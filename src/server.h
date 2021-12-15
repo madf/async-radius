@@ -3,6 +3,7 @@
 
 #include <boost/asio.hpp>
 #include <array>
+#include <cstdint> //uint8_t, uint32_t
 
 class Server
 {
@@ -16,7 +17,7 @@ class Server
 
         boost::asio::ip::udp::socket socket_;
         boost::asio::ip::udp::endpoint remote_endpoint_;
-        std::array<char, 1> recv_buffer_;
+        std::array<uint8_t, 4096> recv_buffer_;
 };
 
 #endif
