@@ -15,6 +15,7 @@ set ( THREADS_PREFER_PTHREAD_FLAG ON )
 find_package ( Threads REQUIRED )
 
 find_package ( Boost 1.66.0 REQUIRED )
+find_package ( OpenSSL 1.0.0 REQUIRED )
 
 add_executable ( ${PROJECT_NAME} )
 
