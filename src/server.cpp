@@ -32,7 +32,7 @@ void Server::handle_receive(const error_code& error, std::size_t bytes)
             uint8_t send_code;
 
             if (recv_buffer_[0] == ACCESS_REQUEST)
-                send_code = 2;
+                send_code = ACCESS_ACCEPT;
 
             std::array<uint8_t, 4096> send_buffer;
             uint8_t send_length1 = 0;
