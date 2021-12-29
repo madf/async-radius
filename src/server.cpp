@@ -3,6 +3,7 @@
 #include "attribute_types.h"
 #include <functional> //std::bind
 #include <string>
+#include <iostream>
 #include <openssl/md5.h>
 
 using boost::asio::ip::udp;
@@ -26,7 +27,16 @@ void Server::handle_receive(const error_code& error, std::size_t bytes)
 {
     if (!error || error == boost::asio::error::message_size)
     {
-        size_t length = recv_buffer_[2] * 256 + recv_buffer_[3];
+        size_t length;
+        try
+        {
+            length = recv_buffer_.at(2) * 256 + recv_buffer_.at(3);
+        }
+        catch (std::out_of_range const& exc)
+        {
+            std::cout << exc.what() << "\n";
+        }
+
         if (bytes >= length)
         {
             uint8_t send_code;
