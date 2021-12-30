@@ -18,6 +18,7 @@ class Server
         boost::asio::ip::udp::socket socket_;
         boost::asio::ip::udp::endpoint remote_endpoint_;
         std::array<uint8_t, 4096> recv_buffer_;
+        std::array<uint8_t, 4096> send_buffer_;
 };
 
 #endif
