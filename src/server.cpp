@@ -61,9 +61,9 @@ void Server::handle_receive(const error_code& error, std::size_t bytes)
             for (int i = 0; i <= 5; i++)
                 send_buffer[i + 20] = secr[i];
 
-            unsigned char md[MD5_DIGEST_LENGTH];
+            std::array<uint8_t, 16> md;
 
-            MD5(send_buffer.data(), send_length2 + secr.length(), md);
+            MD5(send_buffer.data(), send_length2 + secr.length(), md.data());
 
             for (int i = 0; i <= 15; i++)
                 send_buffer[i + 4] = md[i];
