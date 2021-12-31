@@ -44,13 +44,10 @@ void Server::handle_receive(const error_code& error, std::size_t bytes)
             if (recv_buffer_[0] == ACCESS_REQUEST)
                 send_code = ACCESS_ACCEPT;
 
-            uint8_t send_length1 = 0;
-            uint8_t send_length2 = 20;
-
             send_buffer_[0] = send_code;
             send_buffer_[1] = recv_buffer_[1];
-            send_buffer_[2] = send_length1;
-            send_buffer_[3] = send_length2;
+            send_buffer_[2] = 0;
+            send_buffer_[3] = 20;
 
             for (int i = 4; i <= 19; i++)
                 send_buffer_[i] = recv_buffer_[i];
@@ -62,7 +59,7 @@ void Server::handle_receive(const error_code& error, std::size_t bytes)
 
             std::array<uint8_t, 16> md;
 
-            MD5(send_buffer_.data(), send_length2 + secr.length(), md.data());
+            MD5(send_buffer_.data(), 20 + secr.length(), md.data());
 
             for (int i = 0; i <= 15; i++)
                 send_buffer_[i + 4] = md[i];
