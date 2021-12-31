@@ -25,7 +25,7 @@ void Server::start_receive()
 
 void Server::handle_receive(const error_code& error, std::size_t bytes)
 {
-    if (!error || error == boost::asio::error::message_size)
+    if (!error)
     {
         size_t length;
         try
