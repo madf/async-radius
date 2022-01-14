@@ -25,17 +25,9 @@ void Server::start_receive()
 
 void Server::handle_receive(const error_code& error, std::size_t bytes)
 {
-    if (!error)
+    if (!error && bytes >= 20)
     {
-        size_t length;
-        try
-        {
-            length = recv_buffer_.at(2) * 256 + recv_buffer_.at(3);
-        }
-        catch (std::out_of_range const& exc)
-        {
-            std::cout << exc.what() << "\n";
-        }
+        size_t length = recv_buffer_[2] * 256 + recv_buffer_[3];
 
         if (bytes >= length)
         {
@@ -64,8 +56,8 @@ void Server::handle_receive(const error_code& error, std::size_t bytes)
             for (int i = 0; i <= 15; i++)
                 send_buffer_[i + 4] = md[i];
 
-          socket_.async_send_to(boost::asio::buffer(send_buffer_), remote_endpoint_,
-              std::bind(&Server::handle_send, this, pls::_1, pls::_2));
+            socket_.async_send_to(boost::asio::buffer(send_buffer_), remote_endpoint_,
+                std::bind(&Server::handle_send, this, pls::_1, pls::_2));
 
             start_receive();
         }
