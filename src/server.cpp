@@ -61,7 +61,13 @@ void Server::handle_receive(const error_code& error, std::size_t bytes)
 
             start_receive();
         }
+        else
+            std::cout << "Error: request length less than specified length/n";
     }
+    else if (error)
+        std::cout << "Error async_receivw_from: " << error.message() << "/n";
+    else
+        std::cout << "Error: request length less than 20 bytes/n";
 }
 
 void Server::handle_send(const error_code& /*error*/, std::size_t /*bytes_transferred*/)
