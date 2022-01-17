@@ -31,12 +31,11 @@ void Server::handle_receive(const error_code& error, std::size_t bytes)
 
         if (bytes >= length)
         {
-            uint8_t send_code;
-
             if (recv_buffer_[0] == ACCESS_REQUEST)
-                send_code = ACCESS_ACCEPT;
+                send_buffer_[0] = ACCESS_ACCEPT;
+            else
+                send_buffer_[0] = ACCESS_REJECT;
 
-            send_buffer_[0] = send_code;
             send_buffer_[1] = recv_buffer_[1];
             send_buffer_[2] = 0;
             send_buffer_[3] = 20;
