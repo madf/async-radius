@@ -40,19 +40,19 @@ void Server::handle_receive(const error_code& error, std::size_t bytes)
             send_buffer_[2] = 0;
             send_buffer_[3] = 20;
 
-            for (int i = 4; i <= 19; i++)
-                send_buffer_[i] = recv_buffer_[i];
+            for (size_t i = 0; i < 20; ++i)
+                send_buffer_[i + 4] = recv_buffer_[i + 4];
 
             std::string secr("secret");
 
-            for (int i = 0; i <= 5; i++)
+            for (size_t i = 0; i < 6; ++i)
                 send_buffer_[i + 20] = secr[i];
 
             std::array<uint8_t, 16> md;
 
             MD5(send_buffer_.data(), 20 + secr.length(), md.data());
 
-            for (int i = 0; i <= 15; i++)
+            for (size_t i = 0; i < 16; ++i)
                 send_buffer_[i + 4] = md[i];
 
             socket_.async_send_to(boost::asio::buffer(send_buffer_), remote_endpoint_,
