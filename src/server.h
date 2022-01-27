@@ -13,7 +13,7 @@ class Server
     private:
         void start_receive();
         void handle_receive(const boost::system::error_code& error, std::size_t bytes);
-        void handle_send(const boost::system::error_code& /*error*/, std::size_t /*bytes_transferred*/);
+        void handle_send(const boost::system::error_code& error, std::size_t bytes_transferred);
 
         boost::asio::ip::udp::socket socket_;
         boost::asio::ip::udp::endpoint remote_endpoint_;
