@@ -54,7 +54,7 @@ void Server::handle_receive(const error_code& error, std::size_t bytes)
     send_buffer_[2] = 0;
     send_buffer_[3] = 20;
 
-    for (size_t i = 0; i < 20; ++i)
+    for (size_t i = 0; i < 16; ++i)
         send_buffer_[i + 4] = recv_buffer_[i + 4];
 
     std::string secr("secret");
