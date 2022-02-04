@@ -69,7 +69,7 @@ void Server::handle_receive(const error_code& error, std::size_t bytes)
     for (size_t i = 0; i < 16; ++i)
         send_buffer_[i + 4] = md[i];
 
-    socket_.async_send_to(boost::asio::buffer(send_buffer_), remote_endpoint_,
+    socket_.async_send_to(boost::asio::buffer(send_buffer_, 20), remote_endpoint_,
         std::bind(&Server::handle_send, this, pls::_1, pls::_2));
 
     start_receive();
