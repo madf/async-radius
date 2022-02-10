@@ -15,10 +15,10 @@ class Server
         void handle_receive(const boost::system::error_code& error, std::size_t bytes);
         void handle_send(const boost::system::error_code& error, std::size_t bytes_transferred);
 
-        boost::asio::ip::udp::socket socket_;
-        boost::asio::ip::udp::endpoint remote_endpoint_;
-        std::array<uint8_t, 4096> recv_buffer_;
-        std::array<uint8_t, 4096> send_buffer_;
+        boost::asio::ip::udp::socket m_socket;
+        boost::asio::ip::udp::endpoint m_remoteEndpoint;
+        std::array<uint8_t, 4096> m_recvBuffer;
+        std::array<uint8_t, 4096> m_sendBuffer;
 };
 
 #endif
