@@ -39,6 +39,7 @@ void Server::handle_receive(const error_code& error, std::size_t bytes)
     }
 
     size_t length = m_recvBuffer[2] * 256 + m_recvBuffer[3];
+    std::cout << "Length: " << length << "\n";
 
     if (bytes < length)
     {
@@ -48,17 +49,28 @@ void Server::handle_receive(const error_code& error, std::size_t bytes)
 
     Request request(m_recvBuffer);
 
-    if (m_recvBuffer[0] == ACCESS_REQUEST)
-        m_sendBuffer[0] = ACCESS_ACCEPT;
+    if (request.type() == ACCESS_REQUEST)
+    {
+         m_sendBuffer[0] = ACCESS_ACCEPT;
+         std::cout << "Request type: ACCESS_ACCEPT\n";
+    }
     else
+    {
         m_sendBuffer[0] = ACCESS_REJECT;
+        std::cout << "Request type: ACCESS_REJECT\n";
+    }
 
-    m_sendBuffer[1] = m_recvBuffer[1];
+    m_sendBuffer[1] = request.id();
+    std::cout << "Request ID: " << static_cast<size_t>(request.id()) << "\n";
+
     m_sendBuffer[2] = 0;
     m_sendBuffer[3] = 20;
 
     for (size_t i = 0; i < 16; ++i)
-        m_sendBuffer[i + 4] = m_recvBuffer[i + 4];
+    {
+        m_sendBuffer[i + 4] = request.auth()[i];
+        std::cout << "auth[" << i << "]: " << static_cast<size_t>(request.auth()[i])  << "\n";
+    }
 
     std::string secr("secret");
 
