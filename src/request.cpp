@@ -17,7 +17,7 @@ uint8_t Request::type() const
 
 uint8_t Request::id() const
 {
-    return m_type;
+    return m_id;
 }
 
 const std::array<uint8_t, 16>& Request::auth() const
