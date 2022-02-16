@@ -15,16 +15,16 @@ namespace pls = std::placeholders;
 Server::Server(boost::asio::io_service& io_service)
       : m_socket(io_service, udp::endpoint(udp::v4(), 9999))
 {
-    start_receive();
+    startReceive();
 }
 
-void Server::start_receive()
+void Server::startReceive()
 {
     m_socket.async_receive_from(boost::asio::buffer(m_recvBuffer), m_remoteEndpoint,
-        std::bind(&Server::handle_receive, this, pls::_1, pls::_2));
+        std::bind(&Server::handleReceive, this, pls::_1, pls::_2));
 }
 
-void Server::handle_receive(const error_code& error, std::size_t bytes)
+void Server::handleReceive(const error_code& error, std::size_t bytes)
 {
     if (error)
     {
@@ -49,12 +49,12 @@ void Server::handle_receive(const error_code& error, std::size_t bytes)
 
     Packet packet(m_recvBuffer);
 
-    m_socket.async_send_to(boost::asio::buffer(packet.make_sendBuffer(), 20), m_remoteEndpoint,
-        std::bind(&Server::handle_send, this, pls::_1, pls::_2));
+    m_socket.async_send_to(boost::asio::buffer(packet.makeSendBuffer(), 20), m_remoteEndpoint,
+        std::bind(&Server::handleSend, this, pls::_1, pls::_2));
 
-    start_receive();
+    startReceive();
 }
 
-void Server::handle_send(const error_code& /*error*/, std::size_t /*bytes_transferred*/)
+void Server::handleSend(const error_code& /*error*/, std::size_t /*bytes_transferred*/)
 {
 }
