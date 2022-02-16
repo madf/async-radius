@@ -29,9 +29,10 @@ const std::array<uint8_t, 16>& Packet::auth() const
     return m_auth;
 }
 
-std::vector<uint8_t>& Packet::make_sendBuffer()
+std::vector<uint8_t>& Packet::makeSendBuffer()
 {
     m_sendBuffer.resize(20);
+
     if (m_type == ACCESS_REQUEST)
     {
          m_sendBuffer[0] = ACCESS_ACCEPT;
