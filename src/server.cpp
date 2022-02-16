@@ -1,5 +1,5 @@
 #include "server.h"
-#include "request.h"
+#include "packet.h"
 #include "packet_codes.h"
 #include "attribute_types.h"
 #include <functional> //std::bind
@@ -47,44 +47,9 @@ void Server::handle_receive(const error_code& error, std::size_t bytes)
         return;
     }
 
-    Request request(m_recvBuffer);
+    Packet packet(m_recvBuffer);
 
-    if (request.type() == ACCESS_REQUEST)
-    {
-         m_sendBuffer[0] = ACCESS_ACCEPT;
-         std::cout << "Request type: ACCESS_ACCEPT\n";
-    }
-    else
-    {
-        m_sendBuffer[0] = ACCESS_REJECT;
-        std::cout << "Request type: ACCESS_REJECT\n";
-    }
-
-    m_sendBuffer[1] = request.id();
-    std::cout << "Request ID: " << static_cast<size_t>(request.id()) << "\n";
-
-    m_sendBuffer[2] = 0;
-    m_sendBuffer[3] = 20;
-
-    for (size_t i = 0; i < 16; ++i)
-    {
-        m_sendBuffer[i + 4] = request.auth()[i];
-        std::cout << "auth[" << i << "]: " << static_cast<size_t>(request.auth()[i])  << "\n";
-    }
-
-    std::string secr("secret");
-
-    for (size_t i = 0; i < 6; ++i)
-        m_sendBuffer[i + 20] = secr[i];
-
-    std::array<uint8_t, 16> md;
-
-    MD5(m_sendBuffer.data(), 20 + secr.length(), md.data());
-
-    for (size_t i = 0; i < 16; ++i)
-        m_sendBuffer[i + 4] = md[i];
-
-    m_socket.async_send_to(boost::asio::buffer(m_sendBuffer, 20), m_remoteEndpoint,
+    m_socket.async_send_to(boost::asio::buffer(packet.make_sendBuffer(), 20), m_remoteEndpoint,
         std::bind(&Server::handle_send, this, pls::_1, pls::_2));
 
     start_receive();
