@@ -11,9 +11,9 @@ class Server
         Server(boost::asio::io_service& io_service);
 
     private:
-        void start_receive();
-        void handle_receive(const boost::system::error_code& error, std::size_t bytes);
-        void handle_send(const boost::system::error_code& error, std::size_t bytes_transferred);
+        void startReceive();
+        void handleReceive(const boost::system::error_code& error, std::size_t bytes);
+        void handleSend(const boost::system::error_code& error, std::size_t bytes_transferred);
 
         boost::asio::ip::udp::socket m_socket;
         boost::asio::ip::udp::endpoint m_remoteEndpoint;
