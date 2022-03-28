@@ -1,11 +1,8 @@
 #include "server.h"
-#include "packet.h"
 #include "packet_codes.h"
 #include "attribute_types.h"
 #include <functional> //std::bind
-#include <string>
 #include <iostream>
-#include <openssl/md5.h>
 
 using boost::asio::ip::udp;
 using boost::system::error_code;
@@ -38,23 +35,45 @@ void Server::handleReceive(const error_code& error, std::size_t bytes)
         return;
     }
 
-    size_t length = m_recvBuffer[2] * 256 + m_recvBuffer[3];
-    std::cout << "Length: " << length << "\n";
+    try
+    {
+        Packet packet = makeResponse(Packet(m_recvBuffer, bytes));
 
-    if (bytes < length)
+        m_socket.async_send_to(boost::asio::buffer(packet.makeSendBuffer("secret"), 20),
+            m_remoteEndpoint, std::bind(&Server::handleSend, this, pls::_1, pls::_2));
+
+        startReceive();
+    }
+    catch (size_t length)
     {
         std::cout << "Error: request length " << bytes << "is less than specified in the request - " << length << "\n";
         return;
     }
-
-    Packet packet(m_recvBuffer);
-
-    m_socket.async_send_to(boost::asio::buffer(packet.makeSendBuffer(), 20), m_remoteEndpoint,
-        std::bind(&Server::handleSend, this, pls::_1, pls::_2));
-
-    startReceive();
 }
 
 void Server::handleSend(const error_code& /*error*/, std::size_t /*bytes_transferred*/)
 {
 }
+
+const Packet Server::makeResponse(const Packet& packet)
+{
+    uint8_t type = packet.type();
+
+    if (type == ACCESS_REQUEST)
+    {
+        type = ACCESS_ACCEPT;
+        std::cout << "Packet type: ACCESS_ACCEPT\n";
+    }
+    else
+    {
+        type = ACCESS_REJECT;
+        std::cout << "Packet type: ACCESS_REJECT\n";
+    }
+
+    uint8_t id = packet.id();
+
+    std::array<uint8_t, 16> auth = packet.auth();
+
+    return Packet(type, id, auth);
+}
+
