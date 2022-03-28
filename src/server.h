@@ -1,6 +1,7 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include "packet.h"
 #include <boost/asio.hpp>
 #include <array>
 #include <cstdint> //uint8_t, uint32_t
@@ -14,6 +15,7 @@ class Server
         void startReceive();
         void handleReceive(const boost::system::error_code& error, std::size_t bytes);
         void handleSend(const boost::system::error_code& error, std::size_t bytes_transferred);
+        const Packet makeResponse(const Packet& packet);
 
         boost::asio::ip::udp::socket m_socket;
         boost::asio::ip::udp::endpoint m_remoteEndpoint;
