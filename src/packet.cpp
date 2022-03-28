@@ -1,17 +1,31 @@
 #include "packet.h"
-#include "packet_codes.h"
-#include <string>
-#include <iostream>
 #include <openssl/md5.h>
+#include <iostream>
 
-Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer)
+Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes)
 {
+    size_t length = m_recvBuffer[2] * 256 + m_recvBuffer[3];
+    std::cout << "Length: " << length << "\n";
+
+    if (bytes < length)
+        throw length;
+
     m_type = m_recvBuffer[0];
 
     m_id = m_recvBuffer[1];
 
     for (std::size_t i = 0; i < 16; ++i)
         m_auth[i] = m_recvBuffer[i + 4];
+}
+
+Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth)
+{
+    m_type = type;
+
+    m_id = id;
+
+    for (std::size_t i = 0; i < 16; ++i)
+        m_auth[i] = auth[i];
 }
 
 uint8_t Packet::type() const
@@ -29,24 +43,14 @@ const std::array<uint8_t, 16>& Packet::auth() const
     return m_auth;
 }
 
-std::vector<uint8_t> Packet::makeSendBuffer()
+const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
 {
     std::vector<uint8_t> sendBuffer;
     sendBuffer.resize(20);
 
-    if (m_type == ACCESS_REQUEST)
-    {
-         sendBuffer[0] = ACCESS_ACCEPT;
-         std::cout << "Packet type: ACCESS_ACCEPT\n";
-    }
-    else
-    {
-        sendBuffer[0] = ACCESS_REJECT;
-        std::cout << "Packet type: ACCESS_REJECT\n";
-    }
+    sendBuffer[0] = m_type;
 
     sendBuffer[1] = m_id;
-    std::cout << "Packet ID: " << static_cast<size_t>(m_id) << "\n";
 
     sendBuffer[2] = 0;
     sendBuffer[3] = 20;
@@ -54,14 +58,12 @@ std::vector<uint8_t> Packet::makeSendBuffer()
     for (size_t i = 0; i < 16; ++i)
         sendBuffer[i + 4] = m_auth[i];
 
-    std::string secr("secret");
-
     for (size_t i = 0; i < 6; ++i)
-        sendBuffer[i + 20] = secr[i];
+        sendBuffer[i + 20] = secret[i];
 
     std::array<uint8_t, 16> md;
 
-    MD5(sendBuffer.data(), 20 + secr.length(), md.data());
+    MD5(sendBuffer.data(), 20 + secret.length(), md.data());
 
     for (size_t i = 0; i < 16; ++i)
         sendBuffer[i + 4] = md[i];
