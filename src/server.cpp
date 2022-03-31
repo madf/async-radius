@@ -44,9 +44,9 @@ void Server::handleReceive(const error_code& error, std::size_t bytes)
 
         startReceive();
     }
-    catch (size_t length)
+    catch (std::runtime_error& exception)
     {
-        std::cout << "Error: request length " << bytes << "is less than specified in the request - " << length << "\n";
+        std::cout << "Runtime error: " << exception.what() << "\n";
         return;
     }
 }
