@@ -1,6 +1,7 @@
 #include "packet.h"
 #include <openssl/md5.h>
 #include <iostream>
+#include <stdexcept>
 
 Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes)
 {
@@ -8,7 +9,7 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes)
     std::cout << "Length: " << length << "\n";
 
     if (bytes < length)
-        throw length;
+        throw std::runtime_error{"Request length " + std::to_string(bytes) + " is less than specified in the request - " + std::to_string(length)};
 
     m_type = m_recvBuffer[0];
 
