@@ -15,7 +15,7 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes)
 
     m_id = m_recvBuffer[1];
 
-    for (std::size_t i = 0; i < 16; ++i)
+    for (std::size_t i = 0; i < m_auth.size(); ++i)
         m_auth[i] = m_recvBuffer[i + 4];
 }
 
@@ -25,7 +25,7 @@ Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth)
 
     m_id = id;
 
-    for (std::size_t i = 0; i < 16; ++i)
+    for (std::size_t i = 0; i < m_auth.size(); ++i)
         m_auth[i] = auth[i];
 }
 
