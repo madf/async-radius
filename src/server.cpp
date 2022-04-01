@@ -47,7 +47,6 @@ void Server::handleReceive(const error_code& error, std::size_t bytes)
     catch (std::runtime_error& exception)
     {
         std::cout << "Runtime error: " << exception.what() << "\n";
-        return;
     }
 }
 
@@ -55,25 +54,13 @@ void Server::handleSend(const error_code& /*error*/, std::size_t /*bytes_transfe
 {
 }
 
-const Packet Server::makeResponse(const Packet& packet)
+Packet Server::makeResponse(const Packet& request)
 {
-    uint8_t type = packet.type();
-
-    if (type == ACCESS_REQUEST)
+    if (request.type() == ACCESS_REQUEST)
     {
-        type = ACCESS_ACCEPT;
         std::cout << "Packet type: ACCESS_ACCEPT\n";
+        return Packet(ACCESS_ACCEPT, request.id(), request.auth());
     }
-    else
-    {
-        type = ACCESS_REJECT;
-        std::cout << "Packet type: ACCESS_REJECT\n";
-    }
-
-    uint8_t id = packet.id();
-
-    std::array<uint8_t, 16> auth = packet.auth();
-
-    return Packet(type, id, auth);
+    std::cout << "Packet type: ACCESS_REJECT\n";
+    return Packet(ACCESS_REJECT, request.id(), request.auth());
 }
-
