@@ -15,7 +15,7 @@ class Server
         void startReceive();
         void handleReceive(const boost::system::error_code& error, std::size_t bytes);
         void handleSend(const boost::system::error_code& error, std::size_t bytes_transferred);
-        const Packet makeResponse(const Packet& packet);
+        Packet makeResponse(const Packet& request);
 
         boost::asio::ip::udp::socket m_socket;
         boost::asio::ip::udp::endpoint m_remoteEndpoint;
