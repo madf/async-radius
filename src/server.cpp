@@ -39,7 +39,7 @@ void Server::handleReceive(const error_code& error, std::size_t bytes)
     {
         Packet packet = makeResponse(Packet(m_recvBuffer, bytes));
 
-        m_socket.async_send_to(boost::asio::buffer(packet.makeSendBuffer("secret"), 20),
+        m_socket.async_send_to(boost::asio::buffer(packet.makeSendBuffer("secret")),
             m_remoteEndpoint, std::bind(&Server::handleSend, this, pls::_1, pls::_2));
 
         startReceive();
