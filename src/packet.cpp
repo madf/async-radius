@@ -55,17 +55,18 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
     sendBuffer[2] = 0;
     sendBuffer[3] = 20;
 
-    for (size_t i = 0; i < 16; ++i)
+    for (size_t i = 0; i < m_auth.size(); ++i)
         sendBuffer[i + 4] = m_auth[i];
 
-    for (size_t i = 0; i < 6; ++i)
+    sendBuffer.resize(26);
+    for (size_t i = 0; i < secret.length(); ++i)
         sendBuffer[i + 20] = secret[i];
 
     std::array<uint8_t, 16> md;
 
     MD5(sendBuffer.data(), 20 + secret.length(), md.data());
 
-    for (size_t i = 0; i < 16; ++i)
+    for (size_t i = 0; i < md.size(); ++i)
         sendBuffer[i + 4] = md[i];
 
     return sendBuffer;
