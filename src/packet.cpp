@@ -20,11 +20,9 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes)
 }
 
 Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth)
+    : m_type(type),
+      m_id(id)
 {
-    m_type = type;
-
-    m_id = id;
-
     for (std::size_t i = 0; i < m_auth.size(); ++i)
         m_auth[i] = auth[i];
 }
