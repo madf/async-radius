@@ -64,6 +64,7 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
 
     MD5(sendBuffer.data(), 20 + secret.length(), md.data());
 
+    sendBuffer.resize(20);
     for (size_t i = 0; i < md.size(); ++i)
         sendBuffer[i + 4] = md[i];
 
