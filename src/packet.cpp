@@ -5,9 +5,10 @@
 
 Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes)
 {
+    if (bytes < 20)
+        throw std::runtime_error{"The number of received bytes in the request - " + std::to_string(bytes) + " is less than 20 bytes"};
+
     size_t length = m_recvBuffer[2] * 256 + m_recvBuffer[3];
-    if (length < 20)
-        throw std::runtime_error{"Length specified in the request - " + std::to_string(length) + " is less than 20 bytes"};
     std::cout << "Length: " << length << "\n";
 
     if (bytes < length)
