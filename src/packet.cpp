@@ -46,7 +46,7 @@ const std::array<uint8_t, 16>& Packet::auth() const
 
 const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
 {
-    std::vector<uint8_t> sendBuffer(20);
+    std::vector<uint8_t> sendBuffer(20 + secret.length());
 
     sendBuffer[0] = m_type;
 
@@ -58,7 +58,6 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
     for (size_t i = 0; i < m_auth.size(); ++i)
         sendBuffer[i + 4] = m_auth[i];
 
-    sendBuffer.resize(sendBuffer.size() + secret.length());
     for (size_t i = 0; i < secret.length(); ++i)
         sendBuffer[i + 20] = secret[i];
 
