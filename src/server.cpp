@@ -41,14 +41,12 @@ void Server::handleReceive(const error_code& error, std::size_t bytes)
 
         m_socket.async_send_to(boost::asio::buffer(packet.makeSendBuffer("secret")),
             m_remoteEndpoint, std::bind(&Server::handleSend, this, pls::_1, pls::_2));
-
-        startReceive();
     }
     catch (const std::runtime_error& exception)
     {
         std::cout << "Runtime error: " << exception.what() << "\n";
-        startReceive();
     }
+    startReceive();
 }
 
 void Server::handleSend(const error_code& /*error*/, std::size_t /*bytes_transferred*/)
