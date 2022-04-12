@@ -44,7 +44,7 @@ void Server::handleReceive(const error_code& error, std::size_t bytes)
     }
     catch (const std::runtime_error& exception)
     {
-        std::cout << "Runtime error: " << exception.what() << "\n";
+        std::cout << "Packet error: " << exception.what() << "\n";
     }
     startReceive();
 }
