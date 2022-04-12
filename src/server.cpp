@@ -2,9 +2,7 @@
 #include "packet_codes.h"
 #include "attribute_types.h"
 #include <functional> //std::bind
-#include <string>
 #include <iostream>
-#include <openssl/md5.h>
 
 using boost::asio::ip::udp;
 using boost::system::error_code;
@@ -12,18 +10,18 @@ using boost::system::error_code;
 namespace pls = std::placeholders;
 
 Server::Server(boost::asio::io_service& io_service)
-      : socket_(io_service, udp::endpoint(udp::v4(), 9999))
+      : m_socket(io_service, udp::endpoint(udp::v4(), 9999))
 {
-    start_receive();
+    startReceive();
 }
 
-void Server::start_receive()
+void Server::startReceive()
 {
-    socket_.async_receive_from(boost::asio::buffer(recv_buffer_), remote_endpoint_,
-        std::bind(&Server::handle_receive, this, pls::_1, pls::_2));
+    m_socket.async_receive_from(boost::asio::buffer(m_recvBuffer), m_remoteEndpoint,
+        std::bind(&Server::handleReceive, this, pls::_1, pls::_2));
 }
 
-void Server::handle_receive(const error_code& error, std::size_t bytes)
+void Server::handleReceive(const error_code& error, std::size_t bytes)
 {
     if (error)
     {
@@ -37,44 +35,31 @@ void Server::handle_receive(const error_code& error, std::size_t bytes)
         return;
     }
 
-    size_t length = recv_buffer_[2] * 256 + recv_buffer_[3];
-
-    if (bytes < length)
+    try
     {
-        std::cout << "Error: request length " << bytes << "is less than specified in the request - " << length << "\n";
-        return;
+        Packet packet = makeResponse(Packet(m_recvBuffer, bytes));
+
+        m_socket.async_send_to(boost::asio::buffer(packet.makeSendBuffer("secret")),
+            m_remoteEndpoint, std::bind(&Server::handleSend, this, pls::_1, pls::_2));
     }
-
-    if (recv_buffer_[0] == ACCESS_REQUEST)
-        send_buffer_[0] = ACCESS_ACCEPT;
-    else
-        send_buffer_[0] = ACCESS_REJECT;
-
-    send_buffer_[1] = recv_buffer_[1];
-    send_buffer_[2] = 0;
-    send_buffer_[3] = 20;
-
-    for (size_t i = 0; i < 16; ++i)
-        send_buffer_[i + 4] = recv_buffer_[i + 4];
-
-    std::string secr("secret");
-
-    for (size_t i = 0; i < 6; ++i)
-        send_buffer_[i + 20] = secr[i];
-
-    std::array<uint8_t, 16> md;
-
-    MD5(send_buffer_.data(), 20 + secr.length(), md.data());
-
-    for (size_t i = 0; i < 16; ++i)
-        send_buffer_[i + 4] = md[i];
-
-    socket_.async_send_to(boost::asio::buffer(send_buffer_, 20), remote_endpoint_,
-        std::bind(&Server::handle_send, this, pls::_1, pls::_2));
-
-    start_receive();
+    catch (const std::runtime_error& exception)
+    {
+        std::cout << "Packet error: " << exception.what() << "\n";
+    }
+    startReceive();
 }
 
-void Server::handle_send(const error_code& /*error*/, std::size_t /*bytes_transferred*/)
+void Server::handleSend(const error_code& /*error*/, std::size_t /*bytes_transferred*/)
 {
+}
+
+Packet Server::makeResponse(const Packet& request)
+{
+    if (request.type() == ACCESS_REQUEST)
+    {
+        std::cout << "Packet type: ACCESS_ACCEPT\n";
+        return Packet(ACCESS_ACCEPT, request.id(), request.auth());
+    }
+    std::cout << "Packet type: ACCESS_REJECT\n";
+    return Packet(ACCESS_REJECT, request.id(), request.auth());
 }
