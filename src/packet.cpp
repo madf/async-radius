@@ -44,6 +44,11 @@ const std::array<uint8_t, 16>& Packet::auth() const
     return m_auth;
 }
 
+const std::vector<Attribute*>& Packet::attributes() const
+{
+    return m_attributes;
+}
+
 const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
 {
     std::vector<uint8_t> sendBuffer(20 + secret.length());
