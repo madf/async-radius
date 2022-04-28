@@ -19,7 +19,7 @@ class String: public Attribute
 {
     public:
         String(uint8_t type);
-        virtual std::string value() const;
+        std::string value() const override;
 };
 
 #endif
