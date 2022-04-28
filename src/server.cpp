@@ -56,10 +56,7 @@ Packet Server::makeResponse(const Packet& request)
 {
     std::vector<Attribute*> attributes = request.attributes();
     for (size_t i = 0; i < attributes.size(); ++i)
-    {
-        std::cout << "Attribute type: " << attributes[i]->name() << "\n";
-        std::cout << "Attribute value: " << attributes[i]->value() << "\n";
-    }
+        std::cout << "\t" << attributes[i]->name() << ": " << attributes[i]->value() << "\n";
 
     if (request.type() == ACCESS_REQUEST)
     {
