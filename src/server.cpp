@@ -54,6 +54,7 @@ void Server::handleSend(const error_code& /*error*/, std::size_t /*bytes_transfe
 
 Packet Server::makeResponse(const Packet& request)
 {
+    std::cout << "Attributes:\n";
     for (const auto& ap : request.attributes())
         std::cout << "\t" << ap->name() << ": " << ap->value() << "\n";
 
