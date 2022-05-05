@@ -8,35 +8,24 @@ using boost::system::error_code;
 
 namespace pls = std::placeholders;
 
+std::string packetTypeToString(int type)
+{
+    switch (type)
+    {
+        case ACCESS_ACCEPT: return "ACCESS_ACCEPT";
+        case ACCESS_REJECT: return "ACCESS_REJECT";
+        case ACCOUNTING_REQUEST: return "ACCOUNTING_REQUEST";
+        case ACCOUNTING_RESPONSE: return "ACCOUNTING_RESPONSE";
+        case ACCESS_CHALLENGE: return "ACCESS_CHALLENGE";
+        case STATUS_SERVER: return "STATUS_SERVER";
+        case STATUS_CLIENT: return "STATUS_CLIENT";
+    }
+    return "uncnown";
+}
+
 void printPacket(const Packet& p)
 {
-    switch (p.type())
-    {
-        case ACCESS_ACCEPT:
-            std::cout << "Packet type: ACCESS_ACCEPT\n";
-            break;
-        case ACCESS_REJECT:
-            std::cout << "Packet type: ACCESS_REJECT\n";
-            break;
-        case ACCOUNTING_REQUEST:
-            std::cout << "Packet type: ACCOUNTING_REQUEST\n";
-            break;
-        case ACCOUNTING_RESPONSE:
-            std::cout << "Packet type: ACCOUNTING_RESPONSE\n";
-            break;
-        case ACCESS_CHALLENGE:
-            std::cout << "Packet type: ACCESS_CHALLENGE\n";
-            break;
-        case STATUS_SERVER:
-            std::cout << "Packet type: STATUS_SERVER\n";
-            break;
-        case STATUS_CLIENT:
-            std::cout << "Packet type: STATUS_CLIENT\n";
-            break;
-        default:
-            std::cout << "Packet type: uncnown\n";
-            break;
-    }
+    std::cout << "Packet type: " << packetTypeToString(p.type()) << "\n";
 
     std::cout << "ID: " << p.id() << "\n";
 
