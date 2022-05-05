@@ -75,6 +75,7 @@ void Server::handleReceive(const error_code& error, std::size_t bytes)
     {
         Packet packet = makeResponse(Packet(m_recvBuffer, bytes));
 
+        std::cout << "Response packet\n";
         printPacket(packet);
 
         m_socket.async_send_to(boost::asio::buffer(packet.makeSendBuffer("secret")),
@@ -93,6 +94,7 @@ void Server::handleSend(const error_code& /*error*/, std::size_t /*bytes_transfe
 
 Packet Server::makeResponse(const Packet& request)
 {
+    std::cout << "Request packet\n";
     printPacket(request);
 
     if (request.type() == ACCESS_REQUEST)
