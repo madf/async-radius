@@ -7,6 +7,10 @@ Attribute::Attribute(uint8_t type)
 {
 }
 
+Attribute::~Attribute()
+{
+}
+
 String::String(uint8_t type)
         : Attribute(type)
 {
