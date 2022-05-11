@@ -28,6 +28,12 @@ Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth)
 {
 }
 
+Packet::~Packet()
+{
+    for (const auto& ap : m_attributes)
+        delete ap;
+}
+
 uint8_t Packet::type() const
 {
     return m_type;
