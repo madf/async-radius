@@ -8,7 +8,7 @@ class Attribute
 {
     public:
         Attribute(uint8_t type);
-        virtual ~Attribute();
+        virtual ~Attribute() = default;
         std::string name() const;
         virtual std::string value() const = 0;
 
