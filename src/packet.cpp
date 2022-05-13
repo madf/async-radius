@@ -19,6 +19,15 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes)
 
     for (std::size_t i = 0; i < m_auth.size(); ++i)
         m_auth[i] = m_recvBuffer[i + 4];
+
+    size_t attributeLength = 0;
+    for (std::size_t i = 0; i < length; i += attributeLength)
+    {
+        uint8_t attributeType = m_recvBuffer[20 + i];
+        std::cout << "Attribute type: " << int(attributeType) << "\n";
+        attributeLength = m_recvBuffer[21 + i];
+        std::cout << "Attribute length: " << attributeLength << "\n";
+    }
 }
 
 Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth)
