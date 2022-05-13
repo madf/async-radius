@@ -12,6 +12,7 @@ std::string packetTypeToString(int type)
 {
     switch (type)
     {
+        case ACCESS_REQUEST: return "ACCESS_REQUEST";
         case ACCESS_ACCEPT: return "ACCESS_ACCEPT";
         case ACCESS_REJECT: return "ACCESS_REJECT";
         case ACCOUNTING_REQUEST: return "ACCOUNTING_REQUEST";
@@ -27,7 +28,7 @@ void printPacket(const Packet& p)
 {
     std::cout << "Packet type: " << packetTypeToString(p.type()) << "\n";
 
-    std::cout << "ID: " << p.id() << "\n";
+    std::cout << "ID: " << int(p.id()) << "\n";
 
     std::cout << "Attributes:\n";
     for (const auto& ap : p.attributes())
