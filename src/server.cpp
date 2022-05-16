@@ -28,7 +28,7 @@ void printPacket(const Packet& p)
 {
     std::cout << "Packet type: " << packetTypeToString(p.type()) << "\n";
 
-    std::cout << "ID: " << int(p.id()) << "\n";
+    std::cout << "ID: " << std::to_string(p.id()) << "\n";
 
     std::cout << "Attributes:\n";
     for (const auto& ap : p.attributes())
