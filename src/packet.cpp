@@ -10,6 +10,10 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes)
 
     size_t length = m_recvBuffer[2] * 256 + m_recvBuffer[3];
 
+        std::cout << "Length: " << length << "\n";
+
+
+
     if (bytes < length)
         throw std::runtime_error{"Request length " + std::to_string(bytes) + " is less than specified in the request - " + std::to_string(length)};
 
@@ -20,13 +24,15 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes)
     for (std::size_t i = 0; i < m_auth.size(); ++i)
         m_auth[i] = m_recvBuffer[i + 4];
 
-    size_t attributeLength = 0;
-    for (std::size_t i = 0; i < length; i += attributeLength)
+    size_t i = 20;
+    while (i < length)
     {
-        uint8_t attributeType = m_recvBuffer[20 + i];
-        std::cout << "Attribute type: " << int(attributeType) << "\n";
-        attributeLength = m_recvBuffer[21 + i];
-        std::cout << "Attribute length: " << attributeLength << "\n";
+        std::cout << "Index: " << i << "\n";
+        const uint8_t attributeType = m_recvBuffer[i];
+        std::cout << "Attribute type: " << std::to_string(attributeType) << "\n";
+        const uint8_t attributeLength = m_recvBuffer[i + 1];
+        std::cout << "Attribute length: " << std::to_string(attributeLength) << "\n";
+        i += attributeLength;
     }
 }
 
