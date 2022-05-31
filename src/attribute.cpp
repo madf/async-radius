@@ -1,20 +1,44 @@
+#include "packet.h"
 #include "attribute.h"
 #include "attribute_types.h"
 #include <iostream>
+#include "math.h"
 
 Attribute::Attribute(uint8_t type)
     : m_type(type)
 {
 }
 
-String::String(uint8_t type)
+String::String(uint8_t type, const std::array<uint8_t, 4096>& m_recvBuffer, size_t attributeIndex)
         : Attribute(type)
 {
+    size_t valueLength = m_recvBuffer[attributeIndex + 1] - 2;
+    for (std::size_t i = 0; i < valueLength; ++i)
+    {
+        m_attribute[i] = m_recvBuffer[attributeIndex + 2];
+        attributeIndex++;
+    }
+}
+
+Integer::Integer(uint8_t type, const std::array<uint8_t, 4096>& m_recvBuffer, size_t attributeIndex)
+        : Attribute(type)
+{
+    size_t valueLength = m_recvBuffer[attributeIndex + 1] - 2;
+    for (std::size_t i = 0; i < valueLength; ++i)
+    {
+        m_attribute += m_recvBuffer[attributeIndex + 2] * pow(256, valueLength - 1 - i);
+        attributeIndex++;
+    }
 }
 
 std::string String::value() const
 {
-    return "1"; //temporarily
+    return m_attribute.c_str();
+}
+
+std::string Integer::value() const
+{
+    return std::to_string(m_attribute);
 }
 
 std::string typeToString(int type)
