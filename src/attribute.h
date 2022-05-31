@@ -2,6 +2,7 @@
 #define ATTRIBUTE_H
 
 #include <string>
+#include <array>
 #include <cstdint> //uint8_t, uint32_t
 
 class Attribute
@@ -19,8 +20,18 @@ class Attribute
 class String: public Attribute
 {
     public:
-        String(uint8_t type);
+        String(uint8_t type, const std::array<uint8_t, 4096>& m_recvBuffer, size_t attributeIndex);
         std::string value() const override;
+    private:
+        std::string m_attribute;
 };
 
+class Integer: public Attribute
+{
+    public:
+        Integer(uint8_t type, const std::array<uint8_t, 4096>& m_recvBuffer, size_t attributeIndex);
+        std::string value() const override;
+    private:
+        uint32_t m_attribute;
+};
 #endif
