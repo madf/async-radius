@@ -24,15 +24,17 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes)
     for (std::size_t i = 0; i < m_auth.size(); ++i)
         m_auth[i] = m_recvBuffer[i + 4];
 
-    size_t i = 20;
-    while (i < length)
+    size_t attributeIndex = 20;
+    while (attributeIndex < length)
     {
-        std::cout << "Index: " << i << "\n";
-        const uint8_t attributeType = m_recvBuffer[i];
-        std::cout << "Attribute type: " << std::to_string(attributeType) << "\n";
-        const uint8_t attributeLength = m_recvBuffer[i + 1];
-        std::cout << "Attribute length: " << std::to_string(attributeLength) << "\n";
-        i += attributeLength;
+        const uint8_t attributeType = m_recvBuffer[attributeIndex];
+        const uint8_t attributeLength = m_recvBuffer[attributeIndex + 1];
+
+        if (attributeType == 1)
+            m_attributes.push_back(new String(attributeType, m_recvBuffer, attributeIndex));
+        if (attributeType == 5)
+            m_attributes.push_back(new Integer(attributeType, m_recvBuffer, attributeIndex));
+        attributeIndex += attributeLength;
     }
 }
 
