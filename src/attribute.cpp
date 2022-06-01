@@ -15,7 +15,7 @@ String::String(uint8_t type, const std::array<uint8_t, 4096>& m_recvBuffer, size
     size_t valueLength = m_recvBuffer[attributeIndex + 1] - 2;
     for (std::size_t i = 0; i < valueLength; ++i)
     {
-        m_attribute[i] = m_recvBuffer[attributeIndex + 2];
+        m_value[i] = m_recvBuffer[attributeIndex + 2];
         attributeIndex++;
     }
 }
@@ -26,19 +26,19 @@ Integer::Integer(uint8_t type, const std::array<uint8_t, 4096>& m_recvBuffer, si
     size_t valueLength = m_recvBuffer[attributeIndex + 1] - 2;
     for (std::size_t i = 0; i < valueLength; ++i)
     {
-        m_attribute += m_recvBuffer[attributeIndex + 2] * pow(256, valueLength - 1 - i);
+        m_value += m_recvBuffer[attributeIndex + 2] * pow(256, valueLength - 1 - i);
         attributeIndex++;
     }
 }
 
 std::string String::value() const
 {
-    return m_attribute.c_str();
+    return m_value.c_str();
 }
 
 std::string Integer::value() const
 {
-    return std::to_string(m_attribute);
+    return std::to_string(m_value);
 }
 
 std::string typeToString(int type)
