@@ -9,15 +9,10 @@ Attribute::Attribute(uint8_t type)
 {
 }
 
-String::String(uint8_t type, const std::array<uint8_t, 4096>& m_recvBuffer, size_t attributeIndex)
-        : Attribute(type)
+String::String(uint8_t type, const uint8_t* data, size_t size)
+        : Attribute(type),
+          m_value(reinterpret_cast<const char*>(data), size)
 {
-    size_t valueLength = m_recvBuffer[attributeIndex + 1] - 2;
-    for (std::size_t i = 0; i < valueLength; ++i)
-    {
-        m_value[i] = m_recvBuffer[attributeIndex + 2];
-        attributeIndex++;
-    }
 }
 
 Integer::Integer(uint8_t type, const std::array<uint8_t, 4096>& m_recvBuffer, size_t attributeIndex)
