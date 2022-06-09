@@ -20,7 +20,7 @@ class Attribute
 class String: public Attribute
 {
     public:
-        String(uint8_t type, const std::array<uint8_t, 4096>& m_recvBuffer, size_t attributeIndex);
+        String(uint8_t type, const uint8_t* data, size_t size);
         std::string value() const override;
     private:
         std::string m_value;
