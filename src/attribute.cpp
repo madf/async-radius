@@ -16,7 +16,8 @@ String::String(uint8_t type, const uint8_t* data, size_t size)
 }
 
 Integer::Integer(uint8_t type, const std::array<uint8_t, 4096>& m_recvBuffer, size_t attributeIndex)
-        : Attribute(type)
+        : Attribute(type),
+          m_value(0)
 {
     size_t valueLength = m_recvBuffer[attributeIndex + 1] - 2;
     for (std::size_t i = 0; i < valueLength; ++i)
