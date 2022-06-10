@@ -29,7 +29,7 @@ Integer::Integer(uint8_t type, const uint8_t* data, size_t size)
 
 std::string String::value() const
 {
-    return m_value.c_str();
+    return m_value;
 }
 
 std::string Integer::value() const
