@@ -2,7 +2,6 @@
 #include "attribute.h"
 #include "attribute_types.h"
 #include <iostream>
-#include "math.h"
 
 Attribute::Attribute(uint8_t type)
     : m_type(type)
@@ -15,16 +14,17 @@ String::String(uint8_t type, const uint8_t* data, size_t size)
 {
 }
 
-Integer::Integer(uint8_t type, const std::array<uint8_t, 4096>& m_recvBuffer, size_t attributeIndex)
+Integer::Integer(uint8_t type, const uint8_t* data, size_t size)
         : Attribute(type),
           m_value(0)
 {
-    size_t valueLength = m_recvBuffer[attributeIndex + 1] - 2;
-    for (std::size_t i = 0; i < valueLength; ++i)
-    {
-        m_value += m_recvBuffer[attributeIndex + 2] * pow(256, valueLength - 1 - i);
-        attributeIndex++;
-    }
+    if (size != 4)
+        throw std::runtime_error("Invalid integer attribute size. Should be 4, actual size is " + std::to_string(size));
+
+    m_value = data[0] * (1 << 24)
+            + data[1] * (1 << 16)
+            + data[2] * (1 << 8)
+            + data[3];
 }
 
 std::string String::value() const
