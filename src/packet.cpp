@@ -28,16 +28,19 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes)
         const uint8_t attributeLength = m_recvBuffer[attributeIndex + 1];
 
         if (attributeType == 1)
+        {
             m_attributes.push_back(new String(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2));
-
-        try
-        {
-            if (attributeType == 5)
-                m_attributes.push_back(new Integer(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2));
         }
-        catch (const std::runtime_error& exception)
+        else if (attributeType == 5)
         {
-            std::cout << "Attribute error: " << exception.what() << "\n";
+            try
+            {
+                m_attributes.push_back(new Integer(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2));
+            }
+            catch (const std::runtime_error& exception)
+            {
+                std::cout << "Attribute error: " << exception.what() << "\n";
+            }
         }
 
         attributeIndex += attributeLength;
