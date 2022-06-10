@@ -29,7 +29,7 @@ class String: public Attribute
 class Integer: public Attribute
 {
     public:
-        Integer(uint8_t type, const std::array<uint8_t, 4096>& m_recvBuffer, size_t attributeIndex);
+        Integer(uint8_t type, const uint8_t* data, size_t size);
         std::string value() const override;
     private:
         uint32_t m_value;
