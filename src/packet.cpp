@@ -27,20 +27,13 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes)
         const uint8_t attributeType = m_recvBuffer[attributeIndex];
         const uint8_t attributeLength = m_recvBuffer[attributeIndex + 1];
 
-        if (attributeType == 1)
+        try
         {
-            m_attributes.push_back(new String(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2));
+            m_attributes.push_back(makeAttribute(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2));
         }
-        else if (attributeType == 5)
+        catch (const std::runtime_error& exception)
         {
-            try
-            {
-                m_attributes.push_back(new Integer(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2));
-            }
-            catch (const std::runtime_error& exception)
-            {
-                std::cout << "Attribute error: " << exception.what() << "\n";
-            }
+            std::cout << "Attribute error: " << exception.what() << "\n";
         }
 
         attributeIndex += attributeLength;
@@ -106,4 +99,13 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
         sendBuffer[i + 4] = md[i];
 
     return sendBuffer;
+}
+
+Attribute* Packet::makeAttribute(uint8_t type, const uint8_t* data, size_t size)
+{
+    if (type == 1)
+        return new String(type, data, size);
+    else if (type == 5)
+        return new Integer(type, data, size);
+    throw std::runtime_error("Invalid attribute type");
 }
