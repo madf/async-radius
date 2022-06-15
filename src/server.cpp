@@ -1,6 +1,5 @@
 #include "server.h"
 #include "packet_codes.h"
-#include "attribute_types.h"
 #include <functional> //std::bind
 #include <iostream>
 
@@ -8,6 +7,33 @@ using boost::asio::ip::udp;
 using boost::system::error_code;
 
 namespace pls = std::placeholders;
+
+std::string packetTypeToString(int type)
+{
+    switch (type)
+    {
+        case ACCESS_REQUEST: return "ACCESS_REQUEST";
+        case ACCESS_ACCEPT: return "ACCESS_ACCEPT";
+        case ACCESS_REJECT: return "ACCESS_REJECT";
+        case ACCOUNTING_REQUEST: return "ACCOUNTING_REQUEST";
+        case ACCOUNTING_RESPONSE: return "ACCOUNTING_RESPONSE";
+        case ACCESS_CHALLENGE: return "ACCESS_CHALLENGE";
+        case STATUS_SERVER: return "STATUS_SERVER";
+        case STATUS_CLIENT: return "STATUS_CLIENT";
+    }
+    return "uncnown";
+}
+
+void printPacket(const Packet& p)
+{
+    std::cout << "Packet type: " << packetTypeToString(p.type()) << "\n";
+
+    std::cout << "ID: " << std::to_string(p.id()) << "\n";
+
+    std::cout << "Attributes:\n";
+    for (const auto& ap : p.attributes())
+        std::cout << "\t" << ap->name() << ": " << ap->value() << "\n";
+}
 
 Server::Server(boost::asio::io_service& io_service)
       : m_socket(io_service, udp::endpoint(udp::v4(), 9999))
@@ -39,6 +65,9 @@ void Server::handleReceive(const error_code& error, std::size_t bytes)
     {
         Packet packet = makeResponse(Packet(m_recvBuffer, bytes));
 
+        std::cout << "Response packet\n";
+        printPacket(packet);
+
         m_socket.async_send_to(boost::asio::buffer(packet.makeSendBuffer("secret")),
             m_remoteEndpoint, std::bind(&Server::handleSend, this, pls::_1, pls::_2));
     }
@@ -55,11 +84,11 @@ void Server::handleSend(const error_code& /*error*/, std::size_t /*bytes_transfe
 
 Packet Server::makeResponse(const Packet& request)
 {
+    std::cout << "Request packet\n";
+    printPacket(request);
+
     if (request.type() == ACCESS_REQUEST)
-    {
-        std::cout << "Packet type: ACCESS_ACCEPT\n";
         return Packet(ACCESS_ACCEPT, request.id(), request.auth());
-    }
-    std::cout << "Packet type: ACCESS_REJECT\n";
+
     return Packet(ACCESS_REJECT, request.id(), request.auth());
 }

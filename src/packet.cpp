@@ -20,6 +20,24 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes)
 
     for (std::size_t i = 0; i < m_auth.size(); ++i)
         m_auth[i] = m_recvBuffer[i + 4];
+
+    size_t attributeIndex = 20;
+    while (attributeIndex < length)
+    {
+        const uint8_t attributeType = m_recvBuffer[attributeIndex];
+        const uint8_t attributeLength = m_recvBuffer[attributeIndex + 1];
+
+        try
+        {
+            m_attributes.push_back(makeAttribute(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2));
+        }
+        catch (const std::runtime_error& exception)
+        {
+            std::cout << "Attribute error: " << exception.what() << "\n";
+        }
+
+        attributeIndex += attributeLength;
+    }
 }
 
 Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth)
@@ -27,6 +45,12 @@ Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth)
       m_id(id),
       m_auth(auth)
 {
+}
+
+Packet::~Packet()
+{
+    for (const auto& ap : m_attributes)
+        delete ap;
 }
 
 uint8_t Packet::type() const
@@ -42,6 +66,11 @@ uint8_t Packet::id() const
 const std::array<uint8_t, 16>& Packet::auth() const
 {
     return m_auth;
+}
+
+const std::vector<Attribute*>& Packet::attributes() const
+{
+    return m_attributes;
 }
 
 const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
@@ -70,4 +99,13 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
         sendBuffer[i + 4] = md[i];
 
     return sendBuffer;
+}
+
+Attribute* Packet::makeAttribute(uint8_t type, const uint8_t* data, size_t size)
+{
+    if (type == 1)
+        return new String(type, data, size);
+    else if (type == 5)
+        return new Integer(type, data, size);
+    throw std::runtime_error("Invalid attribute type");
 }
