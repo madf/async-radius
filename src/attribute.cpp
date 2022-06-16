@@ -27,6 +27,15 @@ Integer::Integer(uint8_t type, const uint8_t* data, size_t size)
             + data[3];
 }
 
+NasIpAddress::NasIpAddress(uint8_t type, const uint8_t* data, size_t size)
+        : Attribute(type)
+{
+    if (size != 4)
+        throw std::runtime_error("Invalid nas_ip_address attribute size. Should be 4, actual size is " + std::to_string(size));
+
+    m_value = std::to_string(data[0]) + "." + std::to_string(data[1]) + "." + std::to_string(data[2]) + "." + std::to_string(data[3]);
+}
+
 std::string String::value() const
 {
     return m_value;
@@ -35,6 +44,11 @@ std::string String::value() const
 std::string Integer::value() const
 {
     return std::to_string(m_value);
+}
+
+std::string NasIpAddress::value() const
+{
+    return m_value;
 }
 
 std::string typeToString(int type)
