@@ -105,6 +105,8 @@ Attribute* Packet::makeAttribute(uint8_t type, const uint8_t* data, size_t size)
 {
     if (type == 1)
         return new String(type, data, size);
+    else if (type == 4)
+        return new NasIpAddress(type, data, size);
     else if (type == 5)
         return new Integer(type, data, size);
     throw std::runtime_error("Invalid attribute type");
