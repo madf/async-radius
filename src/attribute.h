@@ -34,4 +34,13 @@ class Integer: public Attribute
     private:
         uint32_t m_value;
 };
+
+class NasIpAddress : public Attribute
+{
+    public:
+        NasIpAddress(uint8_t type, const uint8_t* data, size_t size);
+        std::string value() const override;
+    private:
+        std::string m_value;
+};
 #endif
