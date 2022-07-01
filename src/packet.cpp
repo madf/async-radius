@@ -29,7 +29,7 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes)
 
         try
         {
-            m_attributes.push_back(makeAttribute(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2));
+            m_attributes.push_back(makeAttribute(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2, "secret", m_auth));
         }
         catch (const std::runtime_error& exception)
         {
@@ -101,13 +101,15 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
     return sendBuffer;
 }
 
-Attribute* Packet::makeAttribute(uint8_t type, const uint8_t* data, size_t size)
+Attribute* Packet::makeAttribute(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize, std::string secret, std::array<uint8_t, 16> auth)
 {
     if (type == 1)
-        return new String(type, data, size);
+        return new String(type, attributeValue, attributeValueSize);
+    else if (type == 2)
+        return new Encrypted(type, attributeValue, attributeValueSize, secret, auth);
     else if (type == 4)
-        return new NasIpAddress(type, data, size);
+        return new NasIpAddress(type, attributeValue, attributeValueSize);
     else if (type == 5)
-        return new Integer(type, data, size);
+        return new Integer(type, attributeValue, attributeValueSize);
     throw std::runtime_error("Invalid attribute type");
 }
