@@ -1,6 +1,8 @@
 #include "packet.h"
 #include "attribute.h"
 #include "attribute_types.h"
+#include <vector>
+#include <openssl/md5.h>
 #include <iostream>
 
 Attribute::Attribute(uint8_t type)
@@ -8,32 +10,69 @@ Attribute::Attribute(uint8_t type)
 {
 }
 
-String::String(uint8_t type, const uint8_t* data, size_t size)
+String::String(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize)
         : Attribute(type),
-          m_value(reinterpret_cast<const char*>(data), size)
+          m_value(reinterpret_cast<const char*>(attributeValue), attributeValueSize)
 {
 }
 
-Integer::Integer(uint8_t type, const uint8_t* data, size_t size)
+Integer::Integer(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize)
         : Attribute(type),
           m_value(0)
 {
-    if (size != 4)
-        throw std::runtime_error("Invalid integer attribute size. Should be 4, actual size is " + std::to_string(size));
+    if (attributeValueSize != 4)
+        throw std::runtime_error("Invalid integer attribute size. Should be 4, actual size is " + std::to_string(attributeValueSize));
 
-    m_value = data[0] * (1 << 24)
-            + data[1] * (1 << 16)
-            + data[2] * (1 << 8)
-            + data[3];
+    m_value = attributeValue[0] * (1 << 24)
+            + attributeValue[1] * (1 << 16)
+            + attributeValue[2] * (1 << 8)
+            + attributeValue[3];
 }
 
-NasIpAddress::NasIpAddress(uint8_t type, const uint8_t* data, size_t size)
+NasIpAddress::NasIpAddress(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize)
         : Attribute(type)
 {
-    if (size != 4)
-        throw std::runtime_error("Invalid nas_ip_address attribute size. Should be 4, actual size is " + std::to_string(size));
+    if (attributeValueSize != 4)
+        throw std::runtime_error("Invalid nas_ip_address attribute size. Should be 4, actual size is " + std::to_string(attributeValueSize));
 
-    m_value = std::to_string(data[0]) + "." + std::to_string(data[1]) + "." + std::to_string(data[2]) + "." + std::to_string(data[3]);
+    m_value = std::to_string(attributeValue[0]) + "." + std::to_string(attributeValue[1]) + "." + std::to_string(attributeValue[2]) + "." + std::to_string(attributeValue[3]);
+}
+
+Encrypted::Encrypted(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize, std::string secret, std::array<uint8_t, 16> auth)
+        : Attribute(type)
+{
+    std::vector<uint8_t> value(attributeValueSize);
+
+    size_t j = 16;
+    while (j <= attributeValueSize)
+    {
+        std::vector<uint8_t> buffer(16 + secret.length());
+
+        for (size_t i = 0; i < secret.length(); ++i)
+            buffer[i] = secret[i];
+
+        if (j == 16)
+        {
+            for (size_t i = 0; i < 16; ++i)
+                buffer[i + secret.length()] = auth[i];
+        }
+        else
+        {
+            for (size_t i = 0; i < 16; ++i)
+                buffer[i + secret.length()] = attributeValue[i + j - 32];
+        }
+        std::array<uint8_t, 16> md;
+
+        MD5(buffer.data(), buffer.size(), md.data());
+
+        std::vector<uint8_t> decryptValue(16);
+
+        for (size_t i = 0; i < 16; ++i)
+            value.push_back(attributeValue[i + j - 16] ^ md[i]);
+
+        j += 16;
+    }
+    m_value.assign(value.begin(), value.end());
 }
 
 std::string String::value() const
@@ -47,6 +86,11 @@ std::string Integer::value() const
 }
 
 std::string NasIpAddress::value() const
+{
+    return m_value;
+}
+
+std::string Encrypted::value() const
 {
     return m_value;
 }
