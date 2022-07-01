@@ -20,7 +20,7 @@ class Attribute
 class String: public Attribute
 {
     public:
-        String(uint8_t type, const uint8_t* data, size_t size);
+        String(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize);
         std::string value() const override;
     private:
         std::string m_value;
@@ -29,7 +29,7 @@ class String: public Attribute
 class Integer: public Attribute
 {
     public:
-        Integer(uint8_t type, const uint8_t* data, size_t size);
+        Integer(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize);
         std::string value() const override;
     private:
         uint32_t m_value;
@@ -38,7 +38,16 @@ class Integer: public Attribute
 class NasIpAddress : public Attribute
 {
     public:
-        NasIpAddress(uint8_t type, const uint8_t* data, size_t size);
+        NasIpAddress(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize);
+        std::string value() const override;
+    private:
+        std::string m_value;
+};
+
+class Encrypted : public Attribute
+{
+    public:
+        Encrypted (uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize, std::string secret, std::array<uint8_t, 16> auth);
         std::string value() const override;
     private:
         std::string m_value;
