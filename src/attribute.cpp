@@ -41,6 +41,9 @@ NasIpAddress::NasIpAddress(uint8_t type, const uint8_t* attributeValue, size_t a
 Encrypted::Encrypted(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize, std::string secret, std::array<uint8_t, 16> auth)
         : Attribute(type)
 {
+    if (attributeValueSize > 128)
+        throw std::runtime_error("Invalid encrypted attribute size. Should be max 128 bytes, actual size is " + std::to_string(attributeValueSize));
+
     std::vector<uint8_t> value(attributeValueSize);
 
     size_t j = 16;
