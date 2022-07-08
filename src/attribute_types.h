@@ -43,7 +43,9 @@ enum Attribute_Types
     CHAP_CHALLENGE = 60,
     NAS_PORT_TYPE = 61,
     PORT_LIMIT = 62,
-    LOGIN_LAT_PORT = 63
+    LOGIN_LAT_PORT = 63,
+    EAP_MESSAGE = 79,
+    MESSAGE_AUTHENTICATOR = 80
 };
 
 #endif
