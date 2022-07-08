@@ -143,6 +143,8 @@ std::string typeToString(int type)
         case NAS_PORT_TYPE: return "NAS_PORT_TYPE";
         case PORT_LIMIT: return "PORT_LIMIT";
         case LOGIN_LAT_PORT: return "LOGIN_LAT_PORT";
+        case EAP_MESSAGE: return "EAP_MESSAGE";
+        case MESSAGE_AUTHENTICATOR: return "MESSAGE_AUTHENTICATOR";
     }
     return "unknown";
 }
