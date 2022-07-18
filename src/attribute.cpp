@@ -78,6 +78,25 @@ Encrypted::Encrypted(uint8_t type, const uint8_t* attributeValue, size_t attribu
     m_value.assign(value.begin(), value.end());
 }
 
+std::string intToHex(uint8_t number)
+{
+    const std::string digits = "0123456789ABCDEF";
+    std::string hex;
+    hex.insert(0, 1, digits[number % 16]);
+    hex.insert(0, 1, digits[number / 16]);
+    return hex;
+}
+
+Bytes::Bytes(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize)
+        : Attribute(type)
+{
+    for (size_t i = 0; i < attributeValueSize; ++i)
+    {
+        std::string numberHex = intToHex(attributeValue[i]);
+        m_value += numberHex;
+    }
+}
+
 std::string String::value() const
 {
     return m_value;
@@ -94,6 +113,11 @@ std::string NasIpAddress::value() const
 }
 
 std::string Encrypted::value() const
+{
+    return m_value;
+}
+
+std::string Bytes::value() const
 {
     return m_value;
 }
