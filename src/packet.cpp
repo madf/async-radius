@@ -103,18 +103,20 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
 
 Attribute* Packet::makeAttribute(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize, std::string secret, std::array<uint8_t, 16> auth)
 {
-    if (type == 1 || type == 11 || type == 18 || type == 19 || type == 20 ||
-        type == 22 || type == 24 || type == 25 || type == 30 || type == 31 ||
-        type == 32 || type == 33 || type == 34 || type == 35 || type == 36 ||
-        type == 39 || type == 60 || type == 63 || type == 79 || type == 80)
+    if (type == 1 || type == 11 || type == 18 || type == 22 || type == 34 || type == 35 ||
+        type == 60 || type == 63)
         return new String(type, attributeValue, attributeValueSize);
     else if (type == 2)
         return new Encrypted(type, attributeValue, attributeValueSize, secret, auth);
     else if (type == 4 || type == 8 || type == 9 || type == 14)
         return new NasIpAddress(type, attributeValue, attributeValueSize);
     else if (type == 5 || type == 6 || type == 7 || type == 10 || type == 12 ||
-             type == 13 || type == 15 || type == 16 || type == 23 || type == 27 ||
-             type == 28 || type == 29 || type == 37 || type == 38 || type == 61 || type == 62)
+             type == 13 || type == 15 || type == 16 || type == 27 || type == 28 ||
+             type == 29 || type == 37 || type == 38 || type == 61 || type == 62)
         return new Integer(type, attributeValue, attributeValueSize);
+    else if (type == 19 || type == 20 || type == 24 || type == 25 || type == 30 ||
+             type == 31 || type == 32 || type == 33 || type == 36 || type == 39 ||
+             type == 79 || type == 80)
+        return new Bytes(type, attributeValue, attributeValueSize);
     throw std::runtime_error("Invalid attribute type");
 }
