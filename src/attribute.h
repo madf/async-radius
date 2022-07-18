@@ -52,4 +52,13 @@ class Encrypted : public Attribute
     private:
         std::string m_value;
 };
+
+class Bytes: public Attribute
+{
+    public:
+        Bytes(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize);
+        std::string value() const override;
+    private:
+        std::string m_value;
+};
 #endif
