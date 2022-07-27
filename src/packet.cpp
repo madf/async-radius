@@ -38,6 +38,26 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes)
 
         attributeIndex += attributeLength;
     }
+
+    bool eapMessage = false;
+    bool messageAuthenticator = false;
+    for (size_t i = 0; i < m_attributes.size(); ++i)
+    {
+        if (m_attributes[i]->type() == 79)
+            eapMessage = true;
+
+        if (m_attributes[i]->type() == 80)
+            messageAuthenticator = true;
+    }
+    try
+    {
+        if (eapMessage && !messageAuthenticator)
+            throw std::runtime_error{"The EAP-Message attribute is present, but the Message-Authenticator attribute is missing"};
+    }
+    catch (const std::runtime_error& exception)
+    {
+        std::cout << "Attribute error: " << exception.what() << "\n";
+    }
 }
 
 Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth)
@@ -114,9 +134,9 @@ Attribute* Packet::makeAttribute(uint8_t type, const uint8_t* attributeValue, si
              type == 13 || type == 15 || type == 16 || type == 27 || type == 28 ||
              type == 29 || type == 37 || type == 38 || type == 61 || type == 62)
         return new Integer(type, attributeValue, attributeValueSize);
-    else if (type == 19 || type == 20 || type == 24 || type == 25 || type == 30 ||
-             type == 31 || type == 32 || type == 33 || type == 36 || type == 39 ||
-             type == 79 || type == 80)
+    else if (type == 3 || type == 19 || type == 20 || type == 24 || type == 25 ||
+             type == 26 || type == 30 || type == 31 || type == 32 || type == 33 ||
+             type == 36 || type == 39 || type == 79 || type == 80)
         return new Bytes(type, attributeValue, attributeValueSize);
     throw std::runtime_error("Invalid attribute type");
 }
