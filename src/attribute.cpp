@@ -68,8 +68,6 @@ Encrypted::Encrypted(uint8_t type, const uint8_t* attributeValue, size_t attribu
 
         MD5(buffer.data(), buffer.size(), md.data());
 
-        std::vector<uint8_t> decryptValue(16);
-
         for (size_t i = 0; i < 16; ++i)
             value.push_back(attributeValue[i + j - 16] ^ md[i]);
 
@@ -171,6 +169,11 @@ std::string typeToString(int type)
         case MESSAGE_AUTHENTICATOR: return "MESSAGE_AUTHENTICATOR";
     }
     return "unknown";
+}
+
+uint8_t Attribute::type() const
+{
+    return m_type;
 }
 
 std::string Attribute::name() const
