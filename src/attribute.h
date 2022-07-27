@@ -11,6 +11,7 @@ class Attribute
         Attribute(uint8_t type);
         virtual ~Attribute() = default;
         std::string name() const;
+        uint8_t type() const;
         virtual std::string value() const = 0;
 
     private:
