@@ -1,7 +1,6 @@
 #include "packet.h"
 #include "attribute.h"
 #include "attribute_types.h"
-#include <vector>
 #include <openssl/md5.h>
 #include <iostream>
 
@@ -14,6 +13,17 @@ String::String(uint8_t type, const uint8_t* attributeValue, size_t attributeValu
         : Attribute(type),
           m_value(reinterpret_cast<const char*>(attributeValue), attributeValueSize)
 {
+}
+
+std::vector<uint8_t> String::toVector(std::string secret, std::array<uint8_t, 16> auth) const
+{
+    std::vector<uint8_t> attribute(m_value.length());
+    std::copy(m_value.begin(), m_value.end(), attribute.begin());
+    attribute.resize(m_value.length() + 2);
+    auto it = attribute.begin();
+    it = attribute.insert(it, m_value.length() + 2);
+    it = attribute.insert(it, type());
+    return attribute;
 }
 
 Integer::Integer(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize)
@@ -29,6 +39,18 @@ Integer::Integer(uint8_t type, const uint8_t* attributeValue, size_t attributeVa
             + attributeValue[3];
 }
 
+std::vector<uint8_t> Integer::toVector(std::string secret, std::array<uint8_t, 16> auth) const
+{
+    std::vector<uint8_t> attribute(6);
+    attribute[0] = type();
+    attribute[1] = 6;
+    attribute[2] = m_value / (1 << 24);
+    attribute[3] = m_value / (1 << 16);
+    attribute[4] = m_value / (1 << 8);
+    attribute[5] = m_value;
+    return attribute;
+}
+
 NasIpAddress::NasIpAddress(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize)
         : Attribute(type)
 {
@@ -36,6 +58,20 @@ NasIpAddress::NasIpAddress(uint8_t type, const uint8_t* attributeValue, size_t a
         throw std::runtime_error("Invalid nas_ip_address attribute size. Should be 4, actual size is " + std::to_string(attributeValueSize));
 
     m_value = std::to_string(attributeValue[0]) + "." + std::to_string(attributeValue[1]) + "." + std::to_string(attributeValue[2]) + "." + std::to_string(attributeValue[3]);
+}
+
+std::vector<uint8_t> NasIpAddress::toVector(std::string secret, std::array<uint8_t, 16> auth) const
+{
+    std::vector<uint8_t> attribute(m_value.length());
+    std::copy(m_value.begin(), m_value.end(), attribute.begin());
+    attribute.erase(attribute.begin() + 1);
+    attribute.erase(attribute.begin() + 2);
+    attribute.erase(attribute.begin() + 3);
+    attribute.resize(m_value.length() + 2 - 3);
+    auto it = attribute.begin();
+    it = attribute.insert(it, m_value.length() + 2);
+    it = attribute.insert(it, type());
+    return attribute;
 }
 
 Encrypted::Encrypted(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize, std::string secret, std::array<uint8_t, 16> auth)
@@ -76,6 +112,57 @@ Encrypted::Encrypted(uint8_t type, const uint8_t* attributeValue, size_t attribu
     m_value.assign(value.begin(), value.end());
 }
 
+std::vector<uint8_t> Encrypted::toVector(std::string secret, std::array<uint8_t, 16> auth) const
+{
+    std::string value = m_value;
+
+    if (value.length() % 16 != 0)
+     {
+        size_t k = 0;
+        while ((k < value.length() / 16 + 1) * 16 - m_value.length())
+        {
+            value.push_back('0');
+            k++;
+        }
+    }
+    std::vector<uint8_t> buffer(16 + secret.length());
+    std::vector<uint8_t> attribute(value.length());
+    std::vector<uint8_t> result(16);
+
+    size_t j = 16;
+    while (j <= value.length())
+    {
+        for (size_t i = 0; i < secret.length(); ++i)
+            buffer[i] = secret[i];
+
+        std::array<uint8_t, 16> md;
+        if (j == 16)
+        {
+            for (size_t i = 0; i < 16; ++i)
+                buffer[i + secret.length()] = auth[i];
+        }
+        else
+        {
+            for (size_t i = 0; i < 16; ++i)
+                buffer[i + secret.length()] = result[i];
+        }
+
+        MD5(buffer.data(), buffer.size(), md.data());
+
+        for (size_t i = 0; i < 16; ++i)
+        {
+            result[i] = value[i + j - 16] ^ md[i];
+            attribute.push_back(result[i]);
+        }
+        j += 16;
+    }
+    attribute.resize(value.length() + 2);
+    auto it = attribute.begin();
+    it = attribute.insert(it, value.length() + 2);
+    it = attribute.insert(it, type());
+    return attribute;
+}
+
 std::string intToHex(uint8_t number)
 {
     const std::string digits = "0123456789ABCDEF";
@@ -93,6 +180,19 @@ Bytes::Bytes(uint8_t type, const uint8_t* attributeValue, size_t attributeValueS
         std::string numberHex = intToHex(attributeValue[i]);
         m_value += numberHex;
     }
+}
+
+std::vector<uint8_t> Bytes::toVector(std::string secret, std::array<uint8_t, 16> auth) const
+{
+    std::vector<uint8_t> attribute(m_value.length() + 2);
+    attribute[0] = type();
+    attribute[1] = m_value.length() / 2 + 2;
+    for (size_t i = 0; i < m_value.length(); i += 2)
+    {
+        uint8_t number = m_value[i] * 16 + m_value[i + 1];
+        attribute.push_back(number);
+    }
+    return attribute;
 }
 
 std::string String::value() const
