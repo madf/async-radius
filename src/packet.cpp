@@ -118,6 +118,25 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
     for (size_t i = 0; i < md.size(); ++i)
         sendBuffer[i + 4] = md[i];
 
+    std::vector<uint8_t> attributes;
+    for (size_t i = 0; i < m_attributes.size(); ++i)
+    {
+        if (i == 0)
+        {
+            std::vector<uint8_t> attribute(m_attributes[i]->toVector(secret, m_auth));
+            attributes.insert(attributes.begin(), attribute.begin(), attribute.end());
+        }
+        else
+        {
+        std::vector<uint8_t> attribute(m_attributes[i]->toVector(secret, m_auth));
+        attributes.insert(attributes.end(), attribute.begin(), attribute.end());
+        }
+    }
+
+    sendBuffer.resize(20 + attributes.size());
+    for (size_t i = 0; i < attributes.size(); ++i)
+        sendBuffer[i + 20] = attributes[i];
+
     return sendBuffer;
 }
 
