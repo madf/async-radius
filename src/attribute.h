@@ -42,11 +42,11 @@ class Integer: public Attribute
         uint32_t m_value;
 };
 
-class NasIpAddress : public Attribute
+class IpAddress : public Attribute
 {
     public:
-        NasIpAddress(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize);
-        NasIpAddress(uint8_t type, std::string address);
+        IpAddress(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize);
+        IpAddress(uint8_t type, std::string address);
         std::string value() const override;
         std::vector<uint8_t> toVector(std::string secret, std::array<uint8_t, 16> auth) const override;
     private:
