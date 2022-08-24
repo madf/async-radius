@@ -141,7 +141,7 @@ Attribute* Packet::makeAttribute(uint8_t type, const uint8_t* attributeValue, si
     else if (type == 2)
         return new Encrypted(type, attributeValue, attributeValueSize, secret, auth);
     else if (type == 4 || type == 8 || type == 9 || type == 14)
-        return new NasIpAddress(type, attributeValue, attributeValueSize);
+        return new IpAddress(type, attributeValue, attributeValueSize);
     else if (type == 5 || type == 6 || type == 7 || type == 10 || type == 12 ||
              type == 13 || type == 15 || type == 16 || type == 27 || type == 28 ||
              type == 29 || type == 37 || type == 38 || type == 61 || type == 62)
