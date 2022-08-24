@@ -60,10 +60,11 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes)
     }
 }
 
-Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth)
+Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, const std::vector<Attribute*>& attributes)
     : m_type(type),
       m_id(id),
-      m_auth(auth)
+      m_auth(auth),
+      m_attributes(attributes)
 {
 }
 
@@ -101,41 +102,33 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
 
     sendBuffer[1] = m_id;
 
-    sendBuffer[2] = 0;
-    sendBuffer[3] = 20;
-
     for (size_t i = 0; i < m_auth.size(); ++i)
         sendBuffer[i + 4] = m_auth[i];
-
-    for (size_t i = 0; i < secret.length(); ++i)
-        sendBuffer[i + 20] = secret[i];
-
-    std::array<uint8_t, 16> md;
-
-    MD5(sendBuffer.data(), 20 + secret.length(), md.data());
-
-    sendBuffer.resize(20);
-    for (size_t i = 0; i < md.size(); ++i)
-        sendBuffer[i + 4] = md[i];
 
     std::vector<uint8_t> attributes;
     for (size_t i = 0; i < m_attributes.size(); ++i)
     {
-        if (i == 0)
-        {
-            std::vector<uint8_t> attribute(m_attributes[i]->toVector(secret, m_auth));
-            attributes.insert(attributes.begin(), attribute.begin(), attribute.end());
-        }
-        else
-        {
         std::vector<uint8_t> attribute(m_attributes[i]->toVector(secret, m_auth));
         attributes.insert(attributes.end(), attribute.begin(), attribute.end());
-        }
     }
-
     sendBuffer.resize(20 + attributes.size());
+
+    sendBuffer[2] = 0;
+    sendBuffer[3] = 20 + attributes.size();;
+
     for (size_t i = 0; i < attributes.size(); ++i)
         sendBuffer[i + 20] = attributes[i];
+
+    for (size_t i = 0; i < secret.length(); ++i)
+        sendBuffer[i + 20 + attributes.size()] = secret[i];
+
+    std::array<uint8_t, 16> md;
+
+    MD5(sendBuffer.data(), sendBuffer.size() + secret.length(), md.data());
+
+    sendBuffer.resize(20 + attributes.size());
+    for (size_t i = 0; i < md.size(); ++i)
+        sendBuffer[i + 4] = md[i];
 
     return sendBuffer;
 }
