@@ -24,6 +24,7 @@ class String: public Attribute
 {
     public:
         String(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize);
+        String(uint8_t type, std::string name);
         std::string value() const override;
         std::vector<uint8_t> toVector(std::string secret, std::array<uint8_t, 16> auth) const override;
     private:
@@ -34,6 +35,7 @@ class Integer: public Attribute
 {
     public:
         Integer(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize);
+        Integer(uint8_t type, uint32_t value);
         std::string value() const override;
         std::vector<uint8_t> toVector(std::string secret, std::array<uint8_t, 16> auth) const override;
     private:
@@ -44,6 +46,7 @@ class NasIpAddress : public Attribute
 {
     public:
         NasIpAddress(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize);
+        NasIpAddress(uint8_t type, std::string address);
         std::string value() const override;
         std::vector<uint8_t> toVector(std::string secret, std::array<uint8_t, 16> auth) const override;
     private:
