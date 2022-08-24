@@ -1,5 +1,6 @@
 #include "server.h"
 #include "packet_codes.h"
+#include "attribute_types.h"
 #include <functional> //std::bind
 #include <iostream>
 
@@ -87,8 +88,13 @@ Packet Server::makeResponse(const Packet& request)
     std::cout << "Request packet\n";
     printPacket(request);
 
-    if (request.type() == ACCESS_REQUEST)
-        return Packet(ACCESS_ACCEPT, request.id(), request.auth());
+    std::vector<Attribute*> attributes;
+    attributes.push_back(new String(USER_NAME, "test"));
+    attributes.push_back(new Integer(NAS_PORT, 20));
+    attributes.push_back(new NasIpAddress(NAS_IP_ADDRESS, "127.104.22.17"));
 
-    return Packet(ACCESS_REJECT, request.id(), request.auth());
+    if (request.type() == ACCESS_REQUEST)
+        return Packet(ACCESS_ACCEPT, request.id(), request.auth(), attributes);
+
+    return Packet(ACCESS_REJECT, request.id(), request.auth(), attributes);
 }
