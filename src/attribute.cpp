@@ -62,7 +62,7 @@ std::vector<uint8_t> Integer::toVector(std::string secret, std::array<uint8_t, 1
     return attribute;
 }
 
-NasIpAddress::NasIpAddress(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize)
+IpAddress::IpAddress(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize)
         : Attribute(type)
 {
     if (attributeValueSize != 4)
@@ -71,13 +71,13 @@ NasIpAddress::NasIpAddress(uint8_t type, const uint8_t* attributeValue, size_t a
     m_value = std::to_string(attributeValue[0]) + "." + std::to_string(attributeValue[1]) + "." + std::to_string(attributeValue[2]) + "." + std::to_string(attributeValue[3]);
 }
 
-NasIpAddress::NasIpAddress(uint8_t type, std::string address)
+IpAddress::IpAddress(uint8_t type, std::string address)
     : Attribute(type),
       m_value(address)
 {
 }
 
-std::vector<uint8_t> NasIpAddress::toVector(std::string secret, std::array<uint8_t, 16> auth) const
+std::vector<uint8_t> IpAddress::toVector(std::string secret, std::array<uint8_t, 16> auth) const
 {
     std::vector<uint8_t> attribute(4);
     size_t pos = 0;
@@ -231,7 +231,7 @@ std::string Integer::value() const
     return std::to_string(m_value);
 }
 
-std::string NasIpAddress::value() const
+std::string IpAddress::value() const
 {
     return m_value;
 }
