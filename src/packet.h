@@ -11,7 +11,7 @@ class Packet
 {
     public:
         Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes);
-        Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth);
+        Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, const std::vector<Attribute*>& attributes);
         ~Packet();
         uint8_t type() const;
         uint8_t id() const;
