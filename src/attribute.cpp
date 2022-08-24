@@ -15,11 +15,16 @@ String::String(uint8_t type, const uint8_t* attributeValue, size_t attributeValu
 {
 }
 
+String::String(uint8_t type, std::string  name)
+    : Attribute(type),
+      m_value(name)
+{
+}
+
 std::vector<uint8_t> String::toVector(std::string secret, std::array<uint8_t, 16> auth) const
 {
     std::vector<uint8_t> attribute(m_value.length());
     std::copy(m_value.begin(), m_value.end(), attribute.begin());
-    attribute.resize(m_value.length() + 2);
     auto it = attribute.begin();
     it = attribute.insert(it, m_value.length() + 2);
     it = attribute.insert(it, type());
@@ -37,6 +42,12 @@ Integer::Integer(uint8_t type, const uint8_t* attributeValue, size_t attributeVa
             + attributeValue[1] * (1 << 16)
             + attributeValue[2] * (1 << 8)
             + attributeValue[3];
+}
+
+Integer::Integer(uint8_t type, uint32_t value)
+    : Attribute(type),
+      m_value(value)
+{
 }
 
 std::vector<uint8_t> Integer::toVector(std::string secret, std::array<uint8_t, 16> auth) const
@@ -60,16 +71,31 @@ NasIpAddress::NasIpAddress(uint8_t type, const uint8_t* attributeValue, size_t a
     m_value = std::to_string(attributeValue[0]) + "." + std::to_string(attributeValue[1]) + "." + std::to_string(attributeValue[2]) + "." + std::to_string(attributeValue[3]);
 }
 
+NasIpAddress::NasIpAddress(uint8_t type, std::string address)
+    : Attribute(type),
+      m_value(address)
+{
+}
+
 std::vector<uint8_t> NasIpAddress::toVector(std::string secret, std::array<uint8_t, 16> auth) const
 {
-    std::vector<uint8_t> attribute(m_value.length());
-    std::copy(m_value.begin(), m_value.end(), attribute.begin());
-    attribute.erase(attribute.begin() + 1);
-    attribute.erase(attribute.begin() + 2);
-    attribute.erase(attribute.begin() + 3);
-    attribute.resize(m_value.length() + 2 - 3);
+    std::vector<uint8_t> attribute(4);
+    size_t pos = 0;
+    for (size_t i = 0; i < 4; ++i)
+    {
+        std::string::size_type n = m_value.find(".", pos);
+        if (n == std::string::npos)
+        {
+            attribute[i] = std::stoi(m_value.substr(pos, m_value.length() - pos));
+        }
+        else
+        {
+            attribute[i] = std::stoi(m_value.substr(pos, n - pos));
+            pos = n + 1;
+        }
+    }
     auto it = attribute.begin();
-    it = attribute.insert(it, m_value.length() + 2);
+    it = attribute.insert(it, attribute.size() + 2);
     it = attribute.insert(it, type());
     return attribute;
 }
