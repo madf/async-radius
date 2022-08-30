@@ -138,53 +138,57 @@ Encrypted::Encrypted(uint8_t type, const uint8_t* attributeValue, size_t attribu
     m_value.assign(value.begin(), value.end());
 }
 
+Encrypted::Encrypted(uint8_t type, std::string password)
+    : Attribute(type),
+      m_value(password)
+{
+}
+
 std::vector<uint8_t> Encrypted::toVector(std::string secret, std::array<uint8_t, 16> auth) const
 {
+    if (m_value.length() > 128)
+        throw std::runtime_error("Invalid encrypted attribute size. Should be max 128 bytes, actual size is " + std::to_string(m_value.length()));
+
     std::string value = m_value;
 
     if (value.length() % 16 != 0)
-     {
-        size_t k = 0;
-        while ((k < value.length() / 16 + 1) * 16 - m_value.length())
-        {
-            value.push_back('0');
-            k++;
-        }
-    }
-    std::vector<uint8_t> buffer(16 + secret.length());
-    std::vector<uint8_t> attribute(value.length());
-    std::vector<uint8_t> result(16);
-
-    size_t j = 16;
-    while (j <= value.length())
     {
-        for (size_t i = 0; i < secret.length(); ++i)
-            buffer[i] = secret[i];
+        for (size_t i = 0; i < (m_value.length() / 16 + 1) * 16 - m_value.length(); ++i)
+            value.push_back(0);
+    }
 
-        std::array<uint8_t, 16> md;
-        if (j == 16)
+    std::vector<uint8_t> buffer(16 + secret.length());
+
+    for (size_t i = 0; i < secret.length(); ++i)
+        buffer[i] = secret[i];
+    for (size_t i = 0; i < 16; ++i)
+        buffer[i + secret.length()] = auth[i];
+
+    std::array<uint8_t, 16> md;
+    MD5(buffer.data(), buffer.size(), md.data());
+
+    std::vector<uint8_t> attribute;
+    std::vector<uint8_t> result(16);
+    size_t k = 16;
+    for (size_t j = 0; j < value.length() / 16; ++j)
+    {
+        for (size_t i = 0; i < 16; ++i)
         {
-            for (size_t i = 0; i < 16; ++i)
-                buffer[i + secret.length()] = auth[i];
+            result[i] = value[i + k - 16] ^ md[i];
+            attribute.push_back(result[i]);
         }
-        else
+        if (j != value.length() - 1)
         {
             for (size_t i = 0; i < 16; ++i)
                 buffer[i + secret.length()] = result[i];
-        }
 
-        MD5(buffer.data(), buffer.size(), md.data());
-
-        for (size_t i = 0; i < 16; ++i)
-        {
-            result[i] = value[i + j - 16] ^ md[i];
-            attribute.push_back(result[i]);
+            MD5(buffer.data(), buffer.size(), md.data());
+            k += 16;
         }
-        j += 16;
     }
-    attribute.resize(value.length() + 2);
+
     auto it = attribute.begin();
-    it = attribute.insert(it, value.length() + 2);
+    it = attribute.insert(it, attribute.size() + 2);
     it = attribute.insert(it, type());
     return attribute;
 }
