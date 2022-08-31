@@ -153,7 +153,7 @@ std::vector<uint8_t> Encrypted::toVector(std::string secret, std::array<uint8_t,
 
     if (value.length() % 16 != 0)
     {
-        for (size_t i = 0; i < (m_value.length() / 16 + 1) * 16 - m_value.length(); ++i)
+        for (size_t i = 0; i < (16 - m_value.length() % 16); ++i)
             value.push_back(0);
     }
 
