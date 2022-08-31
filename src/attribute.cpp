@@ -169,12 +169,11 @@ std::vector<uint8_t> Encrypted::toVector(std::string secret, std::array<uint8_t,
 
     std::vector<uint8_t> attribute;
     std::vector<uint8_t> result(16);
-    size_t k = 16;
     for (size_t j = 0; j < value.length() / 16; ++j)
     {
         for (size_t i = 0; i < 16; ++i)
         {
-            result[i] = value[i + k - 16] ^ md[i];
+            result[i] = value[i + j * 16] ^ md[i];
             attribute.push_back(result[i]);
         }
         if (j != value.length() - 1)
@@ -183,7 +182,6 @@ std::vector<uint8_t> Encrypted::toVector(std::string secret, std::array<uint8_t,
                 buffer[i + secret.length()] = result[i];
 
             MD5(buffer.data(), buffer.size(), md.data());
-            k += 16;
         }
     }
 
