@@ -9,9 +9,9 @@ Attribute::Attribute(uint8_t type)
 {
 }
 
-String::String(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize)
+String::String(uint8_t type, const uint8_t* data, size_t size)
         : Attribute(type),
-          m_value(reinterpret_cast<const char*>(attributeValue), attributeValueSize)
+          m_value(reinterpret_cast<const char*>(data), size)
 {
 }
 
@@ -31,17 +31,17 @@ std::vector<uint8_t> String::toVector(std::string secret, std::array<uint8_t, 16
     return attribute;
 }
 
-Integer::Integer(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize)
+Integer::Integer(uint8_t type, const uint8_t* data, size_t size)
         : Attribute(type),
           m_value(0)
 {
-    if (attributeValueSize != 4)
-        throw std::runtime_error("Invalid integer attribute size. Should be 4, actual size is " + std::to_string(attributeValueSize));
+    if (size != 4)
+        throw std::runtime_error("Invalid integer attribute size. Should be 4, actual size is " + std::to_string(size));
 
-    m_value = attributeValue[0] * (1 << 24)
-            + attributeValue[1] * (1 << 16)
-            + attributeValue[2] * (1 << 8)
-            + attributeValue[3];
+    m_value = data[0] * (1 << 24)
+            + data[1] * (1 << 16)
+            + data[2] * (1 << 8)
+            + data[3];
 }
 
 Integer::Integer(uint8_t type, uint32_t value)
@@ -62,13 +62,13 @@ std::vector<uint8_t> Integer::toVector(std::string secret, std::array<uint8_t, 1
     return attribute;
 }
 
-IpAddress::IpAddress(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize)
+IpAddress::IpAddress(uint8_t type, const uint8_t* data, size_t size)
         : Attribute(type)
 {
-    if (attributeValueSize != 4)
-        throw std::runtime_error("Invalid nas_ip_address attribute size. Should be 4, actual size is " + std::to_string(attributeValueSize));
+    if (size != 4)
+        throw std::runtime_error("Invalid nas_ip_address attribute size. Should be 4, actual size is " + std::to_string(size));
 
-    m_value = std::to_string(attributeValue[0]) + "." + std::to_string(attributeValue[1]) + "." + std::to_string(attributeValue[2]) + "." + std::to_string(attributeValue[3]);
+    m_value = std::to_string(data[0]) + "." + std::to_string(data[1]) + "." + std::to_string(data[2]) + "." + std::to_string(data[3]);
 }
 
 IpAddress::IpAddress(uint8_t type, std::string address)
@@ -100,16 +100,16 @@ std::vector<uint8_t> IpAddress::toVector(std::string secret, std::array<uint8_t,
     return attribute;
 }
 
-Encrypted::Encrypted(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize, std::string secret, std::array<uint8_t, 16> auth)
+Encrypted::Encrypted(uint8_t type, const uint8_t* data, size_t size, std::string secret, std::array<uint8_t, 16> auth)
         : Attribute(type)
 {
-    if (attributeValueSize > 128)
-        throw std::runtime_error("Invalid encrypted attribute size. Should be max 128 bytes, actual size is " + std::to_string(attributeValueSize));
+    if (size > 128)
+        throw std::runtime_error("Invalid encrypted attribute size. Should be max 128 bytes, actual size is " + std::to_string(size));
 
-    std::vector<uint8_t> value(attributeValueSize);
+    std::vector<uint8_t> value(size);
 
     size_t j = 16;
-    while (j <= attributeValueSize)
+    while (j <= size)
     {
         std::vector<uint8_t> buffer(16 + secret.length());
 
@@ -124,14 +124,14 @@ Encrypted::Encrypted(uint8_t type, const uint8_t* attributeValue, size_t attribu
         else
         {
             for (size_t i = 0; i < 16; ++i)
-                buffer[i + secret.length()] = attributeValue[i + j - 32];
+                buffer[i + secret.length()] = data[i + j - 32];
         }
         std::array<uint8_t, 16> md;
 
         MD5(buffer.data(), buffer.size(), md.data());
 
         for (size_t i = 0; i < 16; ++i)
-            value.push_back(attributeValue[i + j - 16] ^ md[i]);
+            value.push_back(data[i + j - 16] ^ md[i]);
 
         j += 16;
     }
@@ -200,12 +200,12 @@ std::string intToHex(uint8_t number)
     return hex;
 }
 
-Bytes::Bytes(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize)
+Bytes::Bytes(uint8_t type, const uint8_t* data, size_t size)
         : Attribute(type)
 {
-    for (size_t i = 0; i < attributeValueSize; ++i)
+    for (size_t i = 0; i < size; ++i)
     {
-        std::string numberHex = intToHex(attributeValue[i]);
+        std::string numberHex = intToHex(data[i]);
         m_value += numberHex;
     }
 }
