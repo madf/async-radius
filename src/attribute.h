@@ -23,7 +23,7 @@ class Attribute
 class String: public Attribute
 {
     public:
-        String(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize);
+        String(uint8_t type, const uint8_t* data, size_t size);
         String(uint8_t type, std::string name);
         std::string value() const override;
         std::vector<uint8_t> toVector(std::string secret, std::array<uint8_t, 16> auth) const override;
@@ -34,7 +34,7 @@ class String: public Attribute
 class Integer: public Attribute
 {
     public:
-        Integer(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize);
+        Integer(uint8_t type, const uint8_t* data, size_t size);
         Integer(uint8_t type, uint32_t value);
         std::string value() const override;
         std::vector<uint8_t> toVector(std::string secret, std::array<uint8_t, 16> auth) const override;
@@ -45,7 +45,7 @@ class Integer: public Attribute
 class IpAddress : public Attribute
 {
     public:
-        IpAddress(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize);
+        IpAddress(uint8_t type, const uint8_t* data, size_t size);
         IpAddress(uint8_t type, std::string address);
         std::string value() const override;
         std::vector<uint8_t> toVector(std::string secret, std::array<uint8_t, 16> auth) const override;
@@ -56,7 +56,7 @@ class IpAddress : public Attribute
 class Encrypted : public Attribute
 {
     public:
-        Encrypted (uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize, std::string secret, std::array<uint8_t, 16> auth);
+        Encrypted (uint8_t type, const uint8_t* data, size_t size, std::string secret, std::array<uint8_t, 16> auth);
         Encrypted(uint8_t type, std::string password);
         std::string value() const override;
         std::vector<uint8_t> toVector(std::string secret, std::array<uint8_t, 16> auth) const override;
@@ -67,7 +67,7 @@ class Encrypted : public Attribute
 class Bytes: public Attribute
 {
     public:
-        Bytes(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize);
+        Bytes(uint8_t type, const uint8_t* data, size_t size);
         Bytes(uint8_t type, std::string bytes);
         std::string value() const override;
         std::vector<uint8_t> toVector(std::string secret, std::array<uint8_t, 16> auth) const override;
