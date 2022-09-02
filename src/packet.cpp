@@ -99,7 +99,6 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
     std::vector<uint8_t> sendBuffer(20);
 
     sendBuffer[0] = m_type;
-
     sendBuffer[1] = m_id;
 
     for (size_t i = 0; i < m_auth.size(); ++i)
@@ -116,7 +115,6 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
     sendBuffer[3] = 20 + attributes.size();;
 
     sendBuffer.resize(20 + attributes.size() + secret.length());
-
     for (size_t i = 0; i < attributes.size(); ++i)
         sendBuffer[i + 20] = attributes[i];
 
@@ -124,7 +122,6 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
         sendBuffer[i + 20 + attributes.size()] = secret[i];
 
     std::array<uint8_t, 16> md;
-
     MD5(sendBuffer.data(), sendBuffer.size(), md.data());
 
     sendBuffer.resize(20 + attributes.size());
