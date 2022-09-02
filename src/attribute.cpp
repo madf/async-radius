@@ -15,7 +15,7 @@ String::String(uint8_t type, const uint8_t* attributeValue, size_t attributeValu
 {
 }
 
-String::String(uint8_t type, std::string  name)
+String::String(uint8_t type, std::string name)
     : Attribute(type),
       m_value(name)
 {
@@ -210,16 +210,19 @@ Bytes::Bytes(uint8_t type, const uint8_t* attributeValue, size_t attributeValueS
     }
 }
 
+Bytes::Bytes(uint8_t type, std::string bytes)
+    : Attribute(type),
+      m_value(bytes)
+{
+}
+
 std::vector<uint8_t> Bytes::toVector(std::string secret, std::array<uint8_t, 16> auth) const
 {
-    std::vector<uint8_t> attribute(m_value.length() + 2);
-    attribute[0] = type();
-    attribute[1] = m_value.length() / 2 + 2;
-    for (size_t i = 0; i < m_value.length(); i += 2)
-    {
-        uint8_t number = m_value[i] * 16 + m_value[i + 1];
-        attribute.push_back(number);
-    }
+    std::vector<uint8_t> attribute(m_value.length());
+    std::copy(m_value.begin(), m_value.end(), attribute.begin());
+    auto it = attribute.begin();
+    it = attribute.insert(it, m_value.length() + 2);
+    it = attribute.insert(it, type());
     return attribute;
 }
 
