@@ -68,6 +68,7 @@ class Bytes: public Attribute
 {
     public:
         Bytes(uint8_t type, const uint8_t* attributeValue, size_t attributeValueSize);
+        Bytes(uint8_t type, std::string bytes);
         std::string value() const override;
         std::vector<uint8_t> toVector(std::string secret, std::array<uint8_t, 16> auth) const override;
     private:
