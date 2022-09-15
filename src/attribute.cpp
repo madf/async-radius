@@ -21,7 +21,7 @@ String::String(uint8_t type, std::string name)
 {
 }
 
-std::vector<uint8_t> String::toVector(const std::string secret, std::array<uint8_t, 16> auth) const
+std::vector<uint8_t> String::toVector(const std::string& secret, std::array<uint8_t, 16> auth) const
 {
     std::vector<uint8_t> attribute(m_value.length() + 2);
     std::copy(m_value.begin(), m_value.end(), std::next(attribute.begin(), 2));
@@ -49,7 +49,7 @@ Integer::Integer(uint8_t type, uint32_t value)
 {
 }
 
-std::vector<uint8_t> Integer::toVector(const std::string secret, std::array<uint8_t, 16> auth) const
+std::vector<uint8_t> Integer::toVector(const std::string& secret, std::array<uint8_t, 16> auth) const
 {
     std::vector<uint8_t> attribute(6);
     attribute[0] = type();
@@ -76,7 +76,7 @@ IpAddress::IpAddress(uint8_t type, std::string address)
 {
 }
 
-std::vector<uint8_t> IpAddress::toVector(const std::string secret, std::array<uint8_t, 16> auth) const
+std::vector<uint8_t> IpAddress::toVector(const std::string& secret, std::array<uint8_t, 16> auth) const
 {
     std::vector<uint8_t> attribute(4);
     size_t pos = 0;
@@ -143,7 +143,7 @@ Encrypted::Encrypted(uint8_t type, std::string password)
 {
 }
 
-std::vector<uint8_t> Encrypted::toVector(const std::string secret, std::array<uint8_t, 16> auth) const
+std::vector<uint8_t> Encrypted::toVector(const std::string& secret, std::array<uint8_t, 16> auth) const
 {
     if (m_value.length() > 128)
         throw std::runtime_error("Invalid encrypted attribute size. Should be max 128 bytes, actual size is " + std::to_string(m_value.length()));
@@ -215,7 +215,7 @@ Bytes::Bytes(uint8_t type, std::string bytes)
 {
 }
 
-std::vector<uint8_t> Bytes::toVector(const std::string secret, std::array<uint8_t, 16> auth) const
+std::vector<uint8_t> Bytes::toVector(const std::string& secret, std::array<uint8_t, 16> auth) const
 {
     std::vector<uint8_t> attribute(m_value.length());
     std::copy(m_value.begin(), m_value.end(), attribute.begin());
