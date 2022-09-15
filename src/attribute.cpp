@@ -23,11 +23,10 @@ String::String(uint8_t type, std::string name)
 
 std::vector<uint8_t> String::toVector(std::string secret, std::array<uint8_t, 16> auth) const
 {
-    std::vector<uint8_t> attribute(m_value.length());
-    std::copy(m_value.begin(), m_value.end(), attribute.begin());
-    auto it = attribute.begin();
-    it = attribute.insert(it, m_value.length() + 2);
-    it = attribute.insert(it, type());
+    std::vector<uint8_t> attribute(m_value.length() + 2);
+    std::copy(m_value.begin(), m_value.end(), std::next(attribute.begin(), 2));
+    attribute[0] = type();
+    attribute[1] = m_value.length() + 2;
     return attribute;
 }
 
