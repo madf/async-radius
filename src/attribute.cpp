@@ -195,8 +195,8 @@ std::string intToHex(uint8_t number)
 {
     const std::string digits = "0123456789ABCDEF";
     std::string hex;
-    hex.insert(0, 1, digits[number % 16]);
-    hex.insert(0, 1, digits[number / 16]);
+    hex.append(1, digits[number / 16]);
+    hex.append(1, digits[number % 16]);
     return hex;
 }
 
