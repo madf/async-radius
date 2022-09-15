@@ -191,7 +191,7 @@ std::vector<uint8_t> Encrypted::toVector(std::string secret, std::array<uint8_t,
     return attribute;
 }
 
-std::string intToHex(uint8_t number)
+std::string byteToHex(uint8_t number)
 {
     const std::string digits = "0123456789ABCDEF";
     std::string hex;
@@ -205,7 +205,7 @@ Bytes::Bytes(uint8_t type, const uint8_t* data, size_t size)
 {
     for (size_t i = 0; i < size; ++i)
     {
-        std::string numberHex = intToHex(data[i]);
+        std::string numberHex = byteToHex(data[i]);
         m_value += numberHex;
     }
 }
