@@ -203,13 +203,10 @@ Bytes::Bytes(uint8_t type, const uint8_t* data, size_t size)
         : Attribute(type)
 {
     for (size_t i = 0; i < size; ++i)
-    {
-        std::string numberHex = byteToHex(data[i]);
-        m_value += numberHex;
-    }
+        m_value.push_back(data[i]);
 }
 
-Bytes::Bytes(uint8_t type, std::string bytes)
+Bytes::Bytes(uint8_t type, std::vector<uint8_t> bytes)
     : Attribute(type),
       m_value(bytes)
 {
@@ -217,10 +214,9 @@ Bytes::Bytes(uint8_t type, std::string bytes)
 
 std::vector<uint8_t> Bytes::toVector(const std::string& secret, std::array<uint8_t, 16> auth) const
 {
-    std::vector<uint8_t> attribute(m_value.length());
-    std::copy(m_value.begin(), m_value.end(), attribute.begin());
+    std::vector<uint8_t> attribute(m_value);
     auto it = attribute.begin();
-    it = attribute.insert(it, m_value.length() + 2);
+    it = attribute.insert(it, attribute.size() + 2);
     it = attribute.insert(it, type());
     return attribute;
 }
@@ -247,7 +243,11 @@ std::string Encrypted::value() const
 
 std::string Bytes::value() const
 {
-    return m_value;
+    std::string value;
+    for (size_t i = 0; i < m_value.size(); ++i)
+        value += byteToHex(m_value[i]);
+
+    return value;
 }
 
 std::string typeToString(int type)
