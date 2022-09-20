@@ -93,7 +93,8 @@ Packet Server::makeResponse(const Packet& request)
     attributes.push_back(new Integer(NAS_PORT, 20));
     attributes.push_back(new IpAddress(NAS_IP_ADDRESS, "127.104.22.17"));
     attributes.push_back(new Encrypted(USER_PASSWORD, "password123"));
-    attributes.push_back(new Bytes(CALLBACK_NUMBER, "123abc"));
+    std::vector<uint8_t> bytes{'1', '2', '3', 'a', 'b', 'c'};
+    attributes.push_back(new Bytes(CALLBACK_NUMBER, bytes));
 
     if (request.type() == ACCESS_REQUEST)
         return Packet(ACCESS_ACCEPT, request.id(), request.auth(), attributes);
