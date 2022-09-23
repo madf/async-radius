@@ -46,11 +46,11 @@ class IpAddress : public Attribute
 {
     public:
         IpAddress(uint8_t type, const uint8_t* data, size_t size);
-        IpAddress(uint8_t type, std::string address);
+        IpAddress(uint8_t type, std::array<uint8_t, 4> address);
         std::string value() const override;
         std::vector<uint8_t> toVector(const std::string& secret, std::array<uint8_t, 16> auth) const override;
     private:
-        std::string m_value;
+        std::array<uint8_t, 4> m_value;
 };
 
 class Encrypted : public Attribute
