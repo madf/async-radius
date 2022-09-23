@@ -65,12 +65,13 @@ IpAddress::IpAddress(uint8_t type, const uint8_t* data, size_t size)
         : Attribute(type)
 {
     if (size != 4)
-        throw std::runtime_error("Invalid nas_ip_address attribute size. Should be 4, actual size is " + std::to_string(size));
+        throw std::runtime_error("Invalid integer attribute size. Should be 4, actual size is " + std::to_string(size));
 
-    m_value = std::to_string(data[0]) + "." + std::to_string(data[1]) + "." + std::to_string(data[2]) + "." + std::to_string(data[3]);
+    for (size_t i = 0; i < size; ++i)
+        m_value[i] = data[i];
 }
 
-IpAddress::IpAddress(uint8_t type, std::string address)
+IpAddress::IpAddress(uint8_t type, std::array<uint8_t, 4> address)
     : Attribute(type),
       m_value(address)
 {
@@ -78,24 +79,14 @@ IpAddress::IpAddress(uint8_t type, std::string address)
 
 std::vector<uint8_t> IpAddress::toVector(const std::string& secret, std::array<uint8_t, 16> auth) const
 {
-    std::vector<uint8_t> attribute(4);
-    size_t pos = 0;
-    for (size_t i = 0; i < 4; ++i)
-    {
-        std::string::size_type n = m_value.find(".", pos);
-        if (n == std::string::npos)
-        {
-            attribute[i] = std::stoi(m_value.substr(pos, m_value.length() - pos));
-        }
-        else
-        {
-            attribute[i] = std::stoi(m_value.substr(pos, n - pos));
-            pos = n + 1;
-        }
-    }
+    std::vector<uint8_t> attribute;
+    for (size_t i = 0; i < m_value.size(); ++i)
+        attribute.push_back(m_value[i]);
+
     auto it = attribute.begin();
     it = attribute.insert(it, attribute.size() + 2);
     it = attribute.insert(it, type());
+
     return attribute;
 }
 
@@ -233,7 +224,9 @@ std::string Integer::value() const
 
 std::string IpAddress::value() const
 {
-    return m_value;
+    std::string value = std::to_string(m_value[0]) + "." + std::to_string(m_value[1]) + "." + std::to_string(m_value[2]) + "." + std::to_string(m_value[3]);
+
+    return value;
 }
 
 std::string Encrypted::value() const
