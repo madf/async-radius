@@ -24,7 +24,7 @@ class String: public Attribute
 {
     public:
         String(uint8_t type, const uint8_t* data, size_t size);
-        String(uint8_t type, std::string name);
+        String(uint8_t type, const std::string string);
         std::string value() const override;
         std::vector<uint8_t> toVector(const std::string& secret, std::array<uint8_t, 16> auth) const override;
     private:
