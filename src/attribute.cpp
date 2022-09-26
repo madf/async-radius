@@ -92,9 +92,6 @@ std::vector<uint8_t> IpAddress::toVector(const std::string& secret, std::array<u
 Encrypted::Encrypted(uint8_t type, const uint8_t* data, size_t size, std::string secret, std::array<uint8_t, 16> auth)
         : Attribute(type)
 {
-    if (size > 128)
-        throw std::runtime_error("Invalid encrypted attribute size. Should be max 128 bytes, actual size is " + std::to_string(size));
-
     std::vector<uint8_t> value(size);
 
     size_t j = 16;
