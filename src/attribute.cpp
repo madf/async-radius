@@ -55,9 +55,9 @@ std::vector<uint8_t> Integer::toVector(const std::string& secret, std::array<uin
     attribute[0] = type();
     attribute[1] = 6;
     attribute[2] = m_value / (1 << 24);
-    attribute[3] = m_value / (1 << 16);
-    attribute[4] = m_value / (1 << 8);
-    attribute[5] = m_value;
+    attribute[3] = (m_value / (1 << 16)) % 256;
+    attribute[4] = (m_value / (1 << 8)) % 256;
+    attribute[5] = m_value % 256;
     return attribute;
 }
 
