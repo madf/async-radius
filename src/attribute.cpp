@@ -15,9 +15,9 @@ String::String(uint8_t type, const uint8_t* data, size_t size)
 {
 }
 
-String::String(uint8_t type, std::string name)
+String::String(uint8_t type, const std::string string)
     : Attribute(type),
-      m_value(name)
+      m_value(string)
 {
 }
 
