@@ -79,13 +79,12 @@ IpAddress::IpAddress(uint8_t type, std::array<uint8_t, 4> address)
 
 std::vector<uint8_t> IpAddress::toVector(const std::string& secret, std::array<uint8_t, 16> auth) const
 {
-    std::vector<uint8_t> attribute;
-    for (size_t i = 0; i < m_value.size(); ++i)
-        attribute.push_back(m_value[i]);
+    std::vector<uint8_t> attribute(6);
 
-    auto it = attribute.begin();
-    it = attribute.insert(it, attribute.size() + 2);
-    it = attribute.insert(it, type());
+    attribute[0] = type();
+    attribute[1] = attribute.size();
+    for (size_t i = 0; i < m_value.size(); ++i)
+        attribute[i + 2] = m_value[i];
 
     return attribute;
 }
