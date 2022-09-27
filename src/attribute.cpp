@@ -235,8 +235,9 @@ std::string Encrypted::value() const
 std::string Bytes::value() const
 {
     std::string value;
-    for (size_t i = 0; i < m_value.size(); ++i)
-        value += byteToHex(m_value[i]);
+
+    for (const auto& b : m_value)
+    value += byteToHex(b);
 
     return value;
 }
