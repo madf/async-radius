@@ -197,7 +197,7 @@ Bytes::Bytes(uint8_t type, const uint8_t* data, size_t size)
         m_value[i] = data[i];
 }
 
-Bytes::Bytes(uint8_t type, std::vector<uint8_t> bytes)
+Bytes::Bytes(uint8_t type, const std::vector<uint8_t>& bytes)
     : Attribute(type),
       m_value(bytes)
 {
