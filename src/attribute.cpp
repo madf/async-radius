@@ -190,10 +190,11 @@ std::string byteToHex(uint8_t number)
 }
 
 Bytes::Bytes(uint8_t type, const uint8_t* data, size_t size)
-        : Attribute(type)
+        : Attribute(type),
+           m_value(size)
 {
     for (size_t i = 0; i < size; ++i)
-        m_value.push_back(data[i]);
+        m_value[i] = data[i];
 }
 
 Bytes::Bytes(uint8_t type, std::vector<uint8_t> bytes)
