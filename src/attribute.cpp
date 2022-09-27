@@ -224,9 +224,7 @@ std::string Integer::value() const
 
 std::string IpAddress::value() const
 {
-    std::string value = std::to_string(m_value[0]) + "." + std::to_string(m_value[1]) + "." + std::to_string(m_value[2]) + "." + std::to_string(m_value[3]);
-
-    return value;
+    return std::to_string(m_value[0]) + "." + std::to_string(m_value[1]) + "." + std::to_string(m_value[2]) + "." + std::to_string(m_value[3]);
 }
 
 std::string Encrypted::value() const
