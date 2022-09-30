@@ -135,9 +135,6 @@ Encrypted::Encrypted(uint8_t type, std::string password)
 
 std::vector<uint8_t> Encrypted::toVector(const std::string& secret, const std::array<uint8_t, 16>& auth) const
 {
-    if (m_value.length() > 128)
-        throw std::runtime_error("Invalid encrypted attribute size. Should be max 128 bytes, actual size is " + std::to_string(m_value.length()));
-
     std::string value = m_value;
 
     if (value.length() % 16 != 0)
