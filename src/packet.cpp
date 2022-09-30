@@ -128,7 +128,7 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
     return sendBuffer;
 }
 
-Attribute* Packet::makeAttribute(uint8_t type, const uint8_t* data, size_t size, std::string secret, std::array<uint8_t, 16> auth)
+Attribute* Packet::makeAttribute(uint8_t type, const uint8_t* data, size_t size, const std::string& secret, const std::array<uint8_t, 16>& auth)
 {
     if (type == 1 || type == 11 || type == 18 || type == 22 || type == 34 || type == 35 ||
         type == 60 || type == 63)
