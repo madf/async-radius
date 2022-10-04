@@ -71,7 +71,7 @@ IpAddress::IpAddress(uint8_t type, const uint8_t* data, size_t size)
         m_value[i] = data[i];
 }
 
-IpAddress::IpAddress(uint8_t type, std::array<uint8_t, 4> address)
+IpAddress::IpAddress(uint8_t type, const std::array<uint8_t, 4>& address)
     : Attribute(type),
       m_value(address)
 {
