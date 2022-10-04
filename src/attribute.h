@@ -46,7 +46,7 @@ class IpAddress : public Attribute
 {
     public:
         IpAddress(uint8_t type, const uint8_t* data, size_t size);
-        IpAddress(uint8_t type, std::array<uint8_t, 4> address);
+        IpAddress(uint8_t type, const std::array<uint8_t, 4>& address);
         std::string value() const override;
         std::vector<uint8_t> toVector(const std::string& secret, const std::array<uint8_t, 16>& auth) const override;
     private:
