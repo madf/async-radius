@@ -127,7 +127,7 @@ Encrypted::Encrypted(uint8_t type, const uint8_t* data, size_t size, const std::
     m_value.assign(value.begin(), value.end());
 }
 
-Encrypted::Encrypted(uint8_t type, std::string password)
+Encrypted::Encrypted(uint8_t type, const std::string& password)
     : Attribute(type),
       m_value(password)
 {
