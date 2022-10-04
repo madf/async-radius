@@ -57,7 +57,7 @@ class Encrypted : public Attribute
 {
     public:
         Encrypted (uint8_t type, const uint8_t* data, size_t size, const std::string& secret, const std::array<uint8_t, 16>& auth);
-        Encrypted(uint8_t type, std::string password);
+        Encrypted(uint8_t type, const std::string& password);
         std::string value() const override;
         std::vector<uint8_t> toVector(const std::string& secret, const std::array<uint8_t, 16>& auth) const override;
     private:
