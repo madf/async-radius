@@ -89,7 +89,7 @@ std::vector<uint8_t> IpAddress::toVector(const std::string& secret, const std::a
     return attribute;
 }
 
-Encrypted::Encrypted(uint8_t type, const uint8_t* data, size_t size, std::string secret, std::array<uint8_t, 16> auth)
+Encrypted::Encrypted(uint8_t type, const uint8_t* data, size_t size, const std::string& secret, const std::array<uint8_t, 16>& auth)
         : Attribute(type)
 {
     if (size > 128)
