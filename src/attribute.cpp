@@ -131,46 +131,44 @@ Encrypted::Encrypted(uint8_t type, const std::string& password)
 
 std::vector<uint8_t> Encrypted::toVector(const std::string& secret, const std::array<uint8_t, 16>& auth) const
 {
-    std::string value = m_value;
+    std::string plaintext = m_value;
 
-    if (value.length() % 16 != 0)
+    if (plaintext.length() % 16 != 0)
     {
         for (size_t i = 0; i < (16 - m_value.length() % 16); ++i)
-            value.push_back(0);
+            plaintext.push_back(0);
     }
 
-    std::vector<uint8_t> buffer(16 + secret.length());
+    std::vector<uint8_t> mdBuffer(16 + secret.length());
 
     for (size_t i = 0; i < secret.length(); ++i)
-        buffer[i] = secret[i];
+        mdBuffer[i] = secret[i];
+
     for (size_t i = 0; i < 16; ++i)
-        buffer[i + secret.length()] = auth[i];
+        mdBuffer[i + secret.length()] = auth[i];
 
-    std::array<uint8_t, 16> md;
-    MD5(buffer.data(), buffer.size(), md.data());
+    std::vector<uint8_t> ciphertext(plaintext.length());
 
-    std::vector<uint8_t> attribute;
-    std::vector<uint8_t> result(16);
-    for (size_t j = 0; j < value.length() / 16; ++j)
+    for (size_t i = 0; i < plaintext.length() / 16; ++i)
     {
-        for (size_t i = 0; i < 16; ++i)
-        {
-            result[i] = value[i + j * 16] ^ md[i];
-            attribute.push_back(result[i]);
-        }
-        if (j != value.length() - 1)
-        {
-            for (size_t i = 0; i < 16; ++i)
-                buffer[i + secret.length()] = result[i];
+        std::array<uint8_t, 16> md;
 
-            MD5(buffer.data(), buffer.size(), md.data());
-        }
+        MD5(mdBuffer.data(), mdBuffer.size(), md.data());
+
+        for (size_t j = 0; j < 16; ++j)
+            ciphertext[i * 16 + j] = plaintext[i * 16 + j] ^ md[j];
+
+        for (size_t j = 0; j < secret.length(); ++j)
+            mdBuffer[j] = secret[j];
+
+        for (size_t j = 0; j < 16; ++j)
+            mdBuffer[j + secret.length()] = ciphertext[i * 16 + j];
     }
 
-    auto it = attribute.begin();
-    it = attribute.insert(it, attribute.size() + 2);
-    it = attribute.insert(it, type());
-    return attribute;
+    auto it = ciphertext.begin();
+    it = ciphertext.insert(it, ciphertext.size() + 2);
+    it = ciphertext.insert(it, type());
+    return ciphertext;
 }
 
 std::string byteToHex(uint8_t number)
