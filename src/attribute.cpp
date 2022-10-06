@@ -228,7 +228,7 @@ std::string Bytes::value() const
     std::string value;
 
     for (const auto& b : m_value)
-    value += byteToHex(b);
+        value += byteToHex(b);
 
     return value;
 }
