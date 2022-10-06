@@ -95,36 +95,32 @@ Encrypted::Encrypted(uint8_t type, const uint8_t* data, size_t size, const std::
     if (size > 128)
         throw std::runtime_error("Invalid encrypted attribute size. Should be max 128 bytes, actual size is " + std::to_string(size));
 
-    std::vector<uint8_t> value(size);
+    std::vector<uint8_t> mdBuffer(16 + secret.length());
 
-    size_t j = 16;
-    while (j <= size)
+    for (size_t i = 0; i < secret.length(); ++i)
+        mdBuffer[i] = secret[i];
+
+    for (size_t i = 0; i < 16; ++i)
+        mdBuffer[i + secret.length()] = auth[i];
+
+    std::vector<uint8_t> plaintext(size);
+
+    for (size_t i = 0; i < size / 16; ++i)
     {
-        std::vector<uint8_t> buffer(16 + secret.length());
-
-        for (size_t i = 0; i < secret.length(); ++i)
-            buffer[i] = secret[i];
-
-        if (j == 16)
-        {
-            for (size_t i = 0; i < 16; ++i)
-                buffer[i + secret.length()] = auth[i];
-        }
-        else
-        {
-            for (size_t i = 0; i < 16; ++i)
-                buffer[i + secret.length()] = data[i + j - 32];
-        }
         std::array<uint8_t, 16> md;
 
-        MD5(buffer.data(), buffer.size(), md.data());
+        MD5(mdBuffer.data(), mdBuffer.size(), md.data());
+        for (size_t j = 0; j < 16; ++j)
+            plaintext[i * 16 + j] = data[i * 16 + j] ^ md[j];
 
-        for (size_t i = 0; i < 16; ++i)
-            value.push_back(data[i + j - 16] ^ md[i]);
+        for (size_t j = 0; j < secret.length(); ++j)
+            mdBuffer[j] = secret[j];
 
-        j += 16;
+        for (size_t j = 0; j < 16; ++j)
+            mdBuffer[j + secret.length()] = data[i * 16 + j];
     }
-    m_value.assign(value.begin(), value.end());
+
+    m_value.assign(plaintext.begin(), plaintext.end());
 }
 
 Encrypted::Encrypted(uint8_t type, const std::string& password)
