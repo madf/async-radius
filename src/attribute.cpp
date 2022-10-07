@@ -113,9 +113,6 @@ Encrypted::Encrypted(uint8_t type, const uint8_t* data, size_t size, const std::
         for (size_t j = 0; j < 16; ++j)
             plaintext[i * 16 + j] = data[i * 16 + j] ^ md[j];
 
-        for (size_t j = 0; j < secret.length(); ++j)
-            mdBuffer[j] = secret[j];
-
         for (size_t j = 0; j < 16; ++j)
             mdBuffer[j + secret.length()] = data[i * 16 + j];
     }
