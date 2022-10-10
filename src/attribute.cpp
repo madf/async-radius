@@ -131,10 +131,7 @@ std::vector<uint8_t> Encrypted::toVector(const std::string& secret, const std::a
     std::string plaintext = m_value;
 
     if (plaintext.length() % 16 != 0)
-    {
-        for (size_t i = 0; i < (16 - m_value.length() % 16); ++i)
-            plaintext.push_back(0);
-    }
+        plaintext.append(16 - m_value.length() % 16, '\0');
 
     std::vector<uint8_t> mdBuffer(16 + secret.length());
 
