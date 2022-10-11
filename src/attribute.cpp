@@ -141,28 +141,26 @@ std::vector<uint8_t> Encrypted::toVector(const std::string& secret, const std::a
     for (size_t i = 0; i < 16; ++i)
         mdBuffer[i + secret.length()] = auth[i];
 
-    std::vector<uint8_t> ciphertext(plaintext.length());
+    std::vector<uint8_t> res(plaintext.length() + 2);
+    res[0] = type();
+    res[1] = res.size();
+    auto it = std::next(res.begin(), 2);
 
     for (size_t i = 0; i < plaintext.length() / 16; ++i)
     {
-        std::array<uint8_t, 16> md;
+            std::array<uint8_t, 16> md;
+            MD5(mdBuffer.data(), mdBuffer.size(), md.data());
 
-        MD5(mdBuffer.data(), mdBuffer.size(), md.data());
-
-        for (size_t j = 0; j < 16; ++j)
-            ciphertext[i * 16 + j] = plaintext[i * 16 + j] ^ md[j];
+        for (size_t j = 0; j < md.size(); ++j)
+            *it++ = plaintext[i * 16 + j] ^ md[j];
 
         for (size_t j = 0; j < secret.length(); ++j)
             mdBuffer[j] = secret[j];
 
         for (size_t j = 0; j < 16; ++j)
-            mdBuffer[j + secret.length()] = ciphertext[i * 16 + j];
+            mdBuffer[j + secret.length()] = res[i * 16 + j];
     }
-
-    auto it = ciphertext.begin();
-    it = ciphertext.insert(it, ciphertext.size() + 2);
-    it = ciphertext.insert(it, type());
-    return ciphertext;
+    return res;
 }
 
 std::string byteToHex(uint8_t number)
