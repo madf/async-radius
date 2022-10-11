@@ -163,13 +163,10 @@ std::vector<uint8_t> Encrypted::toVector(const std::string& secret, const std::a
     return res;
 }
 
-std::string byteToHex(uint8_t number)
+std::string byteToHex(uint8_t byte)
 {
-    const std::string digits = "0123456789ABCDEF";
-    std::string hex;
-    hex.append(1, digits[number / 16]);
-    hex.append(1, digits[number % 16]);
-    return hex;
+    static const std::string digits = "0123456789ABCDEF";
+    return {digits[byte / 16], digits[byte % 16]};
 }
 
 Bytes::Bytes(uint8_t type, const uint8_t* data, size_t size)
