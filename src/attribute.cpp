@@ -95,7 +95,7 @@ Encrypted::Encrypted(uint8_t type, const uint8_t* data, size_t size, const std::
     if (size > 128)
         throw std::runtime_error("Invalid encrypted attribute size. Should be max 128 bytes, actual size is " + std::to_string(size));
 
-    std::vector<uint8_t> mdBuffer(16 + secret.length());
+    std::vector<uint8_t> mdBuffer(auth.size() + secret.length());
 
     for (size_t i = 0; i < secret.length(); ++i)
         mdBuffer[i] = secret[i];
