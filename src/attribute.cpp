@@ -133,12 +133,12 @@ std::vector<uint8_t> Encrypted::toVector(const std::string& secret, const std::a
     if (plaintext.length() % 16 != 0)
         plaintext.append(16 - m_value.length() % 16, '\0');
 
-    std::vector<uint8_t> mdBuffer(16 + secret.length());
+    std::vector<uint8_t> mdBuffer(auth.size() + secret.length());
 
     for (size_t i = 0; i < secret.length(); ++i)
         mdBuffer[i] = secret[i];
 
-    for (size_t i = 0; i < 16; ++i)
+    for (size_t i = 0; i < auth.size(); ++i)
         mdBuffer[i + secret.length()] = auth[i];
 
     std::vector<uint8_t> res(plaintext.length() + 2);
