@@ -100,7 +100,7 @@ Encrypted::Encrypted(uint8_t type, const uint8_t* data, size_t size, const std::
     for (size_t i = 0; i < secret.length(); ++i)
         mdBuffer[i] = secret[i];
 
-    for (size_t i = 0; i < 16; ++i)
+    for (size_t i = 0; i < auth.size(); ++i)
         mdBuffer[i + secret.length()] = auth[i];
 
     std::vector<uint8_t> plaintext(size);
