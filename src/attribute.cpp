@@ -154,9 +154,6 @@ std::vector<uint8_t> Encrypted::toVector(const std::string& secret, const std::a
         for (size_t j = 0; j < md.size(); ++j)
             *it++ = plaintext[i * 16 + j] ^ md[j];
 
-        for (size_t j = 0; j < secret.length(); ++j)
-            mdBuffer[j] = secret[j];
-
         for (size_t j = 0; j < 16; ++j)
             mdBuffer[j + secret.length()] = res[i * 16 + j];
     }
