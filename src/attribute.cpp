@@ -21,7 +21,7 @@ String::String(uint8_t type, const std::string& string)
 {
 }
 
-std::vector<uint8_t> String::toVector(const std::string& secret, const std::array<uint8_t, 16>& auth) const
+std::vector<uint8_t> String::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
 {
     std::vector<uint8_t> attribute(m_value.length() + 2);
     std::copy(m_value.begin(), m_value.end(), std::next(attribute.begin(), 2));
