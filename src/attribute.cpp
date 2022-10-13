@@ -183,9 +183,8 @@ Bytes::Bytes(uint8_t type, const std::vector<uint8_t>& bytes)
 std::vector<uint8_t> Bytes::toVector(const std::string& secret, const std::array<uint8_t, 16>& auth) const
 {
     std::vector<uint8_t> attribute(m_value);
-    auto it = attribute.begin();
-    it = attribute.insert(it, attribute.size() + 2);
-    it = attribute.insert(it, type());
+    attribute.insert(attribute.begin(), attribute.size() + 2);
+    attribute.insert(attribute.begin(), type());
     return attribute;
 }
 
