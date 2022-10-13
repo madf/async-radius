@@ -148,8 +148,8 @@ std::vector<uint8_t> Encrypted::toVector(const std::string& secret, const std::a
 
     for (size_t i = 0; i < plaintext.length() / 16; ++i)
     {
-            std::array<uint8_t, 16> md;
-            MD5(mdBuffer.data(), mdBuffer.size(), md.data());
+        std::array<uint8_t, 16> md;
+        MD5(mdBuffer.data(), mdBuffer.size(), md.data());
 
         for (size_t j = 0; j < md.size(); ++j)
             *it++ = plaintext[i * 16 + j] ^ md[j];
