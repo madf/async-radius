@@ -49,7 +49,7 @@ Integer::Integer(uint8_t type, uint32_t value)
 {
 }
 
-std::vector<uint8_t> Integer::toVector(const std::string& secret, const std::array<uint8_t, 16>& auth) const
+std::vector<uint8_t> Integer::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
 {
     std::vector<uint8_t> attribute(6);
     attribute[0] = type();
@@ -77,7 +77,7 @@ IpAddress::IpAddress(uint8_t type, const std::array<uint8_t, 4>& address)
 {
 }
 
-std::vector<uint8_t> IpAddress::toVector(const std::string& secret, const std::array<uint8_t, 16>& auth) const
+std::vector<uint8_t> IpAddress::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
 {
     std::vector<uint8_t> attribute(6);
 
@@ -180,7 +180,7 @@ Bytes::Bytes(uint8_t type, const std::vector<uint8_t>& bytes)
 {
 }
 
-std::vector<uint8_t> Bytes::toVector(const std::string& secret, const std::array<uint8_t, 16>& auth) const
+std::vector<uint8_t> Bytes::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
 {
     std::vector<uint8_t> attribute(m_value);
     attribute.insert(attribute.begin(), attribute.size() + 2);
