@@ -109,8 +109,8 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
         sendBuffer.insert(sendBuffer.end(), aData.begin(), aData.end());
     }
 
-    sendBuffer[2] = 0;
-    sendBuffer[3] = sendBuffer.size();
+    sendBuffer[2] = sendBuffer.size() / 256 % 256;
+    sendBuffer[3] = sendBuffer.size() % 256;
 
     sendBuffer.resize(sendBuffer.size() + secret.length());
 
