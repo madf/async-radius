@@ -1,4 +1,5 @@
 #include "packet.h"
+#include "attribute_types.h"
 #include <openssl/md5.h>
 #include <iostream>
 #include <stdexcept>
@@ -43,10 +44,10 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes)
     bool messageAuthenticator = false;
     for (size_t i = 0; i < m_attributes.size(); ++i)
     {
-        if (m_attributes[i]->type() == 79)
+        if (m_attributes[i]->type() == EAP_MESSAGE)
             eapMessage = true;
 
-        if (m_attributes[i]->type() == 80)
+        if (m_attributes[i]->type() == MESSAGE_AUTHENTICATOR)
             messageAuthenticator = true;
     }
     try
