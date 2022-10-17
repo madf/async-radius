@@ -167,8 +167,8 @@ std::string byteToHex(uint8_t byte)
 }
 
 Bytes::Bytes(uint8_t type, const uint8_t* data, size_t size)
-        : Attribute(type),
-           m_value(size)
+    : Attribute(type),
+      m_value(size)
 {
     for (size_t i = 0; i < size; ++i)
         m_value[i] = data[i];
