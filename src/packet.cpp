@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 
-Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes)
+Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes, const std::string secret)
 {
     if (bytes < 20)
         throw std::runtime_error{"The number of received bytes in the request - " + std::to_string(bytes) + " is less than 20 bytes"};
@@ -30,7 +30,7 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes)
 
         try
         {
-            m_attributes.push_back(makeAttribute(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2, "secret", m_auth));
+            m_attributes.push_back(makeAttribute(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2, secret, m_auth));
         }
         catch (const std::runtime_error& exception)
         {
