@@ -9,11 +9,11 @@
 class Server
 {
     public:
-        Server(boost::asio::io_service& io_service);
+        Server(boost::asio::io_service& io_service, const std::string& secret);
 
     private:
-        void startReceive();
-        void handleReceive(const boost::system::error_code& error, std::size_t bytes);
+        void startReceive(const std::string& secret);
+        void handleReceive(const std::string& secret, const boost::system::error_code& error, std::size_t bytes);
         void handleSend(const boost::system::error_code& error, std::size_t bytes_transferred);
         Packet makeResponse(const Packet& request);
 
