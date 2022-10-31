@@ -37,18 +37,19 @@ void printPacket(const Packet& p)
 }
 
 Server::Server(boost::asio::io_service& io_service, const std::string& secret)
-      : m_socket(io_service, udp::endpoint(udp::v4(), 9999))
+      : m_socket(io_service, udp::endpoint(udp::v4(), 9999)),
+        m_secret(secret)
 {
-    startReceive(secret);
+    startReceive();
 }
 
-void Server::startReceive(const std::string& secret)
+void Server::startReceive()
 {
     m_socket.async_receive_from(boost::asio::buffer(m_recvBuffer), m_remoteEndpoint,
-        std::bind(&Server::handleReceive, this, secret, pls::_1, pls::_2));
+        std::bind(&Server::handleReceive, this, pls::_1, pls::_2));
 }
 
-void Server::handleReceive(const std::string& secret, const error_code& error, std::size_t bytes)
+void Server::handleReceive(const error_code& error, std::size_t bytes)
 {
     if (error)
     {
@@ -64,19 +65,19 @@ void Server::handleReceive(const std::string& secret, const error_code& error, s
 
     try
     {
-        Packet packet = makeResponse(Packet(m_recvBuffer, bytes, secret));
+        Packet packet = makeResponse(Packet(m_recvBuffer, bytes, m_secret));
 
         std::cout << "Response packet\n";
         printPacket(packet);
 
-        m_socket.async_send_to(boost::asio::buffer(packet.makeSendBuffer(secret)),
+        m_socket.async_send_to(boost::asio::buffer(packet.makeSendBuffer(m_secret)),
             m_remoteEndpoint, std::bind(&Server::handleSend, this, pls::_1, pls::_2));
     }
     catch (const std::runtime_error& exception)
     {
         std::cout << "Packet error: " << exception.what() << "\n";
     }
-    startReceive(secret);
+    startReceive();
 }
 
 void Server::handleSend(const error_code& /*error*/, std::size_t /*bytes_transferred*/)
