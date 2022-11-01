@@ -28,14 +28,7 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes, cons
         const uint8_t attributeType = m_recvBuffer[attributeIndex];
         const uint8_t attributeLength = m_recvBuffer[attributeIndex + 1];
 
-        try
-        {
-            m_attributes.push_back(makeAttribute(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2, secret, m_auth));
-        }
-        catch (const std::runtime_error& exception)
-        {
-            std::cout << "Attribute error: " << exception.what() << "\n";
-        }
+        m_attributes.push_back(makeAttribute(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2, secret, m_auth));
 
         attributeIndex += attributeLength;
     }
@@ -50,15 +43,8 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes, cons
         if (m_attributes[i]->type() == MESSAGE_AUTHENTICATOR)
             messageAuthenticator = true;
     }
-    try
-    {
-        if (eapMessage && !messageAuthenticator)
-            throw std::runtime_error{"The EAP-Message attribute is present, but the Message-Authenticator attribute is missing"};
-    }
-    catch (const std::runtime_error& exception)
-    {
-        std::cout << "Attribute error: " << exception.what() << "\n";
-    }
+    if (eapMessage && !messageAuthenticator)
+        throw std::runtime_error{"The EAP-Message attribute is present, but the Message-Authenticator attribute is missing"};
 }
 
 Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, const std::vector<Attribute*>& attributes)
