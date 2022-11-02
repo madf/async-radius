@@ -8,9 +8,10 @@ namespace
 
     void printHelp(const std::string& programName)
     {
-        std::cout << "Usage: " << programName << " [options]\n"
-                  << "\t --help, -h    - print this help;\n"
-                  << "\t --version, -v - print version.\n";
+        std::cout << "Usage: " << programName << " -s/--secret <secret> [-h/--help] [-v/--version]\n"
+                  << "\t --secret, -s <secret> - shared secret for password encryption by client and server;\n"
+                  << "\t --help, -h            - print this help;\n"
+                  << "\t --version, -v         - print version.\n";
     }
 
     void printVersion(const std::string& programName)
@@ -22,6 +23,14 @@ namespace
 
 int main(int argc, char* argv[])
 {
+    std::string secret;
+
+    if (argc < 2)
+    {
+        std::cerr << "Needs a parameter secret - shared secret for password encryption by client and server.\n";
+        return 1;
+    }
+
     for (int i = 1; i < argc; ++i)
     {
         const std::string arg(argv[i]);
@@ -35,13 +44,26 @@ int main(int argc, char* argv[])
             printVersion(argv[0]);
             return 0;
         }
-        std::cerr << "Unknown option: " << arg << "\n";
+        if (arg == "--secret" || arg == "-s")
+        {
+            if (i + 1 == argc)
+            {
+                std::cerr << arg << " needs an argument - a shared secret.\n";
+                return 1;
+            }
+            secret = argv[++i];
+        }
+        else
+        {
+            std::cerr << "Unknown command line argument: " << arg << "\n";
+            return 1;
+        }
     }
 
     try
     {
         boost::asio::io_service io_service;
-        Server server(io_service);
+        Server server(io_service, secret);
         io_service.run();
     }
     catch (const std::exception& e)

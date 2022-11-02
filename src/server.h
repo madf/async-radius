@@ -9,7 +9,7 @@
 class Server
 {
     public:
-        Server(boost::asio::io_service& io_service);
+        Server(boost::asio::io_service& io_service, const std::string& secret);
 
     private:
         void startReceive();
@@ -20,6 +20,7 @@ class Server
         boost::asio::ip::udp::socket m_socket;
         boost::asio::ip::udp::endpoint m_remoteEndpoint;
         std::array<uint8_t, 4096> m_recvBuffer;
+        std::string m_secret;
 };
 
 #endif

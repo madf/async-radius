@@ -1,5 +1,6 @@
 #include "server.h"
 #include "packet_codes.h"
+#include "attribute_types.h"
 #include <functional> //std::bind
 #include <iostream>
 
@@ -35,8 +36,9 @@ void printPacket(const Packet& p)
         std::cout << "\t" << ap->name() << ": " << ap->value() << "\n";
 }
 
-Server::Server(boost::asio::io_service& io_service)
-      : m_socket(io_service, udp::endpoint(udp::v4(), 9999))
+Server::Server(boost::asio::io_service& io_service, const std::string& secret)
+      : m_socket(io_service, udp::endpoint(udp::v4(), 9999)),
+        m_secret(secret)
 {
     startReceive();
 }
@@ -63,12 +65,12 @@ void Server::handleReceive(const error_code& error, std::size_t bytes)
 
     try
     {
-        Packet packet = makeResponse(Packet(m_recvBuffer, bytes));
+        Packet packet = makeResponse(Packet(m_recvBuffer, bytes, m_secret));
 
         std::cout << "Response packet\n";
         printPacket(packet);
 
-        m_socket.async_send_to(boost::asio::buffer(packet.makeSendBuffer("secret")),
+        m_socket.async_send_to(boost::asio::buffer(packet.makeSendBuffer(m_secret)),
             m_remoteEndpoint, std::bind(&Server::handleSend, this, pls::_1, pls::_2));
     }
     catch (const std::runtime_error& exception)
@@ -87,8 +89,17 @@ Packet Server::makeResponse(const Packet& request)
     std::cout << "Request packet\n";
     printPacket(request);
 
-    if (request.type() == ACCESS_REQUEST)
-        return Packet(ACCESS_ACCEPT, request.id(), request.auth());
+    std::vector<Attribute*> attributes;
+    attributes.push_back(new String(USER_NAME, "test"));
+    attributes.push_back(new Integer(NAS_PORT, 20));
+    std::array<uint8_t, 4> address {127, 104, 22, 17};
+    attributes.push_back(new IpAddress(NAS_IP_ADDRESS, address));
+    attributes.push_back(new Encrypted(USER_PASSWORD, "password123"));
+    std::vector<uint8_t> bytes {'1', '2', '3', 'a', 'b', 'c'};
+    attributes.push_back(new Bytes(CALLBACK_NUMBER, bytes));
 
-    return Packet(ACCESS_REJECT, request.id(), request.auth());
+    if (request.type() == ACCESS_REQUEST)
+        return Packet(ACCESS_ACCEPT, request.id(), request.auth(), attributes);
+
+    return Packet(ACCESS_REJECT, request.id(), request.auth(), attributes);
 }
