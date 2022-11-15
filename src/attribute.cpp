@@ -1,5 +1,6 @@
 #include "packet.h"
 #include "attribute.h"
+#include "utils.h"
 #include "attribute_types.h"
 #include <openssl/md5.h>
 #include <iostream>
@@ -158,12 +159,6 @@ std::vector<uint8_t> Encrypted::toVector(const std::string& secret, const std::a
             mdBuffer[j + secret.length()] = res[i * 16 + j];
     }
     return res;
-}
-
-std::string byteToHex(uint8_t byte)
-{
-    static const std::string digits = "0123456789ABCDEF";
-    return {digits[byte / 16], digits[byte % 16]};
 }
 
 Bytes::Bytes(uint8_t type, const uint8_t* data, size_t size)
