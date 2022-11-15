@@ -34,6 +34,12 @@ void printPacket(const Packet& p)
     std::cout << "Attributes:\n";
     for (const auto& ap : p.attributes())
         std::cout << "\t" << ap->name() << ": " << ap->value() << "\n";
+
+    for (const auto& ap : p.vendorAttributes())
+    {
+        std::cout << "\t" << ap->name() << ": " << ap->vendorId() << "\n";
+        std::cout << "\t" << ap->vendorType() << ": " << ap->value() << "\n";
+    }
 }
 
 Server::Server(boost::asio::io_service& io_service, const std::string& secret)
