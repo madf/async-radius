@@ -28,7 +28,10 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes, cons
         const uint8_t attributeType = m_recvBuffer[attributeIndex];
         const uint8_t attributeLength = m_recvBuffer[attributeIndex + 1];
 
-        m_attributes.push_back(makeAttribute(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2, secret, m_auth));
+        if (attributeType == 26)
+            m_vendorAttributes.push_back(makeVendorAttribute(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2));
+        else
+            m_attributes.push_back(makeAttribute(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2, secret, m_auth));
 
         attributeIndex += attributeLength;
     }
@@ -81,6 +84,11 @@ const std::vector<Attribute*>& Packet::attributes() const
     return m_attributes;
 }
 
+const std::vector<VendorAttribute*>& Packet::vendorAttributes() const
+{
+    return m_vendorAttributes;
+}
+
 const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
 {
     std::vector<uint8_t> sendBuffer(20);
@@ -129,8 +137,16 @@ Attribute* Packet::makeAttribute(uint8_t type, const uint8_t* data, size_t size,
              type == 29 || type == 37 || type == 38 || type == 61 || type == 62)
         return new Integer(type, data, size);
     else if (type == 3 || type == 19 || type == 20 || type == 24 || type == 25 ||
-             type == 26 || type == 30 || type == 31 || type == 32 || type == 33 ||
+             type == 30 || type == 31 || type == 32 || type == 33 ||
              type == 36 || type == 39 || type == 79 || type == 80)
         return new Bytes(type, data, size);
-    throw std::runtime_error("Invalid attribute type");
+    throw std::runtime_error("Invalid attribute type " + std::to_string(type));
 }
+
+VendorAttribute* Packet::makeVendorAttribute(uint8_t type, const uint8_t* data, size_t size)
+{
+    if (type == 26)
+        return new VendorSpecific(type, data, size);
+    throw std::runtime_error("Invalid Vendor attribute type " + std::to_string(type));
+}
+
