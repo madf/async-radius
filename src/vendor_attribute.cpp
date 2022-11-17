@@ -2,7 +2,6 @@
 #include "utils.h"
 #include "vendor_attribute.h"
 #include "attribute_types.h"
-#include <iostream>
 
 VendorAttribute::VendorAttribute(uint8_t type)
     : m_type(type)
@@ -21,7 +20,9 @@ VendorSpecific::VendorSpecific(uint8_t type, const uint8_t* data, size_t size)
     m_vendorType = data[4];
 
     size_t vendorLength = data[5];
-    for (size_t i = 0; i < vendorLength; ++i)
+    m_value.resize(vendorLength - 2);
+
+    for (size_t i = 0; i < vendorLength - 2; ++i)
         m_value[i] = data[i + 6];
 }
 
