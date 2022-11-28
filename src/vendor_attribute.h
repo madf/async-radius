@@ -13,8 +13,9 @@ class VendorAttribute
         std::string name() const;
         uint8_t type() const;
         virtual std::string value() const = 0;
-        virtual std::string vendorType() const = 0;
+        virtual uint8_t vendorType() const = 0;
         virtual std::string vendorId() const = 0 ;
+        virtual std::vector<uint8_t> toVector() const = 0;
 
     private:
         uint8_t m_type;
@@ -24,13 +25,14 @@ class VendorSpecific: public VendorAttribute
 {
     public:
         VendorSpecific(uint8_t type, const uint8_t* data, size_t size);
-        VendorSpecific(uint8_t type, const std::vector<uint8_t>& bytes);
+        VendorSpecific(uint8_t type, uint32_t vendorId, uint8_t vendorType, const std::vector<uint8_t>& vendorValue);
         std::string value() const override;
-        std::string vendorType() const override;
+        uint8_t vendorType() const override;
         std::string vendorId() const override;
+        std::vector<uint8_t> toVector() const override;
     private:
-        std::vector<uint8_t> m_value;
-        uint8_t m_vendorType;
         uint32_t m_vendorId;
+        uint8_t m_vendorType;
+        std::vector<uint8_t> m_value;
 };
 #endif
