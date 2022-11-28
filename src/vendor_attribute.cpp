@@ -13,9 +13,9 @@ VendorSpecific::VendorSpecific(uint8_t type, const uint8_t* data, size_t size)
       m_value(size)
 {
     m_vendorId = data[0] * (1 << 24)
-           + data[1] * (1 << 16)
-           + data[2] * (1 << 8)
-           + data[3];
+               + data[1] * (1 << 16)
+               + data[2] * (1 << 8)
+               + data[3];
 
     m_vendorType = data[4];
 
@@ -24,6 +24,30 @@ VendorSpecific::VendorSpecific(uint8_t type, const uint8_t* data, size_t size)
 
     for (size_t i = 0; i < vendorLength - 2; ++i)
         m_value[i] = data[i + 6];
+}
+
+VendorSpecific::VendorSpecific(uint8_t type, uint32_t vendorId, uint8_t vendorType, const std::vector<uint8_t>& vendorValue)
+    : VendorAttribute(type),
+      m_vendorId(vendorId),
+      m_vendorType(vendorType),
+      m_value(vendorValue)
+{
+}
+
+std::vector<uint8_t> VendorSpecific::toVector() const
+{
+    std::vector<uint8_t> attribute(m_value.size() + 8);
+    attribute[0] = type();
+    attribute[1] = m_value.size() + 8;
+    attribute[2] = m_vendorId / (1 << 24);
+    attribute[3] = (m_vendorId / (1 << 16)) % 256;
+    attribute[4] = (m_vendorId / (1 << 8)) % 256;
+    attribute[5] = m_vendorId % 256;
+    attribute[6] = vendorType();
+    attribute[7] = m_value.size() + 2;
+    for (size_t i = 0; i < m_value.size() - 2; ++i)
+        attribute[i + 8] = m_value[i];
+    return attribute;
 }
 
 std::string VendorSpecific::value() const
@@ -36,9 +60,9 @@ std::string VendorSpecific::value() const
     return value;
 }
 
-std::string VendorSpecific::vendorType() const
+uint8_t VendorSpecific::vendorType() const
 {
-    return std::to_string(m_vendorType);
+    return m_vendorType;
 }
 
 std::string VendorSpecific::vendorId() const
@@ -53,6 +77,6 @@ uint8_t VendorAttribute::type() const
 
 std::string VendorAttribute::name() const
 {
-    return "VENDOR_SPECIFIC";
+    return typeToString(m_type);
 }
 
