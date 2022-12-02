@@ -29,7 +29,7 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes, cons
         const uint8_t attributeLength = m_recvBuffer[attributeIndex + 1];
 
         if (attributeType == 26)
-            m_vendorAttributes.push_back(makeVendorAttribute(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2));
+            m_vendorSpecific.push_back(makeVendorSpecific(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2));
         else
             m_attributes.push_back(makeAttribute(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2, secret, m_auth));
 
@@ -50,12 +50,12 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes, cons
         throw std::runtime_error{"The EAP-Message attribute is present, but the Message-Authenticator attribute is missing"};
 }
 
-Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, const std::vector<Attribute*>& attributes, const std::vector <VendorAttribute*>& vendorAttributes)
+Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, const std::vector<Attribute*>& attributes, const std::vector <VendorSpecific*>& vendorSpecific)
     : m_type(type),
       m_id(id),
       m_auth(auth),
       m_attributes(attributes),
-      m_vendorAttributes(vendorAttributes)
+      m_vendorSpecific(vendorSpecific)
 {
 }
 
@@ -85,9 +85,9 @@ const std::vector<Attribute*>& Packet::attributes() const
     return m_attributes;
 }
 
-const std::vector<VendorAttribute*>& Packet::vendorAttributes() const
+const std::vector<VendorSpecific*>& Packet::vendorSpecific() const
 {
-    return m_vendorAttributes;
+    return m_vendorSpecific;
 }
 
 const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
@@ -104,7 +104,7 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
         const auto aData = attribute->toVector(secret, m_auth);
         sendBuffer.insert(sendBuffer.end(), aData.begin(), aData.end());
     }
-    for (const auto& vendorAttribute : m_vendorAttributes)
+    for (const auto& vendorAttribute : m_vendorSpecific)
     {
         const auto aData = vendorAttribute->toVector();
         sendBuffer.insert(sendBuffer.end(), aData.begin(), aData.end());
@@ -148,7 +148,7 @@ Attribute* Packet::makeAttribute(uint8_t type, const uint8_t* data, size_t size,
     throw std::runtime_error("Invalid attribute type " + std::to_string(type));
 }
 
-VendorAttribute* Packet::makeVendorAttribute(uint8_t type, const uint8_t* data, size_t size)
+VendorSpecific* Packet::makeVendorSpecific(uint8_t type, const uint8_t* data, size_t size)
 {
     if (type == 26)
         return new VendorSpecific(type, data, size);
