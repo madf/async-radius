@@ -36,7 +36,7 @@ void printPacket(const Packet& p)
     for (const auto& ap : p.attributes())
         std::cout << "\t" << ap->name() << ": " << ap->value() << "\n";
 
-    for (const auto& ap : p.vendorAttributes())
+    for (const auto& ap : p.vendorSpecific())
     {
         std::cout << "\t" << ap->name() << ": " << ap->vendorId() << "\n";
         std::cout << "\t" << std::to_string(ap->vendorType()) << ": " << ap->value() << "\n";
@@ -105,12 +105,12 @@ Packet Server::makeResponse(const Packet& request)
     std::vector<uint8_t> bytes {'1', '2', '3', 'a', 'b', 'c'};
     attributes.push_back(new Bytes(CALLBACK_NUMBER, bytes));
 
-    std::vector<VendorAttribute*> vendorAttributes;
+    std::vector<VendorSpecific*> vendorSpecific;
     std::vector<uint8_t> vendorValue {'0', '0', '0', '3'};
-    vendorAttributes.push_back(new VendorSpecific(VENDOR_SPECIFIC, 171, 1, vendorValue));
+    vendorSpecific.push_back(new VendorSpecific(VENDOR_SPECIFIC, 171, 1, vendorValue));
 
     if (request.type() == ACCESS_REQUEST)
-        return Packet(ACCESS_ACCEPT, request.id(), request.auth(), attributes, vendorAttributes);
+        return Packet(ACCESS_ACCEPT, request.id(), request.auth(), attributes, vendorSpecific);
 
-    return Packet(ACCESS_REJECT, request.id(), request.auth(), attributes, vendorAttributes);
+    return Packet(ACCESS_REJECT, request.id(), request.auth(), attributes, vendorSpecific);
 }
