@@ -3,13 +3,8 @@
 #include "vendor_attribute.h"
 #include "attribute_types.h"
 
-VendorAttribute::VendorAttribute(uint8_t type)
-    : m_type(type)
-{
-}
-
 VendorSpecific::VendorSpecific(uint8_t type, const uint8_t* data, size_t size)
-    : VendorAttribute(type),
+    : m_type(type),
       m_value(size)
 {
     m_vendorId = data[0] * (1 << 24)
@@ -27,7 +22,7 @@ VendorSpecific::VendorSpecific(uint8_t type, const uint8_t* data, size_t size)
 }
 
 VendorSpecific::VendorSpecific(uint8_t type, uint32_t vendorId, uint8_t vendorType, const std::vector<uint8_t>& vendorValue)
-    : VendorAttribute(type),
+    : m_type(type),
       m_vendorId(vendorId),
       m_vendorType(vendorType),
       m_value(vendorValue)
@@ -70,12 +65,12 @@ std::string VendorSpecific::vendorId() const
     return std::to_string(m_vendorId);
 }
 
-uint8_t VendorAttribute::type() const
+uint8_t VendorSpecific::type() const
 {
     return m_type;
 }
 
-std::string VendorAttribute::name() const
+std::string VendorSpecific::name() const
 {
     return typeToString(m_type);
 }
