@@ -28,7 +28,7 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes, cons
         const uint8_t attributeType = m_recvBuffer[attributeIndex];
         const uint8_t attributeLength = m_recvBuffer[attributeIndex + 1];
 
-        if (attributeType == 26)
+        if (attributeType == VENDOR_SPECIFIC)
             m_vendorSpecific.push_back(makeVendorSpecific(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2));
         else
             m_attributes.push_back(makeAttribute(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2, secret, m_auth));
