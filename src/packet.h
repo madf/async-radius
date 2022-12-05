@@ -21,7 +21,6 @@ class Packet
         const std::vector<VendorSpecific*>& vendorSpecific() const;
         const std::vector<uint8_t> makeSendBuffer(const std::string& secret);
         Attribute* makeAttribute(uint8_t type, const uint8_t* data, size_t size, const std::string& secret, const std::array<uint8_t, 16>& auth);
-        VendorSpecific* makeVendorSpecific(uint8_t type, const uint8_t* data, size_t size);
 
     private:
         uint8_t m_type;
