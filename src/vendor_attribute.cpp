@@ -2,11 +2,15 @@
 #include "utils.h"
 #include "vendor_attribute.h"
 #include "attribute_types.h"
+#include <iostream>
 
 VendorSpecific::VendorSpecific(uint8_t type, const uint8_t* data, size_t size)
     : m_type(type),
       m_value(size)
 {
+    if (data[0] != 0)
+        throw std::runtime_error("Invalid high byte Vendor-Id value. Should be 0, actual size is " + std::to_string(data[0]));
+
     m_vendorId = data[0] * (1 << 24)
                + data[1] * (1 << 16)
                + data[2] * (1 << 8)
