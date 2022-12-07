@@ -14,7 +14,7 @@ class VendorSpecific
         uint8_t type() const;
         std::string value() const;
         uint8_t vendorType() const;
-        std::string vendorId() const;
+        uint32_t vendorId() const;
         std::vector<uint8_t> toVector() const;
     private:
         uint8_t m_type;
