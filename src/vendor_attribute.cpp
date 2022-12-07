@@ -4,9 +4,8 @@
 #include "attribute_types.h"
 #include <iostream>
 
-VendorSpecific::VendorSpecific(uint8_t type, const uint8_t* data, size_t size)
-    : m_type(type),
-      m_value(size)
+VendorSpecific::VendorSpecific(uint8_t type, const uint8_t* data)
+    : m_type(type)
 {
     if (data[0] != 0)
         throw std::runtime_error("Invalid high byte Vendor-Id value. Should be 0, actual size is " + std::to_string(data[0]));
