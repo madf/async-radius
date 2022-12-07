@@ -4,8 +4,7 @@
 #include "attribute_types.h"
 #include <iostream>
 
-VendorSpecific::VendorSpecific(uint8_t type, const uint8_t* data)
-    : m_type(type)
+VendorSpecific::VendorSpecific(const uint8_t* data)
 {
     if (data[0] != 0)
         throw std::runtime_error("Invalid high byte Vendor-Id value. Should be 0, actual size is " + std::to_string(data[0]));
@@ -24,9 +23,8 @@ VendorSpecific::VendorSpecific(uint8_t type, const uint8_t* data)
         m_value[i] = data[i + 6];
 }
 
-VendorSpecific::VendorSpecific(uint8_t type, uint32_t vendorId, uint8_t vendorType, const std::vector<uint8_t>& vendorValue)
-    : m_type(type),
-      m_vendorId(vendorId),
+VendorSpecific::VendorSpecific(uint32_t vendorId, uint8_t vendorType, const std::vector<uint8_t>& vendorValue)
+    : m_vendorId(vendorId),
       m_vendorType(vendorType),
       m_value(vendorValue)
 {
@@ -35,7 +33,7 @@ VendorSpecific::VendorSpecific(uint8_t type, uint32_t vendorId, uint8_t vendorTy
 std::vector<uint8_t> VendorSpecific::toVector() const
 {
     std::vector<uint8_t> attribute(m_value.size() + 8);
-    attribute[0] = type();
+    attribute[0] = VENDOR_SPECIFIC;
     attribute[1] = m_value.size() + 8;
     attribute[2] = m_vendorId / (1 << 24);
     attribute[3] = (m_vendorId / (1 << 16)) % 256;
@@ -68,13 +66,8 @@ uint32_t VendorSpecific::vendorId() const
     return m_vendorId;
 }
 
-uint8_t VendorSpecific::type() const
-{
-    return m_type;
-}
-
 std::string VendorSpecific::name() const
 {
-    return typeToString(m_type);
+    return typeToString(VENDOR_SPECIFIC);
 }
 
