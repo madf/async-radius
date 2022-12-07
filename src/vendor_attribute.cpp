@@ -63,9 +63,9 @@ uint8_t VendorSpecific::vendorType() const
     return m_vendorType;
 }
 
-std::string VendorSpecific::vendorId() const
+uint32_t VendorSpecific::vendorId() const
 {
-    return std::to_string(m_vendorId);
+    return m_vendorId;
 }
 
 uint8_t VendorSpecific::type() const
