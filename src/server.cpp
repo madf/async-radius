@@ -107,7 +107,7 @@ Packet Server::makeResponse(const Packet& request)
 
     std::vector<VendorSpecific*> vendorSpecific;
     std::vector<uint8_t> vendorValue {'0', '0', '0', '3'};
-    vendorSpecific.push_back(new VendorSpecific(VENDOR_SPECIFIC, 171, 1, vendorValue));
+    vendorSpecific.push_back(new VendorSpecific(171, 1, vendorValue));
 
     if (request.type() == ACCESS_REQUEST)
         return Packet(ACCESS_ACCEPT, request.id(), request.auth(), attributes, vendorSpecific);
