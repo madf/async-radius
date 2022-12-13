@@ -50,7 +50,7 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes, cons
         throw std::runtime_error{"The EAP-Message attribute is present, but the Message-Authenticator attribute is missing"};
 }
 
-Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, const std::vector<Attribute*>& attributes, const std::vector <VendorSpecific*>& vendorSpecific)
+Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, const std::vector<Attribute*>& attributes, const std::vector<VendorSpecific*>& vendorSpecific)
     : m_type(type),
       m_id(id),
       m_auth(auth),
