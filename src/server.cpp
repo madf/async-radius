@@ -104,6 +104,8 @@ Packet Server::makeResponse(const Packet& request)
     attributes.push_back(new Encrypted(USER_PASSWORD, "password123"));
     std::vector<uint8_t> bytes {'1', '2', '3', 'a', 'b', 'c'};
     attributes.push_back(new Bytes(CALLBACK_NUMBER, bytes));
+    std::vector<uint8_t> chapPassword {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g' };
+    attributes.push_back(new ChapPassword(CHAP_PASSWORD, 1, chapPassword));
 
     std::vector<VendorSpecific*> vendorSpecific;
     std::vector<uint8_t> vendorValue {'0', '0', '0', '3'};
