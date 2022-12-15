@@ -182,6 +182,35 @@ std::vector<uint8_t> Bytes::toVector(const std::string& /*secret*/, const std::a
     return attribute;
 }
 
+ChapPassword::ChapPassword(uint8_t type, const uint8_t* data, size_t size)
+    : Attribute(type),
+      m_value(size - 1)
+{
+    if (size != 17)
+        throw std::runtime_error("Invalid CHAP_PASSWORD attribute size. Should be 17, actual size is " + std::to_string(size));
+
+    m_chapId = data[0];
+
+    for (size_t i = 0; i < size - 1; ++i)
+        m_value[i] = data[i + 1];
+}
+
+ChapPassword::ChapPassword(uint8_t type, uint8_t chapId, const std::vector<uint8_t>& chapValue)
+    : Attribute(type),
+      m_chapId(chapId),
+      m_value(chapValue)
+{
+}
+
+std::vector<uint8_t> ChapPassword::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
+{
+    std::vector<uint8_t> attribute(m_value);
+    attribute.insert(attribute.begin(), chapId() % 256);
+    attribute.insert(attribute.begin(), m_value.size() + 3);
+    attribute.insert(attribute.begin(), type());
+    return attribute;
+}
+
 std::string String::value() const
 {
     return m_value;
@@ -210,6 +239,21 @@ std::string Bytes::value() const
         value += byteToHex(b);
 
     return value;
+}
+
+std::string ChapPassword::value() const
+{
+    std::string value;
+
+    for (const auto& b : m_value)
+        value += byteToHex(b);
+
+    return value;
+}
+
+uint8_t ChapPassword::chapId() const
+{
+    return m_chapId;
 }
 
 uint8_t Attribute::type() const
