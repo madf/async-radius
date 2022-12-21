@@ -205,7 +205,7 @@ ChapPassword::ChapPassword(uint8_t type, uint8_t chapId, const std::vector<uint8
 std::vector<uint8_t> ChapPassword::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
 {
     std::vector<uint8_t> attribute(m_value);
-    attribute.insert(attribute.begin(), chapId() % 256);
+    attribute.insert(attribute.begin(), m_chapId);
     attribute.insert(attribute.begin(), m_value.size() + 3);
     attribute.insert(attribute.begin(), type());
     return attribute;
