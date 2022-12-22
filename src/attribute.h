@@ -82,6 +82,7 @@ class ChapPassword: public Attribute
         ChapPassword(uint8_t type, uint8_t chapId, const std::vector<uint8_t>& chapValue);
         std::string value() const override;
         uint8_t chapId() const;
+        std::vector<uint8_t> chapValue() const;
         std::vector<uint8_t> toVector(const std::string& secret, const std::array<uint8_t, 16>& auth) const override;
     private:
         uint8_t m_chapId;
