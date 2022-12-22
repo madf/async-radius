@@ -46,7 +46,7 @@ std::vector<uint8_t> VendorSpecific::toVector() const
     return attribute;
 }
 
-std::string VendorSpecific::value() const
+std::string VendorSpecific::toString() const
 {
     std::string value;
 
