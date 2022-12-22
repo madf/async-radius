@@ -9,6 +9,16 @@ Attribute::Attribute(uint8_t type)
 {
 }
 
+std::string Attribute::name() const
+{
+    return typeToString(m_type);
+}
+
+uint8_t Attribute::type() const
+{
+    return m_type;
+}
+
 String::String(uint8_t type, const uint8_t* data, size_t size)
         : Attribute(type),
           m_value(reinterpret_cast<const char*>(data), size)
@@ -19,6 +29,11 @@ String::String(uint8_t type, const std::string& string)
     : Attribute(type),
       m_value(string)
 {
+}
+
+std::string String::value() const
+{
+    return m_value;
 }
 
 std::vector<uint8_t> String::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
@@ -49,6 +64,11 @@ Integer::Integer(uint8_t type, uint32_t value)
 {
 }
 
+std::string Integer::value() const
+{
+    return std::to_string(m_value);
+}
+
 std::vector<uint8_t> Integer::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
 {
     std::vector<uint8_t> attribute(6);
@@ -75,6 +95,11 @@ IpAddress::IpAddress(uint8_t type, const std::array<uint8_t, 4>& address)
     : Attribute(type),
       m_value(address)
 {
+}
+
+std::string IpAddress::value() const
+{
+    return std::to_string(m_value[0]) + "." + std::to_string(m_value[1]) + "." + std::to_string(m_value[2]) + "." + std::to_string(m_value[3]);
 }
 
 std::vector<uint8_t> IpAddress::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
@@ -126,6 +151,11 @@ Encrypted::Encrypted(uint8_t type, const std::string& password)
 {
 }
 
+std::string Encrypted::value() const
+{
+    return m_value;
+}
+
 std::vector<uint8_t> Encrypted::toVector(const std::string& secret, const std::array<uint8_t, 16>& auth) const
 {
     std::string plaintext = m_value;
@@ -174,6 +204,16 @@ Bytes::Bytes(uint8_t type, const std::vector<uint8_t>& bytes)
 {
 }
 
+std::string Bytes::value() const
+{
+    std::string value;
+
+    for (const auto& b : m_value)
+        value += byteToHex(b);
+
+    return value;
+}
+
 std::vector<uint8_t> Bytes::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
 {
     std::vector<uint8_t> attribute(m_value);
@@ -202,50 +242,6 @@ ChapPassword::ChapPassword(uint8_t type, uint8_t chapId, const std::vector<uint8
 {
 }
 
-std::vector<uint8_t> ChapPassword::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
-{
-    std::vector<uint8_t> attribute(m_value);
-    attribute.insert(attribute.begin(), m_chapId);
-    attribute.insert(attribute.begin(), m_value.size() + 3);
-    attribute.insert(attribute.begin(), type());
-    return attribute;
-}
-
-std::vector<uint8_t> ChapPassword::chapValue() const
-{
-    return m_value;
-}
-
-std::string String::value() const
-{
-    return m_value;
-}
-
-std::string Integer::value() const
-{
-    return std::to_string(m_value);
-}
-
-std::string IpAddress::value() const
-{
-    return std::to_string(m_value[0]) + "." + std::to_string(m_value[1]) + "." + std::to_string(m_value[2]) + "." + std::to_string(m_value[3]);
-}
-
-std::string Encrypted::value() const
-{
-    return m_value;
-}
-
-std::string Bytes::value() const
-{
-    std::string value;
-
-    for (const auto& b : m_value)
-        value += byteToHex(b);
-
-    return value;
-}
-
 std::string ChapPassword::value() const
 {
     std::string value;
@@ -261,12 +257,16 @@ uint8_t ChapPassword::chapId() const
     return m_chapId;
 }
 
-uint8_t Attribute::type() const
+std::vector<uint8_t> ChapPassword::chapValue() const
 {
-    return m_type;
+    return m_value;
 }
 
-std::string Attribute::name() const
+std::vector<uint8_t> ChapPassword::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
 {
-    return typeToString(m_type);
+    std::vector<uint8_t> attribute(m_value);
+    attribute.insert(attribute.begin(), m_chapId);
+    attribute.insert(attribute.begin(), m_value.size() + 3);
+    attribute.insert(attribute.begin(), type());
+    return attribute;
 }
