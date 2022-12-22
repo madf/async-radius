@@ -34,12 +34,12 @@ void printPacket(const Packet& p)
 
     std::cout << "Attributes:\n";
     for (const auto& ap : p.attributes())
-        std::cout << "\t" << ap->name() << ": " << ap->value() << "\n";
+        std::cout << "\t" << ap->name() << ": " << ap->toString() << "\n";
 
     for (const auto& ap : p.vendorSpecific())
     {
         std::cout << "\t" << ap->name() << ": " << ap->vendorId() << "\n";
-        std::cout << "\t" << std::to_string(ap->vendorType()) << ": " << ap->value() << "\n";
+        std::cout << "\t" << std::to_string(ap->vendorType()) << ": " << ap->toString() << "\n";
     }
 }
 
