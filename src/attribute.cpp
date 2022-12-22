@@ -31,7 +31,7 @@ String::String(uint8_t type, const std::string& string)
 {
 }
 
-std::string String::value() const
+std::string String::toString() const
 {
     return m_value;
 }
@@ -64,7 +64,7 @@ Integer::Integer(uint8_t type, uint32_t value)
 {
 }
 
-std::string Integer::value() const
+std::string Integer::toString() const
 {
     return std::to_string(m_value);
 }
@@ -97,7 +97,7 @@ IpAddress::IpAddress(uint8_t type, const std::array<uint8_t, 4>& address)
 {
 }
 
-std::string IpAddress::value() const
+std::string IpAddress::toString() const
 {
     return std::to_string(m_value[0]) + "." + std::to_string(m_value[1]) + "." + std::to_string(m_value[2]) + "." + std::to_string(m_value[3]);
 }
@@ -151,7 +151,7 @@ Encrypted::Encrypted(uint8_t type, const std::string& password)
 {
 }
 
-std::string Encrypted::value() const
+std::string Encrypted::toString() const
 {
     return m_value;
 }
@@ -204,7 +204,7 @@ Bytes::Bytes(uint8_t type, const std::vector<uint8_t>& bytes)
 {
 }
 
-std::string Bytes::value() const
+std::string Bytes::toString() const
 {
     std::string value;
 
@@ -242,7 +242,7 @@ ChapPassword::ChapPassword(uint8_t type, uint8_t chapId, const std::vector<uint8
 {
 }
 
-std::string ChapPassword::value() const
+std::string ChapPassword::toString() const
 {
     std::string value;
 
