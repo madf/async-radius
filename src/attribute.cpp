@@ -249,7 +249,7 @@ std::string ChapPassword::toString() const
     for (const auto& b : m_value)
         value += byteToHex(b);
 
-    return std::to_string(m_chapId) + value;
+    return std::to_string(m_chapId) + " " + value;
 }
 
 uint8_t ChapPassword::chapId() const
