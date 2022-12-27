@@ -1,12 +1,22 @@
 #include "packet.h"
 #include "attribute.h"
-#include "attribute_types.h"
+#include "utils.h"
 #include <openssl/md5.h>
 #include <iostream>
 
 Attribute::Attribute(uint8_t type)
     : m_type(type)
 {
+}
+
+std::string Attribute::name() const
+{
+    return typeToString(m_type);
+}
+
+uint8_t Attribute::type() const
+{
+    return m_type;
 }
 
 String::String(uint8_t type, const uint8_t* data, size_t size)
@@ -19,6 +29,11 @@ String::String(uint8_t type, const std::string& string)
     : Attribute(type),
       m_value(string)
 {
+}
+
+std::string String::toString() const
+{
+    return m_value;
 }
 
 std::vector<uint8_t> String::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
@@ -49,6 +64,11 @@ Integer::Integer(uint8_t type, uint32_t value)
 {
 }
 
+std::string Integer::toString() const
+{
+    return std::to_string(m_value);
+}
+
 std::vector<uint8_t> Integer::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
 {
     std::vector<uint8_t> attribute(6);
@@ -75,6 +95,11 @@ IpAddress::IpAddress(uint8_t type, const std::array<uint8_t, 4>& address)
     : Attribute(type),
       m_value(address)
 {
+}
+
+std::string IpAddress::toString() const
+{
+    return std::to_string(m_value[0]) + "." + std::to_string(m_value[1]) + "." + std::to_string(m_value[2]) + "." + std::to_string(m_value[3]);
 }
 
 std::vector<uint8_t> IpAddress::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
@@ -126,6 +151,11 @@ Encrypted::Encrypted(uint8_t type, const std::string& password)
 {
 }
 
+std::string Encrypted::toString() const
+{
+    return m_value;
+}
+
 std::vector<uint8_t> Encrypted::toVector(const std::string& secret, const std::array<uint8_t, 16>& auth) const
 {
     std::string plaintext = m_value;
@@ -160,12 +190,6 @@ std::vector<uint8_t> Encrypted::toVector(const std::string& secret, const std::a
     return res;
 }
 
-std::string byteToHex(uint8_t byte)
-{
-    static const std::string digits = "0123456789ABCDEF";
-    return {digits[byte / 16], digits[byte % 16]};
-}
-
 Bytes::Bytes(uint8_t type, const uint8_t* data, size_t size)
     : Attribute(type),
       m_value(size)
@@ -180,35 +204,7 @@ Bytes::Bytes(uint8_t type, const std::vector<uint8_t>& bytes)
 {
 }
 
-std::vector<uint8_t> Bytes::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
-{
-    std::vector<uint8_t> attribute(m_value);
-    attribute.insert(attribute.begin(), attribute.size() + 2);
-    attribute.insert(attribute.begin(), type());
-    return attribute;
-}
-
-std::string String::value() const
-{
-    return m_value;
-}
-
-std::string Integer::value() const
-{
-    return std::to_string(m_value);
-}
-
-std::string IpAddress::value() const
-{
-    return std::to_string(m_value[0]) + "." + std::to_string(m_value[1]) + "." + std::to_string(m_value[2]) + "." + std::to_string(m_value[3]);
-}
-
-std::string Encrypted::value() const
-{
-    return m_value;
-}
-
-std::string Bytes::value() const
+std::string Bytes::toString() const
 {
     std::string value;
 
@@ -218,63 +214,59 @@ std::string Bytes::value() const
     return value;
 }
 
-std::string typeToString(int type)
+std::vector<uint8_t> Bytes::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
 {
-    switch (type)
-    {
-        case USER_NAME: return "USER_NAME";
-        case USER_PASSWORD: return "USER_PASSWORD";
-        case CHAP_PASSWORD: return "CHAP_PASSWORD";
-        case NAS_IP_ADDRESS: return "NAS_IP_ADDRESS";
-        case NAS_PORT: return "NAS_PORT";
-        case SERVICE_TYPE: return "SERVICE_TYPE";
-        case FRAMED_PROTOCOL: return "FRAMED_PROTOCOL";
-        case FRAMED_IP_ADDRESS: return "FRAMED_IP_ADDRESS";
-        case FRAMED_IP_NETMASK: return "FRAMED_IP_NETMASK";
-        case FRAMED_ROUTING: return "FRAMED_ROUTING";
-        case FILTER_ID: return "FILTER_ID";
-        case FRAMED_MTU: return "FRAMED_MTU";
-        case FRAMED_COMPRESSION: return "FRAMED_COMPRESSION";
-        case LOGIN_IP_HOST: return "LOGIN_IP_HOST";
-        case LOGIN_SERVICE: return "LOGIN_SERVICE";
-        case LOGIN_TCP_PORT: return "LOGIN_TCP_PORT";
-        case REPLY_MESSAGE: return "REPLY_MESSAGE";
-        case CALLBACK_NUMBER: return "CALLBACK_NUMBER";
-        case CALLBACK_ID: return "CALLBACK_ID";
-        case FRAMED_ROUTE: return "FRAMED_ROUTE";
-        case FRAMED_IPX_NETWORK: return "FRAMED_IPX_NETWORK";
-        case STATE: return "STATE";
-        case CLASS: return "CLASS";
-        case VENDOR_SPECIFIC: return "VENDOR_SPECIFIC";
-        case SESSION_TIMEOUT: return "SESSION_TIMEOUT";
-        case IDLE_TIMEOUT: return "IDLE_TIMEOUT";
-        case TERMINATION_ACTION: return "TERMINATION_ACTION";
-        case CALLED_STATION_ID: return "CALLED_STATION_ID";
-        case CALLING_STATION_ID: return "CALLING_STATION_ID";
-        case NAS_IDENTIFIER: return "NAS_IDENTIFIER";
-        case PROXY_STATE: return "PROXY_STATE";
-        case LOGIN_LAT_SERVICE: return "LOGIN_LAT_SERVICE";
-        case LOGIN_LAT_NODE: return "LOGIN_LAT_NODE";
-        case LOGIN_LAT_GROUP: return "LOGIN_LAT_GROUP";
-        case FRAMED_APPLETALK_LINK: return "FRAMED_APPLETALK_LINK";
-        case FRAMED_APPLETALK_NETWORK: return "FRAMED_APPLETALK_NETWORK";
-        case FRAMED_APPLETALK_ZONE: return "FRAMED_APPLETALK_ZONE";
-        case CHAP_CHALLENGE: return "CHAP_CHALLENGE";
-        case NAS_PORT_TYPE: return "NAS_PORT_TYPE";
-        case PORT_LIMIT: return "PORT_LIMIT";
-        case LOGIN_LAT_PORT: return "LOGIN_LAT_PORT";
-        case EAP_MESSAGE: return "EAP_MESSAGE";
-        case MESSAGE_AUTHENTICATOR: return "MESSAGE_AUTHENTICATOR";
-    }
-    return "unknown";
+    std::vector<uint8_t> attribute(m_value);
+    attribute.insert(attribute.begin(), attribute.size() + 2);
+    attribute.insert(attribute.begin(), type());
+    return attribute;
 }
 
-uint8_t Attribute::type() const
+ChapPassword::ChapPassword(uint8_t type, const uint8_t* data, size_t size)
+    : Attribute(type),
+      m_value(size - 1)
 {
-    return m_type;
+    if (size != 17)
+        throw std::runtime_error("Invalid CHAP_PASSWORD attribute size. Should be 17, actual size is " + std::to_string(size));
+
+    m_chapId = data[0];
+
+    for (size_t i = 0; i < size - 1; ++i)
+        m_value[i] = data[i + 1];
 }
 
-std::string Attribute::name() const
+ChapPassword::ChapPassword(uint8_t type, uint8_t chapId, const std::vector<uint8_t>& chapValue)
+    : Attribute(type),
+      m_chapId(chapId),
+      m_value(chapValue)
 {
-    return typeToString(m_type);
+}
+
+std::string ChapPassword::toString() const
+{
+    std::string value;
+
+    for (const auto& b : m_value)
+        value += byteToHex(b);
+
+    return std::to_string(m_chapId) + " " + value;
+}
+
+uint8_t ChapPassword::chapId() const
+{
+    return m_chapId;
+}
+
+std::vector<uint8_t> ChapPassword::chapValue() const
+{
+    return m_value;
+}
+
+std::vector<uint8_t> ChapPassword::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
+{
+    std::vector<uint8_t> attribute(m_value);
+    attribute.insert(attribute.begin(), m_chapId);
+    attribute.insert(attribute.begin(), m_value.size() + 3);
+    attribute.insert(attribute.begin(), type());
+    return attribute;
 }
