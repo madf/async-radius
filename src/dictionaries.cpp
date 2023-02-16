@@ -1,53 +1,42 @@
 #include "dictionaries.h"
 #include <utility>
-#include <iostream>
 
-BasicDictionary::BasicDictionary(uint8_t type, std::string name)
-    : m_type(type),
-      m_name(name)
+BasicDictionary::BasicDictionary()
 {
 }
 
-uint8_t BasicDictionary::getType() const
+std::string BasicDictionary::getName(uint8_t type) const
 {
-    return m_type;
+    return m_rightDict.at(type);
 }
 
-std::string BasicDictionary::getName() const
+uint8_t BasicDictionary::getType(const std::string& name) const
 {
-    return m_name;
+    return m_reverseDict.at(name);
 }
 
-void BasicDictionary::add()
+void BasicDictionary::add(uint8_t type, const std::string& name)
 {
-    m_rightDict.insert(std::pair<uint8_t, std::string>(m_type, m_name));
-    m_reverseDict.insert(std::pair<std::string, uint8_t>(m_name, m_type));
+    m_rightDict.insert(std::pair<uint8_t, std::string>(type, name));
+    m_reverseDict.insert(std::pair<std::string, uint8_t>(name, type));
 }
 
-DependentDictionary::DependentDictionary(uint8_t type, std::string name, std::string attributeName)
-    : m_type(type),
-      m_name(name),
-      m_attributeName(attributeName)
+DependentDictionary::DependentDictionary()
 {
 }
 
-uint8_t DependentDictionary::getType() const
+std::string DependentDictionary::getName(const std::string& attributeName, uint8_t type) const
 {
-    return m_type;
+    return m_rightDict.at(make_pair(attributeName, type));
 }
 
-std::string DependentDictionary::getName() const
+uint8_t DependentDictionary::getType(const std::string& attributeName, const std::string& name) const
 {
-    return m_name;
+    return m_reverseDict.at(make_pair(attributeName, name));
 }
 
-std::string DependentDictionary::getAttributeName() const
+void DependentDictionary::add(uint8_t type, const std::string& name, const std::string& attributeName)
 {
-    return m_attributeName;
-}
-
-void DependentDictionary::add()
-{
-    m_rightDict.insert(std::make_pair(std::pair<std::string, uint8_t>(m_attributeName, m_type), m_name));
-    m_reverseDict.insert(std::make_pair(std::pair<std::string, std::string>(m_attributeName, m_name), m_type));
+    m_rightDict.insert(std::make_pair(std::pair<std::string, uint8_t>(attributeName, type), name));
+    m_reverseDict.insert(std::make_pair(std::pair<std::string, std::string>(attributeName, name), type));
 }
