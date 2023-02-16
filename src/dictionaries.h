@@ -8,13 +8,11 @@
 class BasicDictionary
 {
     public:
-        BasicDictionary(uint8_t type, const std::string name);
-        uint8_t getType() const;
-        std::string getName() const;
-        void add();
+        BasicDictionary();
+        std::string getName(uint8_t type) const;
+        uint8_t getType(const std::string& name) const;
+        void add(uint8_t type, const std::string& name);
     private:
-        uint8_t m_type;
-        std::string m_name;
         std::map<uint8_t, std::string> m_rightDict;
         std::map<std::string, uint8_t> m_reverseDict;
 };
@@ -22,15 +20,11 @@ class BasicDictionary
 class DependentDictionary
 {
     public:
-        DependentDictionary(uint8_t type, const std::string name, const std::string attributeName);
-        uint8_t getType() const;
-        std::string getName() const;
-        std::string getAttributeName() const;
-        void add();
+        DependentDictionary();
+        std::string getName(const std::string& attributeName, uint8_t type) const;
+        uint8_t getType(const std::string& attributeName, const std::string& name) const;
+        void add(uint8_t type, const std::string& name, const std::string& attributeName);
     private:
-        uint8_t m_type;
-        std::string m_name;
-        std::string m_attributeName;
         std::map<std::pair<std::string, uint8_t>, std::string> m_rightDict;
         std::map<std::pair<std::string, std::string>, uint8_t> m_reverseDict;
 };
