@@ -17,8 +17,8 @@ uint8_t BasicDictionary::getType(const std::string& name) const
 
 void BasicDictionary::add(uint8_t type, const std::string& name)
 {
-    m_rightDict.insert(std::make_pair(type, name));
-    m_reverseDict.insert(std::make_pair(name, type));
+    m_rightDict.emplace(std::make_pair(type, name));
+    m_reverseDict.emplace(std::make_pair(name, type));
 }
 
 DependentDictionary::DependentDictionary()
@@ -37,6 +37,6 @@ uint8_t DependentDictionary::getType(const std::string& attributeName, const std
 
 void DependentDictionary::add(uint8_t type, const std::string& name, const std::string& attributeName)
 {
-    m_rightDict.insert(std::make_pair(std::make_pair(attributeName, type), name));
-    m_reverseDict.insert(std::make_pair(std::make_pair(attributeName, name), type));
+    m_rightDict.emplace(std::make_pair(std::make_pair(attributeName, type), name));
+    m_reverseDict.emplace(std::make_pair(std::make_pair(attributeName, name), type));
 }
