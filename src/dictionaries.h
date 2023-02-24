@@ -29,4 +29,20 @@ class DependentDictionary
         std::map<std::pair<std::string, std::string>, uint8_t> m_reverseDict;
 };
 
+class Dictionaries
+{
+    public:
+        Dictionaries();
+        const BasicDictionary& getAttributes();
+        const BasicDictionary& getVendorNames();
+        const DependentDictionary& getAttributeValues();
+        const DependentDictionary& getVendorAttributes();
+        const DependentDictionary& getVendorAttributeValues();
+    private:
+        BasicDictionary m_attributes;
+        BasicDictionary m_vendorNames;
+        DependentDictionary m_attributeValues;
+        DependentDictionary m_vendorAttributes;
+        DependentDictionary m_vendorAttributeValues;
+};
 #endif
