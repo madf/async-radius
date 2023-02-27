@@ -45,27 +45,27 @@ Dictionaries::Dictionaries()
 {
 }
 
-const BasicDictionary& Dictionaries::getAttributes()
+const BasicDictionary& Dictionaries::getAttributes() const
 {
     return m_attributes;
 }
 
-const BasicDictionary& Dictionaries::getVendorNames()
+const BasicDictionary& Dictionaries::getVendorNames() const
 {
     return m_vendorNames;
 }
 
-const DependentDictionary& Dictionaries::getAttributeValues()
+const DependentDictionary& Dictionaries::getAttributeValues() const
 {
     return m_attributeValues;
 }
 
-const DependentDictionary& Dictionaries::getVendorAttributes()
+const DependentDictionary& Dictionaries::getVendorAttributes() const
 {
     return m_vendorAttributes;
 }
 
-const DependentDictionary& Dictionaries::getVendorAttributeValues()
+const DependentDictionary& Dictionaries::getVendorAttributeValues() const
 {
     return m_vendorAttributeValues;
 }
