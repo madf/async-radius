@@ -2,6 +2,7 @@
 #define SERVER_H
 
 #include "packet.h"
+#include "dictionaries.h"
 #include <boost/asio.hpp>
 #include <array>
 #include <cstdint> //uint8_t, uint32_t
@@ -21,6 +22,7 @@ class Server
         boost::asio::ip::udp::endpoint m_remoteEndpoint;
         std::array<uint8_t, 4096> m_recvBuffer;
         std::string m_secret;
+        Dictionaries m_dictionaries;
 };
 
 #endif
