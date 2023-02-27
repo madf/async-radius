@@ -33,11 +33,11 @@ class Dictionaries
 {
     public:
         Dictionaries();
-        const BasicDictionary& getAttributes();
-        const BasicDictionary& getVendorNames();
-        const DependentDictionary& getAttributeValues();
-        const DependentDictionary& getVendorAttributes();
-        const DependentDictionary& getVendorAttributeValues();
+        const BasicDictionary& getAttributes() const;
+        const BasicDictionary& getVendorNames() const;
+        const DependentDictionary& getAttributeValues() const;
+        const DependentDictionary& getVendorAttributes() const;
+        const DependentDictionary& getVendorAttributeValues() const;
     private:
         BasicDictionary m_attributes;
         BasicDictionary m_vendorNames;
