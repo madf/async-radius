@@ -32,28 +32,3 @@ void DependentDictionary::add(uint8_t type, const std::string& name, const std::
     m_rightDict.emplace(std::make_pair(attributeName, type), name);
     m_reverseDict.emplace(std::make_pair(attributeName, name), type);
 }
-
-const BasicDictionary& Dictionaries::attributes() const
-{
-    return m_attributes;
-}
-
-const BasicDictionary& Dictionaries::vendorNames() const
-{
-    return m_vendorNames;
-}
-
-const DependentDictionary& Dictionaries::attributeValues() const
-{
-    return m_attributeValues;
-}
-
-const DependentDictionary& Dictionaries::vendorAttributes() const
-{
-    return m_vendorAttributes;
-}
-
-const DependentDictionary& Dictionaries::vendorAttributeValues() const
-{
-    return m_vendorAttributeValues;
-}
