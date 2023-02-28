@@ -9,8 +9,8 @@ class BasicDictionary
 {
     public:
         BasicDictionary() = default;
-        std::string getName(uint8_t type) const;
-        uint8_t getType(const std::string& name) const;
+        std::string name(uint8_t type) const;
+        uint8_t type(const std::string& name) const;
         void add(uint8_t type, const std::string& name);
     private:
         std::map<uint8_t, std::string> m_rightDict;
@@ -21,8 +21,8 @@ class DependentDictionary
 {
     public:
         DependentDictionary() = default;
-        std::string getName(const std::string& attributeName, uint8_t type) const;
-        uint8_t getType(const std::string& attributeName, const std::string& name) const;
+        std::string name(const std::string& attributeName, uint8_t type) const;
+        uint8_t type(const std::string& attributeName, const std::string& name) const;
         void add(uint8_t type, const std::string& name, const std::string& attributeName);
     private:
         std::map<std::pair<std::string, uint8_t>, std::string> m_rightDict;
@@ -33,11 +33,11 @@ class Dictionaries
 {
     public:
         Dictionaries() = default;
-        const BasicDictionary& getAttributes() const;
-        const BasicDictionary& getVendorNames() const;
-        const DependentDictionary& getAttributeValues() const;
-        const DependentDictionary& getVendorAttributes() const;
-        const DependentDictionary& getVendorAttributeValues() const;
+        const BasicDictionary& attributes() const;
+        const BasicDictionary& vendorNames() const;
+        const DependentDictionary& attributeValues() const;
+        const DependentDictionary& vendorAttributes() const;
+        const DependentDictionary& vendorAttributeValues() const;
     private:
         BasicDictionary m_attributes;
         BasicDictionary m_vendorNames;
