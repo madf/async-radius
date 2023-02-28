@@ -8,7 +8,7 @@
 class BasicDictionary
 {
     public:
-        BasicDictionary();
+        BasicDictionary() = default;
         std::string getName(uint8_t type) const;
         uint8_t getType(const std::string& name) const;
         void add(uint8_t type, const std::string& name);
@@ -20,7 +20,7 @@ class BasicDictionary
 class DependentDictionary
 {
     public:
-        DependentDictionary();
+        DependentDictionary() = default;
         std::string getName(const std::string& attributeName, uint8_t type) const;
         uint8_t getType(const std::string& attributeName, const std::string& name) const;
         void add(uint8_t type, const std::string& name, const std::string& attributeName);
@@ -32,7 +32,7 @@ class DependentDictionary
 class Dictionaries
 {
     public:
-        Dictionaries();
+        Dictionaries() = default;
         const BasicDictionary& getAttributes() const;
         const BasicDictionary& getVendorNames() const;
         const DependentDictionary& getAttributeValues() const;
