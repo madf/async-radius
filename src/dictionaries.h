@@ -33,11 +33,11 @@ class Dictionaries
 {
     public:
         Dictionaries() = default;
-        const BasicDictionary& attributes() const;
-        const BasicDictionary& vendorNames() const;
-        const DependentDictionary& attributeValues() const;
-        const DependentDictionary& vendorAttributes() const;
-        const DependentDictionary& vendorAttributeValues() const;
+        const BasicDictionary& attributes() const { return m_attributes; }
+        const BasicDictionary& vendorNames() const { return m_vendorNames; }
+        const DependentDictionary& attributeValues() const { return m_attributeValues; }
+        const DependentDictionary& vendorAttributes() const { return m_vendorAttributes; }
+        const DependentDictionary& vendorAttributeValues() const { return m_vendorAttributeValues; }
     private:
         BasicDictionary m_attributes;
         BasicDictionary m_vendorNames;
