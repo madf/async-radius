@@ -65,31 +65,6 @@ Packet::~Packet()
         delete ap;
 }
 
-uint8_t Packet::type() const
-{
-    return m_type;
-}
-
-uint8_t Packet::id() const
-{
-    return m_id;
-}
-
-const std::array<uint8_t, 16>& Packet::auth() const
-{
-    return m_auth;
-}
-
-const std::vector<Attribute*>& Packet::attributes() const
-{
-    return m_attributes;
-}
-
-const std::vector<VendorSpecific*>& Packet::vendorSpecific() const
-{
-    return m_vendorSpecific;
-}
-
 const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
 {
     std::vector<uint8_t> sendBuffer(20);
