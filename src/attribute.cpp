@@ -14,11 +14,6 @@ std::string Attribute::name() const
     return typeToString(m_type);
 }
 
-uint8_t Attribute::type() const
-{
-    return m_type;
-}
-
 String::String(uint8_t type, const uint8_t* data, size_t size)
         : Attribute(type),
           m_value(reinterpret_cast<const char*>(data), size)
@@ -29,11 +24,6 @@ String::String(uint8_t type, const std::string& string)
     : Attribute(type),
       m_value(string)
 {
-}
-
-std::string String::toString() const
-{
-    return m_value;
 }
 
 std::vector<uint8_t> String::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
@@ -151,11 +141,6 @@ Encrypted::Encrypted(uint8_t type, const std::string& password)
 {
 }
 
-std::string Encrypted::toString() const
-{
-    return m_value;
-}
-
 std::vector<uint8_t> Encrypted::toVector(const std::string& secret, const std::array<uint8_t, 16>& auth) const
 {
     std::string plaintext = m_value;
@@ -250,16 +235,6 @@ std::string ChapPassword::toString() const
         value += byteToHex(b);
 
     return std::to_string(m_chapId) + " " + value;
-}
-
-uint8_t ChapPassword::chapId() const
-{
-    return m_chapId;
-}
-
-std::vector<uint8_t> ChapPassword::chapValue() const
-{
-    return m_value;
 }
 
 std::vector<uint8_t> ChapPassword::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
