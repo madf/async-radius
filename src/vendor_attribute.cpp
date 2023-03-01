@@ -56,16 +56,6 @@ std::string VendorSpecific::toString() const
     return value;
 }
 
-uint8_t VendorSpecific::vendorType() const
-{
-    return m_vendorType;
-}
-
-uint32_t VendorSpecific::vendorId() const
-{
-    return m_vendorId;
-}
-
 std::string VendorSpecific::name() const
 {
     return typeToString(VENDOR_SPECIFIC);
