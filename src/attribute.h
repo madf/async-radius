@@ -12,7 +12,7 @@ class Attribute
         Attribute(uint8_t type);
         virtual ~Attribute() = default;
         std::string name() const;
-        uint8_t type() const;
+        uint8_t type() const { return m_type; }
         virtual std::string toString() const = 0;
         virtual std::vector<uint8_t> toVector(const std::string& secret, const std::array<uint8_t, 16>& auth) const = 0;
 
@@ -25,7 +25,7 @@ class String: public Attribute
     public:
         String(uint8_t type, const uint8_t* data, size_t size);
         String(uint8_t type, const std::string& string);
-        std::string toString() const override;
+        std::string toString() const override { return m_value; }
         std::vector<uint8_t> toVector(const std::string& secret, const std::array<uint8_t, 16>& auth) const override;
     private:
         std::string m_value;
@@ -58,7 +58,7 @@ class Encrypted : public Attribute
     public:
         Encrypted (uint8_t type, const uint8_t* data, size_t size, const std::string& secret, const std::array<uint8_t, 16>& auth);
         Encrypted(uint8_t type, const std::string& password);
-        std::string toString() const override;
+        std::string toString() const override { return m_value; }
         std::vector<uint8_t> toVector(const std::string& secret, const std::array<uint8_t, 16>& auth) const override;
     private:
         std::string m_value;
@@ -81,8 +81,8 @@ class ChapPassword: public Attribute
         ChapPassword(uint8_t type, const uint8_t* data, size_t size);
         ChapPassword(uint8_t type, uint8_t chapId, const std::vector<uint8_t>& chapValue);
         std::string toString() const override;
-        uint8_t chapId() const;
-        std::vector<uint8_t> chapValue() const;
+        uint8_t chapId() const { return m_chapId; }
+        std::vector<uint8_t> chapValue() const { return m_value; }
         std::vector<uint8_t> toVector(const std::string& secret, const std::array<uint8_t, 16>& auth) const override;
     private:
         uint8_t m_chapId;
