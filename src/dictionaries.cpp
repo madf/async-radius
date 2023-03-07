@@ -1,5 +1,7 @@
 #include "dictionaries.h"
 #include <utility>
+#include <iostream>
+#include <fstream>
 
 std::string BasicDictionary::name(uint8_t type) const
 {
@@ -31,4 +33,18 @@ void DependentDictionary::add(uint8_t type, const std::string& name, const std::
 {
     m_rightDict.emplace(std::make_pair(attributeName, type), name);
     m_reverseDict.emplace(std::make_pair(attributeName, name), type);
+}
+
+Dictionaries::Dictionaries(const std::string& filePath)
+{
+    std::ifstream inf(filePath);
+    if (!inf)
+        throw std::runtime_error("File Dictonary " + filePath + " failed to open.");
+
+    while (inf)
+    {
+        std::string strInput;
+        getline(inf, strInput);
+        std::cout << strInput << "\n";
+    }
 }
