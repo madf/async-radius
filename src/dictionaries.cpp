@@ -37,14 +37,11 @@ void DependentDictionary::add(uint8_t type, const std::string& name, const std::
 
 Dictionaries::Dictionaries(const std::string& filePath)
 {
-    std::ifstream inf(filePath);
-    if (!inf)
+    std::ifstream stream(filePath);
+    if (!stream)
         throw std::runtime_error("Cannot open dictionary file " + filePath);
 
-    while (inf)
-    {
-        std::string strInput;
-        getline(inf, strInput);
-        std::cout << strInput << "\n";
-    }
+    std::string line;
+    while (std::getline(stream, line))
+        std::cout << line << "\n";
 }
