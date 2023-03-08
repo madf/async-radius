@@ -39,7 +39,7 @@ Dictionaries::Dictionaries(const std::string& filePath)
 {
     std::ifstream inf(filePath);
     if (!inf)
-        throw std::runtime_error("File Dictonary " + filePath + " failed to open.");
+        throw std::runtime_error("Cannot open dictionary file " + filePath);
 
     while (inf)
     {
