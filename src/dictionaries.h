@@ -32,7 +32,7 @@ class DependentDictionary
 class Dictionaries
 {
     public:
-        Dictionaries(const std::string& filePath);
+        Dictionaries(const std::string& filePath, const std::string& keyword);
         const BasicDictionary& attributes() const { return m_attributes; }
         const BasicDictionary& vendorNames() const { return m_vendorNames; }
         const DependentDictionary& attributeValues() const { return m_attributeValues; }
