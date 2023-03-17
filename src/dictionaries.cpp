@@ -35,13 +35,14 @@ void DependentDictionary::add(uint8_t type, const std::string& name, const std::
     m_reverseDict.emplace(std::make_pair(attributeName, name), type);
 }
 
-Dictionaries::Dictionaries(const std::string& filePath, const std::string& keyword)
+Dictionaries::Dictionaries(const std::string& filePath)
 {
     std::ifstream stream(filePath);
     if (!stream)
         throw std::runtime_error("Cannot open dictionary file " + filePath);
 
     std::string line;
+    const std::string keyword("ATTRIBUTE");
     while (std::getline(stream, line))
     {
         size_t firstPosKeyword = line.find(keyword);
