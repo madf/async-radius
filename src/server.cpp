@@ -46,7 +46,7 @@ void printPacket(const Packet& p)
 Server::Server(boost::asio::io_service& io_service, const std::string& secret)
       : m_socket(io_service, udp::endpoint(udp::v4(), 9999)),
         m_secret(secret),
-        m_dictionaries("/usr/share/freeradius/dictionary.rfc2865", "ATTRIBUTE")
+        m_dictionaries("/usr/share/freeradius/dictionary.rfc2865")
 {
     startReceive();
 }
