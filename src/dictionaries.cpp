@@ -46,7 +46,7 @@ Dictionaries::Dictionaries(const std::string& filePath)
     while (std::getline(stream, line))
     {
         size_t firstPosKeyword = line.find(keyword);
-        if (firstPosKeyword != line.npos)
+        if (firstPosKeyword != std::string::npos)
         {
             size_t lastPosKeyword = line.find_first_of(" \t", firstPosKeyword) - 1;
 
