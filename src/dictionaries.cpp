@@ -45,21 +45,26 @@ Dictionaries::Dictionaries(const std::string& filePath)
     const std::string keyword("ATTRIBUTE");
     while (std::getline(stream, line))
     {
-        size_t firstPosKeyword = line.find(keyword);
-        if (firstPosKeyword != std::string::npos)
+        size_t firstPosKeyword = line.find(keyword, 0);
+        if (firstPosKeyword == std::string::npos && stream.eof())
         {
-            size_t lastPosKeyword = firstPosKeyword + keyword.size() - 1;
+            throw std::runtime_error("Keyword " + keyword + " not found.");
+        }
+        else if (firstPosKeyword != std::string::npos)
+        {
+            size_t firstPosName = line.find_first_not_of(" \t", firstPosKeyword + keyword.size());
+            if (firstPosName == std::string::npos)
+                throw std::runtime_error("Attribute name not found.");
 
-            size_t firstPosName = line.find_first_not_of(" \t", lastPosKeyword + 1);
-            size_t lastPosName = line.find_first_of("  \t", firstPosName) - 1;
-            std::string name = line.substr(firstPosName, lastPosName - firstPosName + 1);
+            std::string name = line.substr(firstPosName, line.find_first_of("  \t", firstPosName) - firstPosName);
 
-            size_t firstPosType = line.find_first_not_of(" \t", lastPosName + 1);
-            size_t lastPosType= line.find_first_of("  \t", firstPosType) - 1;
-            std::string type = line.substr(firstPosType, lastPosType - firstPosType + 1);
+            size_t firstPosType = line.find_first_not_of(" \t", firstPosName + name.size());
+            if (firstPosType == std::string::npos)
+                throw std::runtime_error("Attribute type not found.");
 
-            if (name == "User-Name" || name == "User-Password")
-                std::cout << name << ": " << type << "\n";
+            std::string type = line.substr(firstPosType, line.find_first_of("  \t", firstPosType) - firstPosType);
+
+            std::cout << name << ": " << type << "\n";
         }
     }
 }
