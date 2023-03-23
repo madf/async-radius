@@ -58,11 +58,11 @@ Dictionaries::Dictionaries(const std::string& filePath)
 
             std::string name = line.substr(firstPosName, line.find_first_of("  \t", firstPosName) - firstPosName);
 
-            size_t firstPosType = line.find_first_not_of(" \t", firstPosName + name.size());
-            if (firstPosType == std::string::npos)
+            size_t firstPosCode = line.find_first_not_of(" \t", firstPosName + name.size());
+            if (firstPosCode == std::string::npos)
                 throw std::runtime_error("Attribute code not found.");
 
-            std::string code = line.substr(firstPosType, line.find_first_of("  \t", firstPosType) - firstPosType);
+            std::string code = line.substr(firstPosCode, line.find_first_of("  \t", firstPosCode) - firstPosCode);
 
             std::cout << name << ": " << code << "\n";
         }
