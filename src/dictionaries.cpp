@@ -43,6 +43,7 @@ Dictionaries::Dictionaries(const std::string& filePath)
 
     std::string line;
     const std::string keyword("ATTRIBUTE");
+    size_t lineNumber = 0;
     while (std::getline(stream, line))
     {
         size_t firstPosKeyword = line.find(keyword, 0);
@@ -53,8 +54,9 @@ Dictionaries::Dictionaries(const std::string& filePath)
         else if (firstPosKeyword != std::string::npos)
         {
             size_t firstPosName = line.find_first_not_of(" \t", firstPosKeyword + keyword.size());
+
             if (firstPosName == std::string::npos)
-                throw std::runtime_error("Attribute name not found.");
+                throw std::runtime_error(filePath + ":" + std::to_string(lineNumber) + ": Attribute name is missing in the attribute definition.");
 
             std::string name = line.substr(firstPosName, line.find_first_of("  \t", firstPosName) - firstPosName);
 
@@ -66,5 +68,6 @@ Dictionaries::Dictionaries(const std::string& filePath)
 
             std::cout << name << ": " << code << "\n";
         }
+        ++lineNumber;
     }
 }
