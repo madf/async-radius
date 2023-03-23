@@ -62,7 +62,7 @@ Dictionaries::Dictionaries(const std::string& filePath)
 
             size_t firstPosCode = line.find_first_not_of(" \t", firstPosName + name.size());
             if (firstPosCode == std::string::npos)
-                throw std::runtime_error("Attribute code not found.");
+                throw std::runtime_error(filePath + ":" + std::to_string(lineNumber) + ": Attribute code is missing in the attribute " + name + " definition.");
 
             std::string code = line.substr(firstPosCode, line.find_first_of("  \t", firstPosCode) - firstPosCode);
 
