@@ -47,11 +47,7 @@ Dictionaries::Dictionaries(const std::string& filePath)
     while (std::getline(stream, line))
     {
         size_t firstPosKeyword = line.find(keyword, 0);
-        if (firstPosKeyword == std::string::npos && stream.eof())
-        {
-            throw std::runtime_error("Keyword " + keyword + " not found.");
-        }
-        else if (firstPosKeyword != std::string::npos)
+        if (firstPosKeyword != std::string::npos)
         {
             size_t firstPosName = line.find_first_not_of(" \t", firstPosKeyword + keyword.size());
 
