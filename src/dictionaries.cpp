@@ -1,4 +1,6 @@
 #include "dictionaries.h"
+#include <boost/tokenizer.hpp>
+#include <vector>
 #include <utility>
 #include <iostream>
 #include <fstream>
@@ -41,28 +43,41 @@ Dictionaries::Dictionaries(const std::string& filePath)
     if (!stream)
         throw std::runtime_error("Cannot open dictionary file " + filePath);
 
+    typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
+    boost::char_separator<char> sep("\t");
+
     std::string line;
-    const std::string keyword("ATTRIBUTE");
     size_t lineNumber = 0;
+    bool vendorFlag = false;
     while (std::getline(stream, line))
     {
-        size_t firstPosKeyword = line.find(keyword, 0);
-        if (firstPosKeyword != std::string::npos)
+        tokenizer tok(line, sep);
+
+        std::vector<std::string> tokens;
+        for (const auto &t : tok)
+            tokens.push_back(t);
+
+        for (size_t i = 0; i < tokens.size(); ++i)
         {
-            size_t firstPosName = line.find_first_not_of(" \t", firstPosKeyword + keyword.size());
-
-            if (firstPosName == std::string::npos)
-                throw std::runtime_error(filePath + ":" + std::to_string(lineNumber) + ": Attribute name is missing in the attribute definition.");
-
-            std::string name = line.substr(firstPosName, line.find_first_of("  \t", firstPosName) - firstPosName);
-
-            size_t firstPosCode = line.find_first_not_of(" \t", firstPosName + name.size());
-            if (firstPosCode == std::string::npos)
-                throw std::runtime_error(filePath + ":" + std::to_string(lineNumber) + ": Attribute code is missing in the attribute " + name + " definition.");
-
-            std::string code = line.substr(firstPosCode, line.find_first_of("  \t", firstPosCode) - firstPosCode);
-
-            std::cout << name << ": " << code << "\n";
+            if (tokens[i] == "ATTRIBUTE")
+            {
+                std::string name = tokens[i + 1];
+                std::string code = tokens[i + 2];
+                if (vendorFlag)
+                    std::cout << "  " << name << ": " << code << "\n";
+                else
+                    std::cout << name << ": " << code << "\n";
+            }
+            else if (tokens[i] == "VENDOR")
+            {
+                std::string vendorName = tokens[i + 1];
+                std::string vendorCode = tokens[i + 2];
+                std::cout << "Vendor " << vendorName << ": " << vendorCode << "\n";
+            }
+            else if (tokens[i] == "BEGIN-VENDOR")
+                vendorFlag = true;
+            else if (tokens[i] == "END-VENDOR")
+                vendorFlag = false;
         }
         ++lineNumber;
     }
