@@ -57,26 +57,26 @@ Dictionaries::Dictionaries(const std::string& filePath)
         for (const auto &t : tok)
             tokens.push_back(t);
 
-        for (size_t i = 0; i < tokens.size(); ++i)
+        if (tokens.size() != 0)
         {
-            if (tokens[i] == "ATTRIBUTE")
+            if (tokens[0] == "ATTRIBUTE")
             {
-                std::string name = tokens[i + 1];
-                std::string code = tokens[i + 2];
+                std::string name = tokens[1];
+                std::string code = tokens[2];
                 if (vendorFlag)
                     std::cout << "  " << name << ": " << code << "\n";
                 else
                     std::cout << name << ": " << code << "\n";
             }
-            else if (tokens[i] == "VENDOR")
+            else if (tokens[0] == "VENDOR")
             {
-                std::string vendorName = tokens[i + 1];
-                std::string vendorCode = tokens[i + 2];
+                std::string vendorName = tokens[1];
+                std::string vendorCode = tokens[2];
                 std::cout << "Vendor " << vendorName << ": " << vendorCode << "\n";
             }
-            else if (tokens[i] == "BEGIN-VENDOR")
+            else if (tokens[0] == "BEGIN-VENDOR")
                 vendorFlag = true;
-            else if (tokens[i] == "END-VENDOR")
+            else if (tokens[0] == "END-VENDOR")
                 vendorFlag = false;
         }
         ++lineNumber;
