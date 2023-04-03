@@ -43,7 +43,7 @@ Dictionaries::Dictionaries(const std::string& filePath)
     if (!stream)
         throw std::runtime_error("Cannot open dictionary file " + filePath);
 
-    typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
+    using tokenizer =  boost::tokenizer<boost::char_separator<char>>;
     boost::char_separator<char> sep("\t");
 
     std::string line;
