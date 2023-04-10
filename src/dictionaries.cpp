@@ -49,6 +49,14 @@ Dictionaries::Dictionaries(const std::string& filePath)
     std::string line;
     size_t lineNumber = 0;
     bool vendorFlag = false;
+
+    BasicDictionary attr;
+    DependentDictionary attrValue;
+    BasicDictionary vendName;
+    DependentDictionary vendAttr;
+    DependentDictionary vendAttrValue;
+
+    std::string vendorName;
     while (std::getline(stream, line))
     {
         tokenizer tok(line, sep);
@@ -61,18 +69,29 @@ Dictionaries::Dictionaries(const std::string& filePath)
         {
             if (tokens[0] == "ATTRIBUTE")
             {
-                std::string name = tokens[1];
+                std::string attrName = tokens[1];
                 std::string code = tokens[2];
                 if (vendorFlag)
-                    std::cout << "  " << name << ": " << code << "\n";
+                    vendAttr.add(std::stoi(code), attrName, vendorName);
                 else
-                    std::cout << name << ": " << code << "\n";
+                    attr.add(std::stoi(code), attrName);
+            }
+            else if (tokens[0] == "VALUE")
+            {
+                std::string attrNameVal = tokens[1];
+                std::string valueName = tokens[2];
+                std::string valueCode = tokens[3];
+                if (vendorFlag)
+                    vendAttrValue.add(std::stoi(valueCode), valueName, attrNameVal);
+                else
+                    attrValue.add(std::stoi(valueCode), valueName, attrNameVal);
+
             }
             else if (tokens[0] == "VENDOR")
             {
-                std::string vendorName = tokens[1];
+                vendorName = tokens[1];
                 std::string vendorCode = tokens[2];
-                std::cout << "Vendor " << vendorName << ": " << vendorCode << "\n";
+                vendName.add(std::stoi(vendorCode), vendorName);
             }
             else if (tokens[0] == "BEGIN-VENDOR")
                 vendorFlag = true;
