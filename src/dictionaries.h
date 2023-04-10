@@ -21,9 +21,9 @@ class DependentDictionary
 {
     public:
         DependentDictionary() = default;
-        std::string name(const std::string& attributeName, uint8_t code) const;
-        uint8_t code(const std::string& attributeName, const std::string& name) const;
-        void add(uint8_t code, const std::string& name, const std::string& attributeName);
+        std::string name(const std::string& dependencyName, uint8_t code) const;
+        uint8_t code(const std::string& dependencyName, const std::string& name) const;
+        void add(uint8_t code, const std::string& name, const std::string& dependencyName);
     private:
         std::map<std::pair<std::string, uint8_t>, std::string> m_rightDict;
         std::map<std::pair<std::string, std::string>, uint8_t> m_reverseDict;
