@@ -5,33 +5,33 @@
 #include <iostream>
 #include <fstream>
 
-std::string BasicDictionary::name(uint8_t code) const
+std::string BasicDictionary::name(uint32_t code) const
 {
     return m_rightDict.at(code);
 }
 
-uint8_t BasicDictionary::code(const std::string& name) const
+uint32_t BasicDictionary::code(const std::string& name) const
 {
     return m_reverseDict.at(name);
 }
 
-void BasicDictionary::add(uint8_t code, const std::string& name)
+void BasicDictionary::add(uint32_t code, const std::string& name)
 {
     m_rightDict.emplace(code, name);
     m_reverseDict.emplace(name, code);
 }
 
-std::string DependentDictionary::name(const std::string& attributeName, uint8_t code) const
+std::string DependentDictionary::name(const std::string& attributeName, uint32_t code) const
 {
     return m_rightDict.at(std::make_pair(attributeName, code));
 }
 
-uint8_t DependentDictionary::code(const std::string& attributeName, const std::string& name) const
+uint32_t DependentDictionary::code(const std::string& attributeName, const std::string& name) const
 {
     return m_reverseDict.at(std::make_pair(attributeName, name));
 }
 
-void DependentDictionary::add(uint8_t code, const std::string& name, const std::string& attributeName)
+void DependentDictionary::add(uint32_t code, const std::string& name, const std::string& attributeName)
 {
     m_rightDict.emplace(std::make_pair(attributeName, code), name);
     m_reverseDict.emplace(std::make_pair(attributeName, name), code);
@@ -100,4 +100,23 @@ Dictionaries::Dictionaries(const std::string& filePath)
         }
         ++lineNumber;
     }
+//RFC
+
+//    for (const auto &entry: attr.rightDict())
+//        std::cout << entry.second << ": " << std::to_string(entry.first) << "\n";
+
+
+//    for (const auto &entry: attrValue.rightDict())
+//        std::cout << "  " << entry.first.first << " - " << entry.second << ": " << std::to_string(entry.first.second) << "\n";
+
+//Vendor
+
+    for (const auto &entry: vendName.rightDict())
+        std::cout << entry.second << ": " << std::to_string(entry.first) << "\n";
+
+    for (const auto &entry: vendAttr.rightDict())
+        std::cout << "  " << entry.second << ": " << std::to_string(entry.first.second) << "\n";
+
+    for (const auto &entry: vendAttrValue.rightDict())
+        std::cout << "    " << entry.first.first << " - " << entry.second << ": " << std::to_string(entry.first.second) << "\n";
 }
