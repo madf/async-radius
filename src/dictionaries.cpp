@@ -50,12 +50,6 @@ Dictionaries::Dictionaries(const std::string& filePath)
     size_t lineNumber = 0;
     bool vendorFlag = false;
 
-    BasicDictionary attr;
-    DependentDictionary attrValue;
-    BasicDictionary vendName;
-    DependentDictionary vendAttr;
-    DependentDictionary vendAttrValue;
-
     std::string vendorName;
     while (std::getline(stream, line))
     {
@@ -72,9 +66,9 @@ Dictionaries::Dictionaries(const std::string& filePath)
                 std::string attrName = tokens[1];
                 std::string code = tokens[2];
                 if (vendorFlag)
-                    vendAttr.add(std::stoi(code), attrName, vendorName);
+                    m_vendorAttributes.add(std::stoi(code), attrName, vendorName);
                 else
-                    attr.add(std::stoi(code), attrName);
+                    m_attributes.add(std::stoi(code), attrName);
             }
             else if (tokens[0] == "VALUE")
             {
@@ -82,16 +76,16 @@ Dictionaries::Dictionaries(const std::string& filePath)
                 std::string valueName = tokens[2];
                 std::string valueCode = tokens[3];
                 if (vendorFlag)
-                    vendAttrValue.add(std::stoi(valueCode), valueName, attrNameVal);
+                    m_vendorAttributeValues.add(std::stoi(valueCode), valueName, attrNameVal);
                 else
-                    attrValue.add(std::stoi(valueCode), valueName, attrNameVal);
+                    m_attributeValues.add(std::stoi(valueCode), valueName, attrNameVal);
 
             }
             else if (tokens[0] == "VENDOR")
             {
                 vendorName = tokens[1];
                 std::string vendorCode = tokens[2];
-                vendName.add(std::stoi(vendorCode), vendorName);
+                m_vendorNames.add(std::stoi(vendorCode), vendorName);
             }
             else if (tokens[0] == "BEGIN-VENDOR")
                 vendorFlag = true;
@@ -102,21 +96,21 @@ Dictionaries::Dictionaries(const std::string& filePath)
     }
 //RFC
 
-//    for (const auto &entry: attr.rightDict())
+//    for (const auto &entry: m_attributes.rightDict())
 //        std::cout << entry.second << ": " << std::to_string(entry.first) << "\n";
 
 
-//    for (const auto &entry: attrValue.rightDict())
+//    for (const auto &entry: m_attributeValues.rightDict())
 //        std::cout << "  " << entry.first.first << " - " << entry.second << ": " << std::to_string(entry.first.second) << "\n";
 
 //Vendor
 
-    for (const auto &entry: vendName.rightDict())
+    for (const auto &entry: m_vendorNames.rightDict())
         std::cout << entry.second << ": " << std::to_string(entry.first) << "\n";
 
-    for (const auto &entry: vendAttr.rightDict())
+    for (const auto &entry: m_vendorAttributes.rightDict())
         std::cout << "  " << entry.second << ": " << std::to_string(entry.first.second) << "\n";
 
-    for (const auto &entry: vendAttrValue.rightDict())
+    for (const auto &entry: m_vendorAttributeValues.rightDict())
         std::cout << "    " << entry.first.first << " - " << entry.second << ": " << std::to_string(entry.first.second) << "\n";
 }
