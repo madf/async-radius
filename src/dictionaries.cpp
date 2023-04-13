@@ -21,20 +21,20 @@ void BasicDictionary::add(uint32_t code, const std::string& name)
     m_reverseDict.emplace(name, code);
 }
 
-std::string DependentDictionary::name(const std::string& attributeName, uint32_t code) const
+std::string DependentDictionary::name(const std::string& dependencyName, uint32_t code) const
 {
-    return m_rightDict.at(std::make_pair(attributeName, code));
+    return m_rightDict.at(std::make_pair(dependencyName, code));
 }
 
-uint32_t DependentDictionary::code(const std::string& attributeName, const std::string& name) const
+uint32_t DependentDictionary::code(const std::string& dependencyName, const std::string& name) const
 {
-    return m_reverseDict.at(std::make_pair(attributeName, name));
+    return m_reverseDict.at(std::make_pair(dependencyName, name));
 }
 
-void DependentDictionary::add(uint32_t code, const std::string& name, const std::string& attributeName)
+void DependentDictionary::add(uint32_t code, const std::string& name, const std::string& dependencyName)
 {
-    m_rightDict.emplace(std::make_pair(attributeName, code), name);
-    m_reverseDict.emplace(std::make_pair(attributeName, name), code);
+    m_rightDict.emplace(std::make_pair(dependencyName, code), name);
+    m_reverseDict.emplace(std::make_pair(dependencyName, name), code);
 }
 
 Dictionaries::Dictionaries(const std::string& filePath)
