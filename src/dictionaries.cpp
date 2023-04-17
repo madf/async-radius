@@ -65,9 +65,9 @@ Dictionaries::Dictionaries(const std::string& filePath)
                 std::string attrName = tokens[1];
                 std::string code = tokens[2];
                 if (vendorName.size() != 0)
-                    m_vendorAttributes.add(std::stoi(code), attrName, vendorName);
+                    m_vendorAttributes.add(std::stoul(code), attrName, vendorName);
                 else
-                    m_attributes.add(std::stoi(code), attrName);
+                    m_attributes.add(std::stoul(code), attrName);
             }
             else if (tokens[0] == "VALUE")
             {
@@ -75,12 +75,12 @@ Dictionaries::Dictionaries(const std::string& filePath)
                 std::string valueName = tokens[2];
                 std::string valueCode = tokens[3];
                 if (vendorName.size() != 0)
-                    m_vendorAttributeValues.add(std::stoi(valueCode), valueName, attrNameVal);
+                    m_vendorAttributeValues.add(std::stoul(valueCode), valueName, attrNameVal);
                 else
-                    m_attributeValues.add(std::stoi(valueCode), valueName, attrNameVal);
+                    m_attributeValues.add(std::stoul(valueCode), valueName, attrNameVal);
             }
             else if (tokens[0] == "VENDOR")
-                m_vendorNames.add(std::stoi(tokens[2]), tokens[1]);
+                m_vendorNames.add(std::stoul(tokens[2]), tokens[1]);
             else if (tokens[0] == "BEGIN-VENDOR")
                 vendorName = tokens[1];
             else if (tokens[0] == "END-VENDOR")
