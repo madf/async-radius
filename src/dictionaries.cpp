@@ -58,13 +58,13 @@ Dictionaries::Dictionaries(const std::string& filePath)
         for (const auto &t : tok)
             tokens.push_back(t);
 
-        if (tokens.size() != 0)
+        if (!tokens.empty())
         {
             if (tokens[0] == "ATTRIBUTE")
             {
                 const auto& attrName = tokens[1];
                 const auto& code = std::stoul(tokens[2]);
-                if (vendorName.size() != 0)
+                if (!vendorName.empty())
                     m_vendorAttributes.add(code, attrName, vendorName);
                 else
                     m_attributes.add(code, attrName);
@@ -74,7 +74,7 @@ Dictionaries::Dictionaries(const std::string& filePath)
                 const auto& attrNameVal = tokens[1];
                 const auto& valueName = tokens[2];
                 const auto& valueCode = std::stoul(tokens[3]);
-                if (vendorName.size() != 0)
+                if (!vendorName.empty())
                     m_vendorAttributeValues.add(valueCode, valueName, attrNameVal);
                 else
                     m_attributeValues.add(valueCode, valueName, attrNameVal);
