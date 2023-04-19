@@ -63,7 +63,7 @@ Dictionaries::Dictionaries(const std::string& filePath)
             if (tokens[0] == "ATTRIBUTE")
             {
                 const auto& attrName = tokens[1];
-                const auto& code = std::stoul(tokens[2]);
+                const auto code = std::stoul(tokens[2]);
                 if (!vendorName.empty())
                     m_vendorAttributes.add(code, attrName, vendorName);
                 else
@@ -73,7 +73,7 @@ Dictionaries::Dictionaries(const std::string& filePath)
             {
                 const auto& attrNameVal = tokens[1];
                 const auto& valueName = tokens[2];
-                const auto& valueCode = std::stoul(tokens[3]);
+                const auto valueCode = std::stoul(tokens[3]);
                 if (!vendorName.empty())
                     m_vendorAttributeValues.add(valueCode, valueName, attrNameVal);
                 else
