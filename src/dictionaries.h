@@ -9,24 +9,28 @@ class BasicDictionary
 {
     public:
         BasicDictionary() = default;
-        std::string name(uint8_t code) const;
-        uint8_t code(const std::string& name) const;
-        void add(uint8_t code, const std::string& name);
+        std::string name(uint32_t code) const;
+        uint32_t code(const std::string& name) const;
+        void add(uint32_t code, const std::string& name);
+        const std::map<uint32_t, std::string> rightDict() const { return m_rightDict; }
+        const std::map<std::string, uint32_t> reverseDict() const { return m_reverseDict; }
     private:
-        std::map<uint8_t, std::string> m_rightDict;
-        std::map<std::string, uint8_t> m_reverseDict;
+        std::map<uint32_t, std::string> m_rightDict;
+        std::map<std::string, uint32_t> m_reverseDict;
 };
 
 class DependentDictionary
 {
     public:
         DependentDictionary() = default;
-        std::string name(const std::string& attributeName, uint8_t code) const;
-        uint8_t code(const std::string& attributeName, const std::string& name) const;
-        void add(uint8_t code, const std::string& name, const std::string& attributeName);
+        std::string name(const std::string& dependencyName, uint32_t code) const;
+        uint32_t code(const std::string& dependencyName, const std::string& name) const;
+        void add(uint32_t code, const std::string& name, const std::string& dependencyName);
+        const std::map<std::pair<std::string, uint32_t>, std::string> rightDict() const { return m_rightDict; }
+        const std::map<std::pair<std::string, std::string>, uint32_t> reverseDict() const { return m_reverseDict; }
     private:
-        std::map<std::pair<std::string, uint8_t>, std::string> m_rightDict;
-        std::map<std::pair<std::string, std::string>, uint8_t> m_reverseDict;
+        std::map<std::pair<std::string, uint32_t>, std::string> m_rightDict;
+        std::map<std::pair<std::string, std::string>, uint32_t> m_reverseDict;
 };
 
 class Dictionaries
