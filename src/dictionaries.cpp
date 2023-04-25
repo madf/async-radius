@@ -85,6 +85,13 @@ Dictionaries::Dictionaries(const std::string& filePath)
                 vendorName = tokens[1];
             else if (tokens[0] == "END-VENDOR")
                 vendorName.clear();
+            else if (tokens[0] == "$INCLUDE")
+            {
+                if (tokens[1].substr(0, 1) == "/")
+                    Dictionaries fillingDictionaries(tokens[1]);
+                else
+                    Dictionaries fillingDictionaries(filePath.substr(0, filePath.rfind('/') + 1)+ tokens[1]);
+            }
         }
         ++lineNumber;
     }
