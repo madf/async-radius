@@ -15,6 +15,12 @@ uint32_t BasicDictionary::code(const std::string& name) const
     return m_reverseDict.at(name);
 }
 
+void BasicDictionary::append(const BasicDictionary& basicDict)
+{
+    m_rightDict.insert(basicDict.m_rightDict.begin(), basicDict.m_rightDict.end());
+    m_reverseDict.insert(basicDict.m_reverseDict.begin(), basicDict.m_reverseDict.end());
+}
+
 void BasicDictionary::add(uint32_t code, const std::string& name)
 {
     m_rightDict.emplace(code, name);
@@ -90,23 +96,13 @@ Dictionaries::Dictionaries(const std::string& filePath)
                 if (tokens[1].substr(0, 1) == "/")
                     Dictionaries fillingDictionaries(tokens[1]);
                 else
-                    Dictionaries fillingDictionaries(filePath.substr(0, filePath.rfind('/') + 1)+ tokens[1]);
+                {
+                    Dictionaries fillingDictionaries(filePath.substr(0, filePath.rfind('/') + 1) + tokens[1]);
+                    m_attributes.append(fillingDictionaries.m_attributes);
+                    m_vendorNames.append(fillingDictionaries.m_vendorNames);
+                }
             }
         }
         ++lineNumber;
     }
-    for (const auto &entry: m_attributes.rightDict())
-        std::cout << entry.second << ": " << std::to_string(entry.first) << "\n";
-
-    for (const auto &entry: m_attributeValues.rightDict())
-        std::cout << "  " << entry.first.first << " - " << entry.second << ": " << std::to_string(entry.first.second) << "\n";
-
-    for (const auto &entry: m_vendorNames.rightDict())
-        std::cout << entry.second << ": " << std::to_string(entry.first) << "\n";
-
-    for (const auto &entry: m_vendorAttributes.rightDict())
-        std::cout << "  " << entry.second << ": " << std::to_string(entry.first.second) << "\n";
-
-    for (const auto &entry: m_vendorAttributeValues.rightDict())
-        std::cout << "    " << entry.first.first << " - " << entry.second << ": " << std::to_string(entry.first.second) << "\n";
 }
