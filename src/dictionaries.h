@@ -27,6 +27,7 @@ class DependentDictionary
         std::string name(const std::string& dependencyName, uint32_t code) const;
         uint32_t code(const std::string& dependencyName, const std::string& name) const;
         void add(uint32_t code, const std::string& name, const std::string& dependencyName);
+        void append(const DependentDictionary& dependentDict);
         const std::map<std::pair<std::string, uint32_t>, std::string>& rightDict() const { return m_rightDict; }
         const std::map<std::pair<std::string, std::string>, uint32_t>& reverseDict() const { return m_reverseDict; }
     private:
