@@ -15,16 +15,16 @@ uint32_t BasicDictionary::code(const std::string& name) const
     return m_reverseDict.at(name);
 }
 
-void BasicDictionary::append(const BasicDictionary& basicDict)
-{
-    m_rightDict.insert(basicDict.m_rightDict.begin(), basicDict.m_rightDict.end());
-    m_reverseDict.insert(basicDict.m_reverseDict.begin(), basicDict.m_reverseDict.end());
-}
-
 void BasicDictionary::add(uint32_t code, const std::string& name)
 {
     m_rightDict.emplace(code, name);
     m_reverseDict.emplace(name, code);
+}
+
+void BasicDictionary::append(const BasicDictionary& basicDict)
+{
+    m_rightDict.insert(basicDict.m_rightDict.begin(), basicDict.m_rightDict.end());
+    m_reverseDict.insert(basicDict.m_reverseDict.begin(), basicDict.m_reverseDict.end());
 }
 
 std::string DependentDictionary::name(const std::string& dependencyName, uint32_t code) const
@@ -41,6 +41,12 @@ void DependentDictionary::add(uint32_t code, const std::string& name, const std:
 {
     m_rightDict.emplace(std::make_pair(dependencyName, code), name);
     m_reverseDict.emplace(std::make_pair(dependencyName, name), code);
+}
+
+void DependentDictionary::append(const DependentDictionary& dependentDict)
+{
+    m_rightDict.insert(dependentDict.m_rightDict.begin(), dependentDict.m_rightDict.end());
+    m_reverseDict.insert(dependentDict.m_reverseDict.begin(), dependentDict.m_reverseDict.end());
 }
 
 Dictionaries::Dictionaries(const std::string& filePath)
@@ -100,6 +106,9 @@ Dictionaries::Dictionaries(const std::string& filePath)
                     Dictionaries fillingDictionaries(filePath.substr(0, filePath.rfind('/') + 1) + tokens[1]);
                     m_attributes.append(fillingDictionaries.m_attributes);
                     m_vendorNames.append(fillingDictionaries.m_vendorNames);
+                    m_attributeValues.append(fillingDictionaries.m_attributeValues);
+                    m_vendorAttributes.append(fillingDictionaries.m_vendorAttributes);
+                    m_vendorAttributeValues.append(fillingDictionaries.m_vendorAttributeValues);
                 }
             }
         }
