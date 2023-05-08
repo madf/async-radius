@@ -100,7 +100,14 @@ Dictionaries::Dictionaries(const std::string& filePath)
             else if (tokens[0] == "$INCLUDE")
             {
                 if (tokens[1].substr(0, 1) == "/")
+                {
                     Dictionaries fillingDictionaries(tokens[1]);
+                    m_attributes.append(fillingDictionaries.m_attributes);
+                    m_vendorNames.append(fillingDictionaries.m_vendorNames);
+                    m_attributeValues.append(fillingDictionaries.m_attributeValues);
+                    m_vendorAttributes.append(fillingDictionaries.m_vendorAttributes);
+                    m_vendorAttributeValues.append(fillingDictionaries.m_vendorAttributeValues);
+                }
                 else
                 {
                     Dictionaries fillingDictionaries(filePath.substr(0, filePath.rfind('/') + 1) + tokens[1]);
