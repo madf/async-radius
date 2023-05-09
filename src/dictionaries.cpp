@@ -23,8 +23,11 @@ void BasicDictionary::add(uint32_t code, const std::string& name)
 
 void BasicDictionary::append(const BasicDictionary& basicDict)
 {
-    m_rightDict.insert(basicDict.m_rightDict.begin(), basicDict.m_rightDict.end());
-    m_reverseDict.insert(basicDict.m_reverseDict.begin(), basicDict.m_reverseDict.end());
+    for (const auto &entry: basicDict.m_rightDict)
+        m_rightDict.insert_or_assign(entry.first, entry.second);
+
+    for (const auto &entry: basicDict.m_reverseDict)
+        m_reverseDict.insert_or_assign(entry.first, entry.second);
 }
 
 std::string DependentDictionary::name(const std::string& dependencyName, uint32_t code) const
@@ -45,8 +48,11 @@ void DependentDictionary::add(uint32_t code, const std::string& name, const std:
 
 void DependentDictionary::append(const DependentDictionary& dependentDict)
 {
-    m_rightDict.insert(dependentDict.m_rightDict.begin(), dependentDict.m_rightDict.end());
-    m_reverseDict.insert(dependentDict.m_reverseDict.begin(), dependentDict.m_reverseDict.end());
+    for (const auto &entry: dependentDict.m_rightDict)
+        m_rightDict.insert_or_assign(entry.first, entry.second);
+
+    for (const auto &entry: dependentDict.m_reverseDict)
+        m_reverseDict.insert_or_assign(entry.first, entry.second);
 }
 
 Dictionaries::Dictionaries(const std::string& filePath)
