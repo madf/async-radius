@@ -23,10 +23,10 @@ void BasicDictionary::add(uint32_t code, const std::string& name)
 
 void BasicDictionary::append(const BasicDictionary& basicDict)
 {
-    for (const auto &entry: basicDict.m_rightDict)
+    for (const auto& entry: basicDict.m_rightDict)
         m_rightDict.insert_or_assign(entry.first, entry.second);
 
-    for (const auto &entry: basicDict.m_reverseDict)
+    for (const auto& entry: basicDict.m_reverseDict)
         m_reverseDict.insert_or_assign(entry.first, entry.second);
 }
 
@@ -48,10 +48,10 @@ void DependentDictionary::add(uint32_t code, const std::string& name, const std:
 
 void DependentDictionary::append(const DependentDictionary& dependentDict)
 {
-    for (const auto &entry: dependentDict.m_rightDict)
+    for (const auto& entry: dependentDict.m_rightDict)
         m_rightDict.insert_or_assign(entry.first, entry.second);
 
-    for (const auto &entry: dependentDict.m_reverseDict)
+    for (const auto& entry: dependentDict.m_reverseDict)
         m_reverseDict.insert_or_assign(entry.first, entry.second);
 }
 
@@ -73,7 +73,7 @@ Dictionaries::Dictionaries(const std::string& filePath)
         tokenizer tok(line, sep);
 
         std::vector<std::string> tokens;
-        for (const auto &t : tok)
+        for (const auto& t : tok)
             tokens.push_back(t);
 
         if (!tokens.empty())
