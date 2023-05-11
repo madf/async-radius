@@ -39,6 +39,7 @@ class Dictionaries
 {
     public:
         Dictionaries(const std::string& filePath);
+        void append(const Dictionaries& fillingDictionaries);
         const BasicDictionary& attributes() const { return m_attributes; }
         const BasicDictionary& vendorNames() const { return m_vendorNames; }
         const DependentDictionary& attributeValues() const { return m_attributeValues; }
