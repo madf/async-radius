@@ -21,6 +21,15 @@ void BasicDictionary::add(uint32_t code, const std::string& name)
     m_reverseDict.emplace(name, code);
 }
 
+void BasicDictionary::append(const BasicDictionary& basicDict)
+{
+    for (const auto& entry: basicDict.m_rightDict)
+        m_rightDict.insert_or_assign(entry.first, entry.second);
+
+    for (const auto& entry: basicDict.m_reverseDict)
+        m_reverseDict.insert_or_assign(entry.first, entry.second);
+}
+
 std::string DependentDictionary::name(const std::string& dependencyName, uint32_t code) const
 {
     return m_rightDict.at(std::make_pair(dependencyName, code));
@@ -35,6 +44,15 @@ void DependentDictionary::add(uint32_t code, const std::string& name, const std:
 {
     m_rightDict.emplace(std::make_pair(dependencyName, code), name);
     m_reverseDict.emplace(std::make_pair(dependencyName, name), code);
+}
+
+void DependentDictionary::append(const DependentDictionary& dependentDict)
+{
+    for (const auto& entry: dependentDict.m_rightDict)
+        m_rightDict.insert_or_assign(entry.first, entry.second);
+
+    for (const auto& entry: dependentDict.m_reverseDict)
+        m_reverseDict.insert_or_assign(entry.first, entry.second);
 }
 
 Dictionaries::Dictionaries(const std::string& filePath)
@@ -55,7 +73,7 @@ Dictionaries::Dictionaries(const std::string& filePath)
         tokenizer tok(line, sep);
 
         std::vector<std::string> tokens;
-        for (const auto &t : tok)
+        for (const auto& t : tok)
             tokens.push_back(t);
 
         if (!tokens.empty())
@@ -85,21 +103,23 @@ Dictionaries::Dictionaries(const std::string& filePath)
                 vendorName = tokens[1];
             else if (tokens[0] == "END-VENDOR")
                 vendorName.clear();
+            else if (tokens[0] == "$INCLUDE")
+            {
+                if (tokens[1].substr(0, 1) == "/")
+                    append(Dictionaries(tokens[1]));
+                else
+                    append(Dictionaries(filePath.substr(0, filePath.rfind('/') + 1) + tokens[1]));
+            }
         }
         ++lineNumber;
     }
-    for (const auto &entry: m_attributes.rightDict())
-        std::cout << entry.second << ": " << std::to_string(entry.first) << "\n";
+}
 
-    for (const auto &entry: m_attributeValues.rightDict())
-        std::cout << "  " << entry.first.first << " - " << entry.second << ": " << std::to_string(entry.first.second) << "\n";
-
-    for (const auto &entry: m_vendorNames.rightDict())
-        std::cout << entry.second << ": " << std::to_string(entry.first) << "\n";
-
-    for (const auto &entry: m_vendorAttributes.rightDict())
-        std::cout << "  " << entry.second << ": " << std::to_string(entry.first.second) << "\n";
-
-    for (const auto &entry: m_vendorAttributeValues.rightDict())
-        std::cout << "    " << entry.first.first << " - " << entry.second << ": " << std::to_string(entry.first.second) << "\n";
+void Dictionaries::append(const Dictionaries& fillingDictionaries)
+{
+    m_attributes.append(fillingDictionaries.m_attributes);
+    m_vendorNames.append(fillingDictionaries.m_vendorNames);
+    m_attributeValues.append(fillingDictionaries.m_attributeValues);
+    m_vendorAttributes.append(fillingDictionaries.m_vendorAttributes);
+    m_vendorAttributeValues.append(fillingDictionaries.m_vendorAttributeValues);
 }

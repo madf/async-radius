@@ -46,9 +46,26 @@ void printPacket(const Packet& p)
 Server::Server(boost::asio::io_service& io_service, const std::string& secret)
       : m_socket(io_service, udp::endpoint(udp::v4(), 9999)),
         m_secret(secret),
-        m_dictionaries("/usr/share/freeradius/dictionary.cisco")
-//        m_dictionaries("/usr/share/freeradius/dictionary.rfc2865")
+        m_dictionaries("/usr/share/freeradius/dictionary")
 {
+/*    for (const auto& entry: m_dictionaries.attributes().reverseDict())
+        std::cout << std::to_string(entry.second) << ": " << entry.first << "\n";*/
+
+    for (const auto& entry: m_dictionaries.attributes().rightDict())
+        std::cout << entry.second << ": " << std::to_string(entry.first) << "\n";
+
+    for (const auto& entry: m_dictionaries.attributeValues().rightDict())
+        std::cout << "  " << entry.first.first << " - " << entry.second << ": " << std::to_string(entry.first.second) << "\n";
+
+    for (const auto& entry: m_dictionaries.vendorNames().rightDict())
+        std::cout << entry.second << ": " << std::to_string(entry.first) << "\n";
+
+    for (const auto& entry: m_dictionaries.vendorAttributes().rightDict())
+        std::cout << "  " << entry.second << ": " << std::to_string(entry.first.second) << "\n";
+
+    for (const auto& entry: m_dictionaries.vendorAttributeValues().rightDict())
+        std::cout << "    " << entry.first.first << " - " << entry.second << ": " << std::to_string(entry.first.second) << "\n";
+
     startReceive();
 }
 
