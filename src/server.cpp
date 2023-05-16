@@ -1,7 +1,5 @@
 #include "server.h"
 #include "packet_codes.h"
-#include "attribute_types.h"
-#include "vendor_attribute.h"
 #include <functional> //std::bind
 #include <iostream>
 
@@ -117,19 +115,19 @@ Packet Server::makeResponse(const Packet& request)
     printPacket(request);
 
     std::vector<Attribute*> attributes;
-    attributes.push_back(new String(USER_NAME, "test"));
-    attributes.push_back(new Integer(NAS_PORT, 20));
+    attributes.push_back(new String(dictionaries().attributes().code("User-Name"), "test"));
+    attributes.push_back(new Integer(dictionaries().attributes().code("NAS-Port"), 20));
     std::array<uint8_t, 4> address {127, 104, 22, 17};
-    attributes.push_back(new IpAddress(NAS_IP_ADDRESS, address));
-    attributes.push_back(new Encrypted(USER_PASSWORD, "password123"));
+    attributes.push_back(new IpAddress(dictionaries().attributes().code("NAS-IP-Address"), address));
+    attributes.push_back(new Encrypted(dictionaries().attributes().code("User-Password"), "password123"));
     std::vector<uint8_t> bytes {'1', '2', '3', 'a', 'b', 'c'};
-    attributes.push_back(new Bytes(CALLBACK_NUMBER, bytes));
+    attributes.push_back(new Bytes(dictionaries().attributes().code("Callback-Number"), bytes));
     std::vector<uint8_t> chapPassword {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g' };
-    attributes.push_back(new ChapPassword(CHAP_PASSWORD, 1, chapPassword));
+    attributes.push_back(new ChapPassword(dictionaries().attributes().code("CHAP-Password"), 1, chapPassword));
 
     std::vector<VendorSpecific*> vendorSpecific;
     std::vector<uint8_t> vendorValue {'0', '0', '0', '3'};
-    vendorSpecific.push_back(new VendorSpecific(171, 1, vendorValue));
+    vendorSpecific.push_back(new VendorSpecific(dictionaries().vendorNames().code("Dlink"), dictionaries().vendorAttributes().code("Dlink", "Dlink-User-Level"), vendorValue));
 
     if (request.type() == ACCESS_REQUEST)
         return Packet(ACCESS_ACCEPT, request.id(), request.auth(), attributes, vendorSpecific);
