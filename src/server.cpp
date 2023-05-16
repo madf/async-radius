@@ -26,7 +26,7 @@ std::string packetTypeToString(int type)
     return "uncnown";
 }
 
-void printPacket(const Packet& p)
+void Server::printPacket(const Packet& p)
 {
     std::cout << "Packet type: " << packetTypeToString(p.type()) << "\n";
 
@@ -34,12 +34,13 @@ void printPacket(const Packet& p)
 
     std::cout << "Attributes:\n";
     for (const auto& ap : p.attributes())
-        std::cout << "\t" << ap->name() << ": " << ap->toString() << "\n";
+        std::cout << "\t" << dictionaries().attributes().name(ap->type()) << ": " << ap->toString() << "\n";
 
     for (const auto& ap : p.vendorSpecific())
     {
-        std::cout << "\t" << ap->name() << ": " << ap->vendorId() << "\n";
-        std::cout << "\t" << std::to_string(ap->vendorType()) << ": " << ap->toString() << "\n";
+        const std::string vendorName = dictionaries().vendorNames().name(ap->vendorId());
+        std::cout << "\t" << ap->name() << ": " << vendorName << "\n";
+        std::cout << "\t" << dictionaries().vendorAttributes().name(vendorName, ap->vendorType()) << ": " << ap->toString() << "\n";
     }
 }
 
