@@ -17,7 +17,6 @@ class Server
         void handleReceive(const boost::system::error_code& error, std::size_t bytes);
         void handleSend(const boost::system::error_code& error, std::size_t bytes_transferred);
         Packet makeResponse(const Packet& request);
-        const Dictionaries& dictionaries() const { return m_dictionaries; }
         void printPacket(const Packet& p);
 
         boost::asio::ip::udp::socket m_socket;
