@@ -10,7 +10,6 @@ class VendorSpecific
     public:
         VendorSpecific(const uint8_t* data);
         VendorSpecific(uint32_t vendorId, uint8_t vendorType, const std::vector<uint8_t>& vendorValue);
-        std::string name() const;
         std::string toString() const;
         uint8_t vendorType() const { return m_vendorType; }
         uint32_t vendorId() const { return m_vendorId; }
