@@ -1,9 +1,10 @@
 #include "packet.h"
+#include "attribute_types.h"
 #include <openssl/md5.h>
 #include <iostream>
 #include <stdexcept>
 
-Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes, const std::string& secret, const Dictionaries& dict)
+Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes, const std::string& secret)
 {
     if (bytes < 20)
         throw std::runtime_error{"The number of received bytes in the request - " + std::to_string(bytes) + " is less than 20 bytes"};
@@ -27,7 +28,7 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes, cons
         const uint8_t attributeType = m_recvBuffer[attributeIndex];
         const uint8_t attributeLength = m_recvBuffer[attributeIndex + 1];
 
-        if (attributeType == dict.attributes().code("Vendor-Specific"))
+        if (attributeType == VENDOR_SPECIFIC)
             m_vendorSpecific.push_back(new VendorSpecific(&m_recvBuffer[attributeIndex + 2]));
         else
             m_attributes.push_back(makeAttribute(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2, secret, m_auth));
@@ -39,10 +40,10 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes, cons
     bool messageAuthenticator = false;
     for (size_t i = 0; i < m_attributes.size(); ++i)
     {
-        if (m_attributes[i]->type() == dict.attributes().code("EAP-Message"))
+        if (m_attributes[i]->type() == EAP_MESSAGE)
             eapMessage = true;
 
-        if (m_attributes[i]->type() == dict.attributes().code("Message-Authenticator"))
+        if (m_attributes[i]->type() == MESSAGE_AUTHENTICATOR)
             messageAuthenticator = true;
     }
     if (eapMessage && !messageAuthenticator)
