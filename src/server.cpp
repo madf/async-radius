@@ -72,7 +72,7 @@ void Server::handleReceive(const error_code& error, std::size_t bytes)
 
     try
     {
-        Packet packet = makeResponse(Packet(m_recvBuffer, bytes, m_secret, m_dictionaries));
+        Packet packet = makeResponse(Packet(m_recvBuffer, bytes, m_secret));
 
         std::cout << "Response packet\n";
         printPacket(packet);
