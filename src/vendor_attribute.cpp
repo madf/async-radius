@@ -55,8 +55,3 @@ std::string VendorSpecific::toString() const
 
     return value;
 }
-
-std::string VendorSpecific::name() const
-{
-    return "Vendor-Specific";
-}
