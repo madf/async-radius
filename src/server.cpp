@@ -37,7 +37,7 @@ void Server::printPacket(const Packet& p)
     for (const auto& ap : p.vendorSpecific())
     {
         const std::string vendorName = m_dictionaries.vendorNames().name(ap->vendorId());
-        std::cout << "\t" << ap->name() << ": " << vendorName << "\n";
+        std::cout << "\tVendor-Specific" << ": " << vendorName << "\n";
         std::cout << "\t" << m_dictionaries.vendorAttributes().name(vendorName, ap->vendorType()) << ": " << ap->toString() << "\n";
     }
 }
