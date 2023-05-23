@@ -1,7 +1,5 @@
 #include "server.h"
 #include "packet_codes.h"
-#include "attribute_types.h"
-#include "vendor_attribute.h"
 #include <functional> //std::bind
 #include <iostream>
 
@@ -26,7 +24,7 @@ std::string packetTypeToString(int type)
     return "uncnown";
 }
 
-void printPacket(const Packet& p)
+void Server::printPacket(const Packet& p)
 {
     std::cout << "Packet type: " << packetTypeToString(p.type()) << "\n";
 
@@ -34,12 +32,13 @@ void printPacket(const Packet& p)
 
     std::cout << "Attributes:\n";
     for (const auto& ap : p.attributes())
-        std::cout << "\t" << ap->name() << ": " << ap->toString() << "\n";
+        std::cout << "\t" << m_dictionaries.attributes().name(ap->type()) << ": " << ap->toString() << "\n";
 
     for (const auto& ap : p.vendorSpecific())
     {
-        std::cout << "\t" << ap->name() << ": " << ap->vendorId() << "\n";
-        std::cout << "\t" << std::to_string(ap->vendorType()) << ": " << ap->toString() << "\n";
+        const std::string vendorName = m_dictionaries.vendorNames().name(ap->vendorId());
+        std::cout << "\tVendor-Specific" << ": " << vendorName << "\n";
+        std::cout << "\t" << m_dictionaries.vendorAttributes().name(vendorName, ap->vendorType()) << ": " << ap->toString() << "\n";
     }
 }
 
@@ -48,24 +47,6 @@ Server::Server(boost::asio::io_service& io_service, const std::string& secret)
         m_secret(secret),
         m_dictionaries("/usr/share/freeradius/dictionary")
 {
-/*    for (const auto& entry: m_dictionaries.attributes().reverseDict())
-        std::cout << std::to_string(entry.second) << ": " << entry.first << "\n";*/
-
-    for (const auto& entry: m_dictionaries.attributes().rightDict())
-        std::cout << entry.second << ": " << std::to_string(entry.first) << "\n";
-
-    for (const auto& entry: m_dictionaries.attributeValues().rightDict())
-        std::cout << "  " << entry.first.first << " - " << entry.second << ": " << std::to_string(entry.first.second) << "\n";
-
-    for (const auto& entry: m_dictionaries.vendorNames().rightDict())
-        std::cout << entry.second << ": " << std::to_string(entry.first) << "\n";
-
-    for (const auto& entry: m_dictionaries.vendorAttributes().rightDict())
-        std::cout << "  " << entry.second << ": " << std::to_string(entry.first.second) << "\n";
-
-    for (const auto& entry: m_dictionaries.vendorAttributeValues().rightDict())
-        std::cout << "    " << entry.first.first << " - " << entry.second << ": " << std::to_string(entry.first.second) << "\n";
-
     startReceive();
 }
 
@@ -116,19 +97,19 @@ Packet Server::makeResponse(const Packet& request)
     printPacket(request);
 
     std::vector<Attribute*> attributes;
-    attributes.push_back(new String(USER_NAME, "test"));
-    attributes.push_back(new Integer(NAS_PORT, 20));
+    attributes.push_back(new String(m_dictionaries.attributes().code("User-Name"), "test"));
+    attributes.push_back(new Integer(m_dictionaries.attributes().code("NAS-Port"), 20));
     std::array<uint8_t, 4> address {127, 104, 22, 17};
-    attributes.push_back(new IpAddress(NAS_IP_ADDRESS, address));
-    attributes.push_back(new Encrypted(USER_PASSWORD, "password123"));
+    attributes.push_back(new IpAddress(m_dictionaries.attributes().code("NAS-IP-Address"), address));
+    attributes.push_back(new Encrypted(m_dictionaries.attributes().code("User-Password"), "password123"));
     std::vector<uint8_t> bytes {'1', '2', '3', 'a', 'b', 'c'};
-    attributes.push_back(new Bytes(CALLBACK_NUMBER, bytes));
+    attributes.push_back(new Bytes(m_dictionaries.attributes().code("Callback-Number"), bytes));
     std::vector<uint8_t> chapPassword {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g' };
-    attributes.push_back(new ChapPassword(CHAP_PASSWORD, 1, chapPassword));
+    attributes.push_back(new ChapPassword(m_dictionaries.attributes().code("CHAP-Password"), 1, chapPassword));
 
     std::vector<VendorSpecific*> vendorSpecific;
     std::vector<uint8_t> vendorValue {'0', '0', '0', '3'};
-    vendorSpecific.push_back(new VendorSpecific(171, 1, vendorValue));
+    vendorSpecific.push_back(new VendorSpecific(m_dictionaries.vendorNames().code("Dlink"), m_dictionaries.vendorAttributes().code("Dlink", "Dlink-User-Level"), vendorValue));
 
     if (request.type() == ACCESS_REQUEST)
         return Packet(ACCESS_ACCEPT, request.id(), request.auth(), attributes, vendorSpecific);

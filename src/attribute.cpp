@@ -9,11 +9,6 @@ Attribute::Attribute(uint8_t type)
 {
 }
 
-std::string Attribute::name() const
-{
-    return typeToString(m_type);
-}
-
 String::String(uint8_t type, const uint8_t* data, size_t size)
         : Attribute(type),
           m_value(reinterpret_cast<const char*>(data), size)
