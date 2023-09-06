@@ -2,6 +2,8 @@ cmake_minimum_required (VERSION 3.13)
 
 project (radiusd VERSION 1.0.0)
 
+option (BUILD_SAMPLE_SERVER "Build sample server." OFF)
+
 set (CPACK_PACKAGE_NAME ${PROJECT_NAME})
 set (CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 
@@ -17,8 +19,7 @@ find_package ( Threads REQUIRED )
 find_package ( Boost 1.66.0 REQUIRED )
 find_package ( OpenSSL 1.0.0 REQUIRED )
 
-add_executable ( ${PROJECT_NAME} )
-
+add_subdirectory (sample)
 add_subdirectory (src)
 
 add_custom_target (cppcheck COMMAND cppcheck --enable=all --std=c++14 ${CMAKE_SOURCE_DIR}/src)
