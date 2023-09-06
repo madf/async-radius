@@ -1,6 +1,12 @@
 configure_file ( version.h.in version.h ESCAPE_QUOTES @ONLY )
 
-target_sources ( ${PROJECT_NAME} PRIVATE main.cpp server.cpp packet.cpp attribute.cpp vendor_attribute.cpp utils.cpp dictionaries.cpp)
+add_library ( radproto STATIC )
+
+target_sources ( radproto PRIVATE server.cpp packet.cpp attribute.cpp vendor_attribute.cpp utils.cpp dictionaries.cpp)
+
+target_link_libraries ( ${PROJECT_NAME} radproto )
+
+target_include_directories ( radproto PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} )
 
 target_link_libraries ( ${PROJECT_NAME} OpenSSL::Crypto Boost::boost Threads::Threads )
 
