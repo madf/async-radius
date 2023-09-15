@@ -23,3 +23,8 @@ add_subdirectory (sample)
 add_subdirectory (src)
 
 add_custom_target (cppcheck COMMAND cppcheck --enable=all --std=c++14 ${CMAKE_SOURCE_DIR}/src)
+
+target_include_directories (radproto INTERFACE
+  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/radproto>
+  $<INSTALL_INTERFACE:include/radproto>
+)
