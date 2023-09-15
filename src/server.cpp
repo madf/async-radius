@@ -1,4 +1,4 @@
-#include "server.h"
+#include "../include/radproto/server.h"
 #include "packet_codes.h"
 #include <functional> //std::bind
 #include <iostream>
