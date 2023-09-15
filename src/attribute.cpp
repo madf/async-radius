@@ -1,5 +1,5 @@
-#include "packet.h"
-#include "attribute.h"
+#include "../include/radproto/packet.h"
+#include "../include/radproto/attribute.h"
 #include "utils.h"
 #include <openssl/md5.h>
 #include <iostream>
