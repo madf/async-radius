@@ -1,4 +1,4 @@
-#include "../include/radproto/dictionaries.h"
+#include "dictionaries.h"
 #include <boost/tokenizer.hpp>
 #include <vector>
 #include <utility>
