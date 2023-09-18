@@ -1,5 +1,5 @@
-#include "../include/radproto/packet.h"
-#include "../include/radproto/vendor_attribute.h"
+#include "packet.h"
+#include "vendor_attribute.h"
 #include "utils.h"
 #include "attribute_types.h"
 #include <iostream>
