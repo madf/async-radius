@@ -1,4 +1,4 @@
-#include "../include/radproto/packet.h"
+#include "packet.h"
 #include "attribute_types.h"
 #include <openssl/md5.h>
 #include <iostream>
