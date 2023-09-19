@@ -7,3 +7,8 @@ target_sources ( radproto PRIVATE server.cpp packet.cpp attribute.cpp vendor_att
 target_link_libraries ( radproto OpenSSL::Crypto Boost::boost Threads::Threads )
 
 target_include_directories ( ${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR} )
+
+target_include_directories (radproto PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/radproto>
+  $<INSTALL_INTERFACE:include/radproto>
+)

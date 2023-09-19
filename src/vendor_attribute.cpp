@@ -1,6 +1,6 @@
 #include "packet.h"
-#include "utils.h"
 #include "vendor_attribute.h"
+#include "utils.h"
 #include "attribute_types.h"
 #include <iostream>
 
