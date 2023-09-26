@@ -1,0 +1,8 @@
+#pragma once
+
+namespace RADIUSD
+{
+
+const auto version = "@CPACK_PACKAGE_VERSION@";
+
+}
