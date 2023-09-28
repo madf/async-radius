@@ -16,7 +16,8 @@ namespace
 
     void printVersion(const std::string& programName)
     {
-        std::cout << programName << " " << RADIUSD::version << "\n";
+        std::cout << programName << "\n"
+                  << "radproto" <<  " " << RADIUSD::version << "\n";
     }
 
 }
