@@ -4,7 +4,7 @@ project (radproto VERSION 1.0.0)
 
 option (BUILD_SAMPLE_SERVER "Build sample server." OFF)
 
-set (CPACK_PACKAGE_NAME radiusd)
+set (CPACK_PACKAGE_NAME ${PROJECT_NAME})
 set (CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 
 set ( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules )
