@@ -53,7 +53,7 @@ Server::Server(boost::asio::io_service& io_service, const std::string& secret)
 void Server::startReceive()
 {
     m_socket.async_receive_from(boost::asio::buffer(m_recvBuffer), m_remoteEndpoint,
-        std::bind(&Server::handleReceive, this, pls::_1, pls::_2));
+        [this](const error_code error, std::size_t bytes) {handleReceive(error, bytes);});
 }
 
 void Server::handleReceive(const error_code& error, std::size_t bytes)
