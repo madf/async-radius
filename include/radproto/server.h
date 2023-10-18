@@ -15,7 +15,7 @@ class Server
     private:
         void startReceive();
         void handleReceive(const boost::system::error_code& error, std::size_t bytes);
-        void handleSend(const boost::system::error_code& error, std::size_t bytes_transferred);
+        void handleSend();
         Packet makeResponse(const Packet& request);
         void printPacket(const Packet& p);
 
