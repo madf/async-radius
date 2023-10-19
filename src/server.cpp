@@ -53,7 +53,7 @@ Server::Server(boost::asio::io_service& io_service, const std::string& secret)
 void Server::startReceive()
 {
     m_socket.async_receive_from(boost::asio::buffer(m_recvBuffer), m_remoteEndpoint,
-        std::bind(&Server::handleReceive, this, pls::_1, pls::_2));
+        [this](const error_code& error, std::size_t bytes) {handleReceive(error, bytes);});
 }
 
 void Server::handleReceive(const error_code& error, std::size_t bytes)
@@ -77,8 +77,8 @@ void Server::handleReceive(const error_code& error, std::size_t bytes)
         std::cout << "Response packet\n";
         printPacket(packet);
 
-        m_socket.async_send_to(boost::asio::buffer(packet.makeSendBuffer(m_secret)),
-            m_remoteEndpoint, std::bind(&Server::handleSend, this, pls::_1, pls::_2));
+        m_socket.async_send_to(boost::asio::buffer(packet.makeSendBuffer(m_secret)), m_remoteEndpoint,
+           [this](const error_code& /*ec*/, std::size_t /*bytesTransferred*/) {handleSend();});
     }
     catch (const std::runtime_error& exception)
     {
@@ -87,7 +87,7 @@ void Server::handleReceive(const error_code& error, std::size_t bytes)
     startReceive();
 }
 
-void Server::handleSend(const error_code& /*error*/, std::size_t /*bytes_transferred*/)
+void Server::handleSend()
 {
 }
 
