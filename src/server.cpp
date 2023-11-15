@@ -1,7 +1,5 @@
 #include "server.h"
 #include "packet_codes.h"
-#include <functional> //std::bind
-#include <iostream>
 
 using boost::asio::ip::udp;
 using boost::system::error_code;
@@ -24,95 +22,38 @@ std::string packetTypeToString(int type)
     return "uncnown";
 }
 
-void Server::printPacket(const Packet& p)
-{
-    std::cout << "Packet type: " << packetTypeToString(p.type()) << "\n";
-
-    std::cout << "ID: " << std::to_string(p.id()) << "\n";
-
-    std::cout << "Attributes:\n";
-    for (const auto& ap : p.attributes())
-        std::cout << "\t" << m_dictionaries.attributes().name(ap->type()) << ": " << ap->toString() << "\n";
-
-    for (const auto& ap : p.vendorSpecific())
-    {
-        const std::string vendorName = m_dictionaries.vendorNames().name(ap->vendorId());
-        std::cout << "\tVendor-Specific" << ": " << vendorName << "\n";
-        std::cout << "\t" << m_dictionaries.vendorAttributes().name(vendorName, ap->vendorType()) << ": " << ap->toString() << "\n";
-    }
-}
-
 Server::Server(boost::asio::io_service& io_service, const std::string& secret)
-      : m_socket(io_service, udp::endpoint(udp::v4(), 9999)),
-        m_secret(secret),
-        m_dictionaries("/usr/share/freeradius/dictionary")
+    : m_socket(io_service, udp::endpoint(udp::v4(), 9999)),
+      m_secret(secret),
+      m_dictionaries("/usr/share/freeradius/dictionary")
 {
-    startReceive();
 }
 
-void Server::startReceive()
+void Server::asyncReceive(std::function<void(const error_code& error, const Packet& request)> callback)
 {
     m_socket.async_receive_from(boost::asio::buffer(m_recvBuffer), m_remoteEndpoint,
-        [this](const error_code& error, std::size_t bytes) {handleReceive(error, bytes);});
+       [this, callback](const error_code& error, std::size_t bytes) {handleReceive(error, bytes, callback);});
 }
 
-void Server::handleReceive(const error_code& error, std::size_t bytes)
+void Server::asyncSend(std::function<void(const error_code& ec)> callback, Packet& response)
 {
-    if (error)
-    {
-        std::cout << "Error async_receivw_from: " << error.message() << "\n";
-        return;
-    }
+    m_socket.async_send_to(boost::asio::buffer(response.makeSendBuffer(m_secret)), m_remoteEndpoint,
+       [this, callback](const error_code& ec, std::size_t /*bytesTransferred*/) {handleSend(ec, callback);});
+}
 
-    if (bytes < 20)
-    {
-        std::cout << "Error: request length less than 20 bytes\n";
-        return;
-    }
-
+void Server::handleReceive(const error_code& error, std::size_t bytes, std::function<void(const error_code&, const Packet&)> callback)
+{
     try
     {
-        Packet packet = makeResponse(Packet(m_recvBuffer, bytes, m_secret));
-
-        std::cout << "Response packet\n";
-        printPacket(packet);
-
-        m_socket.async_send_to(boost::asio::buffer(packet.makeSendBuffer(m_secret)), m_remoteEndpoint,
-           [this](const error_code& /*ec*/, std::size_t /*bytesTransferred*/) {handleSend();});
+        const Packet request = Packet(m_recvBuffer, bytes, m_secret);
+        callback(error, request);
     }
     catch (const std::runtime_error& exception)
     {
-        std::cout << "Packet error: " << exception.what() << "\n";
     }
-    startReceive();
 }
 
-void Server::handleSend()
+void Server::handleSend(const error_code& ec, std::function<void(const error_code&)> callback)
 {
-}
-
-Packet Server::makeResponse(const Packet& request)
-{
-    std::cout << "Request packet\n";
-    printPacket(request);
-
-    std::vector<Attribute*> attributes;
-    attributes.push_back(new String(m_dictionaries.attributes().code("User-Name"), "test"));
-    attributes.push_back(new Integer(m_dictionaries.attributes().code("NAS-Port"), 20));
-    std::array<uint8_t, 4> address {127, 104, 22, 17};
-    attributes.push_back(new IpAddress(m_dictionaries.attributes().code("NAS-IP-Address"), address));
-    attributes.push_back(new Encrypted(m_dictionaries.attributes().code("User-Password"), "password123"));
-    std::vector<uint8_t> bytes {'1', '2', '3', 'a', 'b', 'c'};
-    attributes.push_back(new Bytes(m_dictionaries.attributes().code("Callback-Number"), bytes));
-    std::vector<uint8_t> chapPassword {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g' };
-    attributes.push_back(new ChapPassword(m_dictionaries.attributes().code("CHAP-Password"), 1, chapPassword));
-
-    std::vector<VendorSpecific*> vendorSpecific;
-    std::vector<uint8_t> vendorValue {'0', '0', '0', '3'};
-    vendorSpecific.push_back(new VendorSpecific(m_dictionaries.vendorNames().code("Dlink"), m_dictionaries.vendorAttributes().code("Dlink", "Dlink-User-Level"), vendorValue));
-
-    if (request.type() == ACCESS_REQUEST)
-        return Packet(ACCESS_ACCEPT, request.id(), request.auth(), attributes, vendorSpecific);
-
-    return Packet(ACCESS_REJECT, request.id(), request.auth(), attributes, vendorSpecific);
+    callback(ec);
 }
