@@ -4,20 +4,20 @@
 #include "packet.h"
 #include "dictionaries.h"
 #include <boost/asio.hpp>
-#include <array>
 #include <cstdint> //uint8_t, uint32_t
+#include <array>
+#include <functional>
 
 class Server
 {
     public:
         Server(boost::asio::io_service& io_service, const std::string& secret);
+        void asyncReceive(std::function<void(const boost::system::error_code& error, const Packet& request)> callback);
+        void asyncSend(std::function<void(const boost::system::error_code& err)> callback, Packet& response);
 
     private:
-        void startReceive();
-        void handleReceive(const boost::system::error_code& error, std::size_t bytes);
-        void handleSend();
-        Packet makeResponse(const Packet& request);
-        void printPacket(const Packet& p);
+        void handleReceive(const boost::system::error_code& error, std::size_t bytes, std::function<void(const boost::system::error_code&, const Packet&)> callback);
+        void handleSend(const boost::system::error_code& ec, std::function<void(const boost::system::error_code&)> callback);
 
         boost::asio::ip::udp::socket m_socket;
         boost::asio::ip::udp::endpoint m_remoteEndpoint;
