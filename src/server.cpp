@@ -24,8 +24,7 @@ std::string packetTypeToString(int type)
 
 Server::Server(boost::asio::io_service& io_service, const std::string& secret)
     : m_socket(io_service, udp::endpoint(udp::v4(), 9999)),
-      m_secret(secret),
-      m_dictionaries("/usr/share/freeradius/dictionary")
+      m_secret(secret)
 {
 }
 
@@ -35,7 +34,7 @@ void Server::asyncReceive(const std::function<void(const error_code&, const Pack
        [this, callback](const error_code& error, std::size_t bytes) {handleReceive(error, bytes, callback);});
 }
 
-void Server::asyncSend(const std::function<void(const error_code&)>& callback, Packet& response)
+void Server::asyncSend(Packet& response, const std::function<void(const error_code&)>& callback)
 {
     m_socket.async_send_to(boost::asio::buffer(response.makeSendBuffer(m_secret)), m_remoteEndpoint,
        [this, callback](const error_code& ec, std::size_t /*bytesTransferred*/) {handleSend(ec, callback);});
