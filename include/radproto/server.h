@@ -12,7 +12,7 @@ class Server
 {
     public:
         Server(boost::asio::io_service& io_service, const std::string& secret);
-        void asyncReceive(std::function<void(const boost::system::error_code& error, const Packet& request)> callback);
+        void asyncReceive(const std::function<void(const boost::system::error_code&, const Packet&)>& callback);
         void asyncSend(std::function<void(const boost::system::error_code& err)> callback, Packet& response);
 
     private:
