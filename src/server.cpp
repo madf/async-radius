@@ -34,7 +34,7 @@ void Server::asyncReceive(const std::function<void(const error_code&, const Pack
        [this, callback](const error_code& error, std::size_t bytes) {handleReceive(error, bytes, callback);});
 }
 
-void Server::asyncSend(Packet& response, const std::function<void(const error_code&)>& callback)
+void Server::asyncSend(const Packet& response, const std::function<void(const error_code&)>& callback)
 {
     m_socket.async_send_to(boost::asio::buffer(response.makeSendBuffer(m_secret)), m_remoteEndpoint,
        [this, callback](const error_code& ec, std::size_t /*bytesTransferred*/) {handleSend(ec, callback);});
