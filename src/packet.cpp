@@ -65,7 +65,7 @@ Packet::~Packet()
         delete ap;
 }
 
-const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
+const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret) const
 {
     std::vector<uint8_t> sendBuffer(20);
 
