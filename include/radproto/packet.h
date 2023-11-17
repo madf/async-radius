@@ -19,7 +19,7 @@ class Packet
         const std::array<uint8_t, 16>& auth() const { return m_auth; }
         const std::vector<Attribute*>& attributes() const { return m_attributes; }
         const std::vector<VendorSpecific*>& vendorSpecific() const { return m_vendorSpecific; }
-        const std::vector<uint8_t> makeSendBuffer(const std::string& secret);
+        const std::vector<uint8_t> makeSendBuffer(const std::string& secret) const;
         Attribute* makeAttribute(uint8_t type, const uint8_t* data, size_t size, const std::string& secret, const std::array<uint8_t, 16>& auth);
 
     private:
