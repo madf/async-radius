@@ -44,11 +44,18 @@ void Server::handleReceive(const error_code& error, std::size_t bytes, std::func
 {
     try
     {
+        if (error)
+            throw std::runtime_error{"Error async_receivw_from: " + error.message()};
+
+        if (bytes < 20)
+            throw std::runtime_error{"Error: request length less than 20 bytes"};
+
         const Packet request = Packet(m_recvBuffer, bytes, m_secret);
         callback(error, request);
     }
     catch (const std::runtime_error& exception)
     {
+        return;
     }
 }
 
