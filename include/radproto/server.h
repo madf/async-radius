@@ -6,16 +6,17 @@
 #include <cstdint> //uint8_t, uint32_t
 #include <array>
 #include <functional>
+#include <optional>
 
 class Server
 {
     public:
         Server(boost::asio::io_service& io_service, const std::string& secret);
-        void asyncReceive(const std::function<void(const boost::system::error_code&, const Packet&)>& callback);
+        void asyncReceive(const std::function<void(const boost::system::error_code&, const std::optional<Packet>&)>& callback);
         void asyncSend(const Packet& response, const std::function<void(const boost::system::error_code&)>& callback);
 
     private:
-        void handleReceive(const boost::system::error_code& error, std::size_t bytes, std::function<void(const boost::system::error_code&, const Packet&)> callback);
+        void handleReceive(const boost::system::error_code& error, std::size_t bytes, std::function<void(const boost::system::error_code&, const std::optional<Packet>&)> callback);
         void handleSend(const boost::system::error_code& ec, std::function<void(const boost::system::error_code&)> callback);
 
         boost::asio::ip::udp::socket m_socket;
