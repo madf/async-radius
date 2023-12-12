@@ -1,4 +1,5 @@
 #include "packet.h"
+#include "error.h"
 #include "attribute_types.h"
 #include <openssl/md5.h>
 #include <iostream>
@@ -7,13 +8,13 @@
 Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes, const std::string& secret)
 {
     if (bytes < 20)
-        throw std::runtime_error{"The number of received bytes in the request - " + std::to_string(bytes) + " is less than 20 bytes"};
+        throw std::runtime_error{"lib::Error::numberBytesLess20"};
 
     size_t length = m_recvBuffer[2] * 256 + m_recvBuffer[3];
     std::cout << "Length: " << length << "\n";
 
     if (bytes < length)
-        throw std::runtime_error{"Request length " + std::to_string(bytes) + " is less than specified in the request - " + std::to_string(length)};
+        throw std::runtime_error{"requestLengthShort"};
 
     m_type = m_recvBuffer[0];
 
@@ -47,7 +48,7 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes, cons
             messageAuthenticator = true;
     }
     if (eapMessage && !messageAuthenticator)
-        throw std::runtime_error{"The EAP-Message attribute is present, but the Message-Authenticator attribute is missing"};
+        throw std::runtime_error{"eapMessageAttributeError"};
 }
 
 Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, const std::vector<Attribute*>& attributes, const std::vector<VendorSpecific*>& vendorSpecific)
