@@ -1,4 +1,5 @@
 #include "server.h"
+#include "error.h"
 #include "packet_codes.h"
 
 using boost::asio::ip::udp;
@@ -28,7 +29,7 @@ Server::Server(boost::asio::io_service& io_service, const std::string& secret)
 {
 }
 
-void Server::asyncReceive(const std::function<void(const error_code&, const Packet&)>& callback)
+void Server::asyncReceive(const std::function<void(const error_code&, const std::optional<Packet>&)>& callback)
 {
     m_socket.async_receive_from(boost::asio::buffer(m_recvBuffer), m_remoteEndpoint,
        [this, callback](const error_code& error, std::size_t bytes) {handleReceive(error, bytes, callback);});
@@ -40,23 +41,31 @@ void Server::asyncSend(const Packet& response, const std::function<void(const er
        [this, callback](const error_code& ec, std::size_t /*bytesTransferred*/) {handleSend(ec, callback);});
 }
 
-void Server::handleReceive(const error_code& error, std::size_t bytes, std::function<void(const error_code&, const Packet&)> callback)
+void Server::handleReceive(const error_code& error, std::size_t bytes, std::function<void(const error_code&, const std::optional<Packet>&)> callback)
 {
-    try
-    {
-        if (error)
-            throw std::runtime_error{"Error async_receivw_from: " + error.message()};
+        std::optional<Packet> oEmpty;
+        std::optional<Packet> oRequest;
 
         if (bytes < 20)
-            throw std::runtime_error{"Error: request length less than 20 bytes"};
+            callback(lib::Error::numberBytesLess20, oEmpty);
 
+    try
+    {
         const Packet request = Packet(m_recvBuffer, bytes, m_secret);
-        callback(error, request);
+        oRequest = request;
     }
     catch (const std::runtime_error& exception)
     {
-        return;
+        if (std::string (exception.what()) == "lib::Error::numberBytesLess20")
+            callback(lib::Error::numberBytesLess20, oEmpty);
+
+        if (std::string (exception.what()) == "lib::Error::requestLengthShort")
+            callback(lib::Error::requestLengthShort, oEmpty);
+
+        if (std::string (exception.what()) == "lib::Error::eapMessageAttributeError")
+            callback(lib::Error::eapMessageAttributeError, oEmpty);
     }
+    callback(error, oRequest);
 }
 
 void Server::handleSend(const error_code& ec, std::function<void(const error_code&)> callback)
