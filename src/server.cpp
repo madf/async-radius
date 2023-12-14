@@ -49,7 +49,7 @@ namespace RadProto
             std::optional<Packet> oRequest;
 
             if (bytes < 20)
-                callback(Error::numberBytesLess20, oEmpty);
+                callback(Error::numberOfBytesIsLessThan20, oEmpty);
 
         try
         {
@@ -59,10 +59,10 @@ namespace RadProto
         catch (const std::runtime_error& exception)
         {
             if (std::string (exception.what()) == "Error::numberBytesLess20")
-                callback(Error::numberBytesLess20, oEmpty);
+                callback(Error::numberOfBytesIsLessThan20, oEmpty);
 
             if (std::string (exception.what()) == "Error::requestLengthShort")
-                callback(Error::requestLengthShort, oEmpty);
+                callback(Error::requestLengthIsShort, oEmpty);
 
             if (std::string (exception.what()) == "Error::eapMessageAttributeError")
                 callback(Error::eapMessageAttributeError, oEmpty);
