@@ -10,7 +10,7 @@ namespace RadProto
 
     std::string ErrorCategory::message(int ev) const noexcept
     {
-        switch(static_cast<Error>(ev))
+        switch (static_cast<Error>(ev))
         {
             case Error::success:
                 return "No error";
