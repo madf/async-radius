@@ -3,7 +3,7 @@
 
 #include <boost/system/error_code.hpp>
 
-namespace lib
+namespace RadProto
 {
     class ErrorCategory: public boost::system::error_category
     {
@@ -29,7 +29,7 @@ namespace boost
     namespace system
     {
         template <>
-            struct is_error_code_enum<::lib::Error> : std::true_type
+            struct is_error_code_enum<::RadProto::Error> : std::true_type
         {
         };
     }
