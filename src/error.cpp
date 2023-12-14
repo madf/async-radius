@@ -14,10 +14,10 @@ namespace RadProto
         {
             case Error::success:
                 return "No error";
-            case Error::numberBytesLess20:
-                return "Request length less than 20 bytes";
-            case Error::requestLengthShort:
-                return "Request length less than specified in the request";
+            case Error::numberOfBytesIsLessThan20:
+                return "Request length is less than 20 bytes";
+            case Error::requestLengthIsShort:
+                return "Request length is less than specified in the request";
             case Error::eapMessageAttributeError:
                 return "The EAP-Message attribute is present, but the Message-Authenticator attribute is missing";
             default:
