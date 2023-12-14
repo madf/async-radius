@@ -25,7 +25,7 @@ namespace RadProto
         }
     }
 
-    boost::system::error_category const& theCategory()
+    const boost::system::error_category& theCategory()
     {
         static const ErrorCategory instance;
         return instance;
