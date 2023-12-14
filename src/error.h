@@ -16,8 +16,8 @@ namespace RadProto
     {
         success = 0,
 
-        numberBytesLess20,
-        requestLengthShort,
+        numberOfBytesIsLessThan20,
+        requestLengthIsShort,
         eapMessageAttributeError
     };
 
