@@ -1,7 +1,7 @@
 #include "error.h"
 #include <string>
 
-namespace lib
+namespace RadProto
 {
     const char* ErrorCategory::name() const noexcept
     {
