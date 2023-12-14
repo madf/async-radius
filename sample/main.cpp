@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
     try
     {
         boost::asio::io_service io_service;
-        Server server(io_service, secret);
+        RadProto::Server server(io_service, secret);
         io_service.run();
     }
     catch (const std::exception& e)
