@@ -1,16 +1,19 @@
 #ifndef PACKET_CODES_H
 #define PACKET_CODES_H
 
-enum Packet_Codes
+namespace RadProto
 {
-    ACCESS_REQUEST = 1,
-    ACCESS_ACCEPT = 2,
-    ACCESS_REJECT = 3,
-    ACCOUNTING_REQUEST = 4,
-    ACCOUNTING_RESPONSE = 5,
-    ACCESS_CHALLENGE = 11,
-    STATUS_SERVER = 12,
-    STATUS_CLIENT = 13
-};
+    enum Packet_Codes
+    {
+        ACCESS_REQUEST = 1,
+        ACCESS_ACCEPT = 2,
+        ACCESS_REJECT = 3,
+        ACCOUNTING_REQUEST = 4,
+        ACCOUNTING_RESPONSE = 5,
+        ACCESS_CHALLENGE = 11,
+        STATUS_SERVER = 12,
+        STATUS_CLIENT = 13
+    };
+}
 
 #endif
