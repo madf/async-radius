@@ -29,7 +29,7 @@ namespace boost
     namespace system
     {
         template <>
-            struct is_error_code_enum<::RadProto::Error> : std::true_type
+        struct is_error_code_enum<::RadProto::Error> : std::true_type
         {
         };
     }
