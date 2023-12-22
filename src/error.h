@@ -21,6 +21,16 @@ namespace RadProto
         eapMessageAttributeError
     };
 
+    class Exception: public std::runtime_error
+    {
+        public:
+            Exception(const boost::system::error_code& errorCode);
+            Error getErrorCode() const {return m_errorCode;}
+
+        private:
+            Error m_errorCode;
+    };
+
     boost::system::error_code make_error_code(Error);
 }
 
