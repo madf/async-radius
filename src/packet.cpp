@@ -10,13 +10,13 @@ namespace RadProto
     Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes, const std::string& secret)
     {
         if (bytes < 20)
-            throw std::runtime_error{"Error::numberOfBytesIsLessThan20"};
+            throw Exception(Error::numberOfBytesIsLessThan20);
 
         size_t length = m_recvBuffer[2] * 256 + m_recvBuffer[3];
         std::cout << "Length: " << length << "\n";
 
         if (bytes < length)
-            throw std::runtime_error{"requestLengthIsShort"};
+            throw Exception(Error::requestLengthIsShort);
 
         m_type = m_recvBuffer[0];
 
@@ -50,7 +50,7 @@ namespace RadProto
                 messageAuthenticator = true;
         }
         if (eapMessage && !messageAuthenticator)
-            throw std::runtime_error{"eapMessageAttributeError"};
+            throw Exception(Error::eapMessageAttributeError);
     }
 
     Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, const std::vector<Attribute*>& attributes, const std::vector<VendorSpecific*>& vendorSpecific)
