@@ -56,15 +56,15 @@ namespace RadProto
             const Packet request = Packet(m_recvBuffer, bytes, m_secret);
             oRequest = request;
         }
-        catch (const std::runtime_error& exception)
+        catch (const Exception& exception)
         {
-            if (std::string (exception.what()) == "Error::numberBytesLess20")
+            if (exception.getErrorCode() == Error::numberOfBytesIsLessThan20)
                 callback(Error::numberOfBytesIsLessThan20, oEmpty);
 
-            if (std::string (exception.what()) == "Error::requestLengthShort")
+            if (exception.getErrorCode() == Error::requestLengthIsShort)
                 callback(Error::requestLengthIsShort, oEmpty);
 
-            if (std::string (exception.what()) == "Error::eapMessageAttributeError")
+            if (exception.getErrorCode() == Error::eapMessageAttributeError)
                 callback(Error::eapMessageAttributeError, oEmpty);
         }
         callback(error, oRequest);
