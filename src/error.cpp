@@ -3,6 +3,11 @@
 
 namespace RadProto
 {
+    Exception::Exception(const boost::system::error_code& errorCode)
+        : std::runtime_error(errorCode.message())
+    {
+    }
+
     const char* ErrorCategory::name() const noexcept
     {
         return "library";
