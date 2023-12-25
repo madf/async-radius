@@ -45,29 +45,24 @@ namespace RadProto
 
     void Server::handleReceive(const error_code& error, std::size_t bytes, std::function<void(const error_code&, const std::optional<Packet>&)> callback)
     {
-            std::optional<Packet> oEmpty;
-            std::optional<Packet> oRequest;
-
-            if (bytes < 20)
-                callback(Error::numberOfBytesIsLessThan20, oEmpty);
-
+        if (bytes < 20)
+            callback(Error::numberOfBytesIsLessThan20, std::nullopt);
         try
         {
             const Packet request = Packet(m_recvBuffer, bytes, m_secret);
-            oRequest = request;
+            callback(error, std::make_optional<Packet>(request));
         }
         catch (const Exception& exception)
         {
             if (exception.getErrorCode() == Error::numberOfBytesIsLessThan20)
-                callback(Error::numberOfBytesIsLessThan20, oEmpty);
+                callback(Error::numberOfBytesIsLessThan20, std::nullopt);
 
             if (exception.getErrorCode() == Error::requestLengthIsShort)
-                callback(Error::requestLengthIsShort, oEmpty);
+                callback(Error::requestLengthIsShort, std::nullopt);
 
             if (exception.getErrorCode() == Error::eapMessageAttributeError)
-                callback(Error::eapMessageAttributeError, oEmpty);
+                callback(Error::eapMessageAttributeError, std::nullopt);
         }
-        callback(error, oRequest);
     }
 
     void Server::handleSend(const error_code& ec, std::function<void(const error_code&)> callback)
