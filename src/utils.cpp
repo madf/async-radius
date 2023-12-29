@@ -2,11 +2,8 @@
 #include "attribute_types.h"
 #include <cstdint> //uint8_t, uint32_t
 
-namespace RadProto
+std::string RadProto::byteToHex(uint8_t byte)
 {
-    std::string byteToHex(uint8_t byte)
-    {
-        static const std::string digits = "0123456789ABCDEF";
-        return {digits[byte / 16], digits[byte % 16]};
-    }
+    static const std::string digits = "0123456789ABCDEF";
+    return {digits[byte / 16], digits[byte % 16]};
 }
