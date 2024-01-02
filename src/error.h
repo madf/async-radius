@@ -25,10 +25,10 @@ namespace RadProto
     {
         public:
             Exception(const boost::system::error_code& errorCode);
-            Error getErrorCode() const {return m_errorCode;}
+            boost::system::error_code getErrorCode() const {return m_errorCode;}
 
         private:
-            Error m_errorCode;
+            boost::system::error_code m_errorCode;
     };
 
     boost::system::error_code make_error_code(Error);
