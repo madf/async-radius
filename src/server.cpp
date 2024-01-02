@@ -53,14 +53,7 @@ void Server::handleReceive(const error_code& error, std::size_t bytes, std::func
     }
     catch (const Exception& exception)
     {
-        if (exception.getErrorCode() == Error::numberOfBytesIsLessThan20)
-            callback(Error::numberOfBytesIsLessThan20, std::nullopt);
-
-        if (exception.getErrorCode() == Error::requestLengthIsShort)
-            callback(Error::requestLengthIsShort, std::nullopt);
-
-        if (exception.getErrorCode() == Error::eapMessageAttributeError)
-            callback(Error::eapMessageAttributeError, std::nullopt);
+        callback(exception.getErrorCode(), std::nullopt);
     }
 }
 
