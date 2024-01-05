@@ -48,8 +48,7 @@ void Server::handleReceive(const error_code& error, std::size_t bytes, std::func
         callback(Error::numberOfBytesIsLessThan20, std::nullopt);
     try
     {
-        const Packet request = Packet(m_recvBuffer, bytes, m_secret);
-        callback(error, std::make_optional<Packet>(request));
+        callback(error, std::make_optional<Packet>(m_recvBuffer, bytes, m_secret));
     }
     catch (const Exception& exception)
     {
