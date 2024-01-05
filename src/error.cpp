@@ -3,7 +3,8 @@
 
 using Exception = RadProto::Exception;
 Exception::Exception(const boost::system::error_code& errorCode)
-    : std::runtime_error(errorCode.message())
+    : std::runtime_error(errorCode.message()),
+      m_errorCode(errorCode)
 {
 }
 
