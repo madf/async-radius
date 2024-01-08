@@ -56,7 +56,7 @@ void Server::handleReceive(const error_code& error, std::size_t bytes, const std
     }
 }
 
-void Server::handleSend(const error_code& ec, std::function<void(const error_code&)> callback)
+void Server::handleSend(const error_code& ec, const std::function<void(const error_code&)>& callback)
 {
     callback(ec);
 }
