@@ -42,7 +42,7 @@ void Server::asyncSend(const Packet& response, const std::function<void(const er
        [this, callback](const error_code& ec, std::size_t /*bytesTransferred*/) {handleSend(ec, callback);});
 }
 
-void Server::handleReceive(const error_code& error, std::size_t bytes, std::function<void(const error_code&, const std::optional<Packet>&)> callback)
+void Server::handleReceive(const error_code& error, std::size_t bytes, const std::function<void(const error_code&, const std::optional<Packet>&)>& callback)
 {
     if (bytes < 20)
         callback(Error::numberOfBytesIsLessThan20, std::nullopt);
