@@ -19,7 +19,7 @@ namespace RadProto
 
         private:
             void handleReceive(const boost::system::error_code& error, std::size_t bytes, const std::function<void(const boost::system::error_code&, const std::optional<Packet>&)>& callback);
-            void handleSend(const boost::system::error_code& ec, std::function<void(const boost::system::error_code&)> callback);
+            void handleSend(const boost::system::error_code& ec, const std::function<void(const boost::system::error_code&)>& callback);
 
             boost::asio::ip::udp::socket m_socket;
             boost::asio::ip::udp::endpoint m_remoteEndpoint;
