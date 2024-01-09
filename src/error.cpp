@@ -32,13 +32,8 @@ std::string ErrorCategory::message(int ev) const noexcept
     }
 }
 
-const boost::system::error_category& theCategory()
-{
-    static const ErrorCategory instance;
-    return instance;
-}
-
 boost::system::error_code RadProto::make_error_code(Error e)
 {
-    return boost::system::error_code(static_cast<int>(e), theCategory());
+    static const ErrorCategory instance;
+    return boost::system::error_code(static_cast<int>(e), instance);
 }
