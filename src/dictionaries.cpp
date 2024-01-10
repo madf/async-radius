@@ -68,7 +68,6 @@ Dictionaries::Dictionaries(const std::string& filePath)
     boost::char_separator<char> sep(" \t");
 
     std::string line;
-    size_t lineNumber = 0;
     std::string vendorName;
 
     while (std::getline(stream, line))
@@ -114,7 +113,6 @@ Dictionaries::Dictionaries(const std::string& filePath)
                     append(Dictionaries(filePath.substr(0, filePath.rfind('/') + 1) + tokens[1]));
             }
         }
-        ++lineNumber;
     }
 }
 
