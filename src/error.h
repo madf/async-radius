@@ -24,7 +24,7 @@ namespace RadProto
     class Exception: public std::runtime_error
     {
         public:
-            Exception(const boost::system::error_code& errorCode);
+            explicit Exception(const boost::system::error_code& errorCode);
             boost::system::error_code getErrorCode() const {return m_errorCode;}
 
         private:
