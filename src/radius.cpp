@@ -1,4 +1,4 @@
-#include "server.h"
+#include "radius.h"
 #include "error.h"
 #include "packet_codes.h"
 
@@ -23,26 +23,26 @@ std::string packetTypeToString(int type)
     return "uncnown";
 }
 
-using Server = RadProto::Server;
-Server::Server(boost::asio::io_service& io_service, const std::string& secret)
+using Radius = RadProto::Radius;
+Radius::Radius(boost::asio::io_service& io_service, const std::string& secret)
     : m_socket(io_service, udp::endpoint(udp::v4(), 9999)),
       m_secret(secret)
 {
 }
 
-void Server::asyncReceive(const std::function<void(const error_code&, const std::optional<Packet>&)>& callback)
+void Radius::asyncReceive(const std::function<void(const error_code&, const std::optional<Packet>&)>& callback)
 {
     m_socket.async_receive_from(boost::asio::buffer(m_recvBuffer), m_remoteEndpoint,
        [this, callback](const error_code& error, std::size_t bytes) {handleReceive(error, bytes, callback);});
 }
 
-void Server::asyncSend(const Packet& response, const std::function<void(const error_code&)>& callback)
+void Radius::asyncSend(const Packet& response, const std::function<void(const error_code&)>& callback)
 {
     m_socket.async_send_to(boost::asio::buffer(response.makeSendBuffer(m_secret)), m_remoteEndpoint,
        [this, callback](const error_code& ec, std::size_t /*bytesTransferred*/) {handleSend(ec, callback);});
 }
 
-void Server::handleReceive(const error_code& error, std::size_t bytes, const std::function<void(const error_code&, const std::optional<Packet>&)>& callback)
+void Radius::handleReceive(const error_code& error, std::size_t bytes, const std::function<void(const error_code&, const std::optional<Packet>&)>& callback)
 {
     if (bytes < 20)
         callback(Error::numberOfBytesIsLessThan20, std::nullopt);
@@ -56,7 +56,7 @@ void Server::handleReceive(const error_code& error, std::size_t bytes, const std
     }
 }
 
-void Server::handleSend(const error_code& ec, const std::function<void(const error_code&)>& callback)
+void Radius::handleSend(const error_code& ec, const std::function<void(const error_code&)>& callback)
 {
     callback(ec);
 }
