@@ -10,10 +10,10 @@
 
 namespace RadProto
 {
-    class Server
+    class Radius
     {
         public:
-            Server(boost::asio::io_service& io_service, const std::string& secret);
+            Radius(boost::asio::io_service& io_service, const std::string& secret);
             void asyncReceive(const std::function<void(const boost::system::error_code&, const std::optional<Packet>&)>& callback);
             void asyncSend(const Packet& response, const std::function<void(const boost::system::error_code&)>& callback);
 
