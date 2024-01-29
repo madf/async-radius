@@ -2,7 +2,6 @@
 #include "error.h"
 #include "attribute_types.h"
 #include <openssl/md5.h>
-#include <iostream>
 #include <stdexcept>
 
 using Packet = RadProto::Packet;
@@ -12,7 +11,6 @@ Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes, cons
         throw Exception(Error::numberOfBytesIsLessThan20);
 
     size_t length = m_recvBuffer[2] * 256 + m_recvBuffer[3];
-    std::cout << "Length: " << length << "\n";
 
     if (bytes < length)
         throw Exception(Error::requestLengthIsShort);
