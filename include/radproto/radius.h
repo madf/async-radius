@@ -1,5 +1,5 @@
-#ifndef SERVER_H
-#define SERVER_H
+#ifndef RADIUS_H
+#define RADIUS_H
 
 #include "packet.h"
 #include <boost/asio.hpp>
