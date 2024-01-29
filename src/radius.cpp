@@ -38,7 +38,10 @@ void Radius::asyncReceive(const std::function<void(const error_code&, const std:
 
 void Radius::asyncSend(const Packet& response, const std::function<void(const error_code&)>& callback)
 {
-    m_socket.async_send_to(boost::asio::buffer(response.makeSendBuffer(m_secret)), m_remoteEndpoint,
+    const std::vector<uint8_t> vResponse = response.makeSendBuffer(m_secret);
+    std::copy(vResponse.begin(), vResponse.end(), m_recvBuffer.begin());
+
+    m_socket.async_send_to(boost::asio::buffer(m_recvBuffer), m_remoteEndpoint,
        [this, callback](const error_code& ec, std::size_t /*bytesTransferred*/) {handleSend(ec, callback);});
 }
 
