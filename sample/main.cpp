@@ -1,7 +1,10 @@
 #include "version.h"
 #include "server.h"
+#include "error.h"
 #include <boost/asio.hpp>
 #include <iostream>
+
+using boost::system::error_code;
 
 namespace
 {
@@ -64,7 +67,7 @@ int main(int argc, char* argv[])
     try
     {
         boost::asio::io_service io_service;
-        RadProto::Server server(io_service, secret);
+        Server server(io_service, secret, "/usr/share/freeradius/dictionary");
         io_service.run();
     }
     catch (const std::exception& e)
