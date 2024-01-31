@@ -13,7 +13,7 @@ class Server
         Server(boost::asio::io_service& io_service, const std::string& secret, const std::string& filePath);
 
     private:
-        RadProto::Packet makeResponse(RadProto::Packet& request);
+        RadProto::Packet makeResponse(const RadProto::Packet& request);
         void handleReceive(const boost::system::error_code& error, const std::optional<RadProto::Packet>& packet);
         void handleSend(const boost::system::error_code& ec);
         void startReceive();
