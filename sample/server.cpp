@@ -17,7 +17,7 @@ void Server::startReceive()
     m_radius.asyncReceive([this](const auto& error, const auto& packet){ handleReceive(error, packet); });
 }
 
-RadProto::Packet Server::makeResponse(RadProto::Packet& request)
+RadProto::Packet Server::makeResponse(const RadProto::Packet& request)
 {
     std::vector<RadProto::Attribute*> attributes;
     attributes.push_back(new RadProto::String(m_dictionaries.attributes().code("User-Name"), "test"));
@@ -63,10 +63,7 @@ void Server::handleReceive(const error_code& error, const std::optional<RadProto
     }
     else
     {
-        RadProto::Packet request = *packet;
-        RadProto::Packet response = makeResponse(request);
-
-        m_radius.asyncSend(response, [this](const auto& ec){ handleSend(ec); });
+        m_radius.asyncSend(makeResponse(*packet), [this](const auto& ec){ handleSend(ec); });
     }
 }
 
