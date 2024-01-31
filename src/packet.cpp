@@ -63,6 +63,9 @@ Packet::~Packet()
 {
     for (const auto& ap : m_attributes)
         delete ap;
+
+    for (const auto& vp : m_vendorSpecific)
+        delete vp;
 }
 
 const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret) const
