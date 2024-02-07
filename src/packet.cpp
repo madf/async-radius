@@ -59,16 +59,12 @@ Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, co
 {
 }
 
-Packet::Packet(Packet const & dc)
+Packet::Packet(const Packet& dc)
       : attributePtr(dc.attributePtr->clone())
 {
     for(size_t i = 0; i < dc.m_vendorSpecific.size(); ++i)
-        {
         if (dc.m_vendorSpecific[i])
             m_vendorSpecific.push_back(new VendorSpecific(*dc.m_vendorSpecific[i]));
-        else
-            m_vendorSpecific.push_back(NULL);
-        }
 }
 
 Packet::~Packet()
