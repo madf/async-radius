@@ -15,7 +15,7 @@ namespace RadProto
         public:
             Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes, const std::string& secret);
             Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, const std::vector<Attribute*>& attributes, const std::vector<VendorSpecific*>& vendorSpecific);
-            Packet(Packet const & dc);
+            Packet(const Packet& dc);
             ~Packet();
             uint8_t type() const { return m_type; }
             uint8_t id() const { return m_id; };
