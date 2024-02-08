@@ -31,7 +31,6 @@ namespace RadProto
             std::array<uint8_t, 16> m_auth;
             std::vector<Attribute*> m_attributes;
             std::vector<VendorSpecific*> m_vendorSpecific;
-            Attribute* attributePtr;
     };
 }
 
