@@ -24,8 +24,8 @@ std::string packetTypeToString(int type)
 }
 
 using Radius = RadProto::Radius;
-Radius::Radius(boost::asio::io_service& io_service, const std::string& secret)
-    : m_socket(io_service, udp::endpoint(udp::v4(), 9999)),
+Radius::Radius(boost::asio::io_service& io_service, const std::string& secret, uint16_t port)
+    : m_socket(io_service, udp::endpoint(udp::v4(), port)),
       m_secret(secret)
 {
 }
