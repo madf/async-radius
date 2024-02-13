@@ -6,11 +6,12 @@
 #include "dictionaries.h"
 #include <boost/asio.hpp>
 #include <optional>
+#include <cstdint> //uint8_t, uint32_t
 
 class Server
 {
     public:
-        Server(boost::asio::io_service& io_service, const std::string& secret, const std::string& filePath);
+        Server(boost::asio::io_service& io_service, const std::string& secret, uint16_t port, const std::string& filePath);
 
     private:
         RadProto::Packet makeResponse(const RadProto::Packet& request);
