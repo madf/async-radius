@@ -47,12 +47,12 @@ int main(int argc, char* argv[])
             printHelp(argv[0]);
             return 0;
         }
-        else if (arg == "--version" || arg == "-v")
+        if (arg == "--version" || arg == "-v")
         {
             printVersion(argv[0]);
             return 0;
         }
-        else if (arg == "--port" || arg == "-p")
+        if (arg == "--port" || arg == "-p")
         {
             if (i + 1 == argc)
             {
