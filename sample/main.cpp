@@ -3,6 +3,7 @@
 #include "error.h"
 #include <boost/asio.hpp>
 #include <stdlib.h>
+#include <string>
 #include <iostream>
 #include <cstdint> //uint8_t, uint32_t
 
@@ -59,7 +60,7 @@ int main(int argc, char* argv[])
                 std::cerr << arg << " required argument - port number.\n";
                 return 1;
             }
-            port = atoi(argv[++i]);
+            port = std::stoul(argv[++i]);
         }
         else if (arg == "--secret" || arg == "-s")
         {
