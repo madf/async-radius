@@ -5,33 +5,33 @@
 #include <stdexcept>
 
 using Packet = RadProto::Packet;
-Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes, const std::string& secret)
+Packet::Packet(const std::array<uint8_t, 4096>& buffer, size_t bytes, const std::string& secret)
 {
     if (bytes < 20)
         throw Exception(Error::numberOfBytesIsLessThan20);
 
-    size_t length = m_recvBuffer[2] * 256 + m_recvBuffer[3];
+    size_t length = buffer[2] * 256 + buffer[3];
 
     if (bytes < length)
         throw Exception(Error::requestLengthIsShort);
 
-    m_type = m_recvBuffer[0];
+    m_type = buffer[0];
 
-    m_id = m_recvBuffer[1];
+    m_id = buffer[1];
 
     for (std::size_t i = 0; i < m_auth.size(); ++i)
-        m_auth[i] = m_recvBuffer[i + 4];
+        m_auth[i] = buffer[i + 4];
 
     size_t attributeIndex = 20;
     while (attributeIndex < length)
     {
-        const uint8_t attributeType = m_recvBuffer[attributeIndex];
-        const uint8_t attributeLength = m_recvBuffer[attributeIndex + 1];
+        const uint8_t attributeType = buffer[attributeIndex];
+        const uint8_t attributeLength = buffer[attributeIndex + 1];
 
         if (attributeType == VENDOR_SPECIFIC)
-            m_vendorSpecific.push_back(new VendorSpecific(&m_recvBuffer[attributeIndex + 2]));
+            m_vendorSpecific.push_back(new VendorSpecific(&buffer[attributeIndex + 2]));
         else
-            m_attributes.push_back(makeAttribute(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2, secret, m_auth));
+            m_attributes.push_back(makeAttribute(attributeType, &buffer[attributeIndex + 2], attributeLength - 2, secret, m_auth));
 
         attributeIndex += attributeLength;
     }
