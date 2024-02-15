@@ -59,15 +59,15 @@ Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, co
 {
 }
 
-Packet::Packet(const Packet& dc)
+Packet::Packet(const Packet& other)
 {
-    for(size_t i = 0; i < dc.m_vendorSpecific.size(); ++i)
-        if (dc.m_vendorSpecific[i])
-            m_vendorSpecific.push_back(new VendorSpecific(*dc.m_vendorSpecific[i]));
+    for(size_t i = 0; i < other.m_vendorSpecific.size(); ++i)
+        if (other.m_vendorSpecific[i])
+            m_vendorSpecific.push_back(new VendorSpecific(*other.m_vendorSpecific[i]));
 
-    for(size_t i = 0; i < dc.m_attributes.size(); ++i)
-        if (dc.m_attributes[i])
-            m_attributes.push_back(dc.m_attributes[i]->clone());
+    for(size_t i = 0; i < other.m_attributes.size(); ++i)
+        if (other.m_attributes[i])
+            m_attributes.push_back(other.m_attributes[i]->clone());
 }
 
 Packet::~Packet()
