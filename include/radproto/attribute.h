@@ -16,7 +16,7 @@ namespace RadProto
             uint8_t type() const { return m_type; }
             virtual std::string toString() const = 0;
             virtual std::vector<uint8_t> toVector(const std::string& secret, const std::array<uint8_t, 16>& auth) const = 0;
-             virtual Attribute* clone() const = 0;
+            virtual Attribute* clone() const = 0;
         private:
             uint8_t m_type;
     };
