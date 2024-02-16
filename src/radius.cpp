@@ -47,8 +47,6 @@ void Radius::asyncSend(const Packet& response, const std::function<void(const er
 
 void Radius::handleReceive(const error_code& error, std::size_t bytes, const std::function<void(const error_code&, const std::optional<Packet>&)>& callback)
 {
-    if (bytes < 20)
-        callback(Error::numberOfBytesIsLessThan20, std::nullopt);
     try
     {
         callback(error, std::make_optional<Packet>(m_recvBuffer, bytes, m_secret));
@@ -57,6 +55,8 @@ void Radius::handleReceive(const error_code& error, std::size_t bytes, const std
     {
         callback(exception.getErrorCode(), std::nullopt);
     }
+    if (bytes < 20)
+        callback(Error::numberOfBytesIsLessThan20, std::nullopt);
 }
 
 void Radius::handleSend(const error_code& ec, const std::function<void(const error_code&)>& callback)
