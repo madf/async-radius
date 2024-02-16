@@ -38,12 +38,12 @@ Packet::Packet(const std::array<uint8_t, 4096>& buffer, size_t bytes, const std:
 
     bool eapMessage = false;
     bool messageAuthenticator = false;
-    for (size_t i = 0; i < m_attributes.size(); ++i)
+    for (const auto& a : m_attributes)
     {
-        if (m_attributes[i]->type() == EAP_MESSAGE)
+        if (a->type() == EAP_MESSAGE)
             eapMessage = true;
 
-        if (m_attributes[i]->type() == MESSAGE_AUTHENTICATOR)
+        if (a->type() == MESSAGE_AUTHENTICATOR)
             messageAuthenticator = true;
     }
     if (eapMessage && !messageAuthenticator)
@@ -61,13 +61,13 @@ Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, co
 
 Packet::Packet(const Packet& other)
 {
-    for(size_t i = 0; i < other.m_vendorSpecific.size(); ++i)
-        if (other.m_vendorSpecific[i])
-            m_vendorSpecific.push_back(new VendorSpecific(*other.m_vendorSpecific[i]));
+    for(const auto& a :  other.m_vendorSpecific)
+        if (a)
+            m_vendorSpecific.push_back(new VendorSpecific(*a));
 
-    for(size_t i = 0; i < other.m_attributes.size(); ++i)
-        if (other.m_attributes[i])
-            m_attributes.push_back(other.m_attributes[i]->clone());
+    for(const auto& a :  other.m_attributes)
+        if (a)
+            m_attributes.push_back(a->clone());
 }
 
 Packet::~Packet()
