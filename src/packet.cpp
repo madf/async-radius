@@ -29,7 +29,7 @@ Packet::Packet(const std::array<uint8_t, 4096>& buffer, size_t bytes, const std:
         const uint8_t attributeLength = buffer[attributeIndex + 1];
 
         if (attributeType == VENDOR_SPECIFIC)
-            m_vendorSpecific.push_back(new VendorSpecific(&buffer[attributeIndex + 2]));
+            m_vendorSpecific.push_back(VendorSpecific(&buffer[attributeIndex + 2]));
         else
             m_attributes.push_back(makeAttribute(attributeType, &buffer[attributeIndex + 2], attributeLength - 2, secret, m_auth));
 
@@ -50,7 +50,7 @@ Packet::Packet(const std::array<uint8_t, 4096>& buffer, size_t bytes, const std:
         throw Exception(Error::eapMessageAttributeError);
 }
 
-Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, const std::vector<Attribute*>& attributes, const std::vector<VendorSpecific*>& vendorSpecific)
+Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, const std::vector<Attribute*>& attributes, const std::vector<VendorSpecific>& vendorSpecific)
     : m_type(type),
       m_id(id),
       m_auth(auth),
@@ -60,11 +60,8 @@ Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, co
 }
 
 Packet::Packet(const Packet& other)
+    : m_vendorSpecific(other.m_vendorSpecific)
 {
-    for(const auto& a :  other.m_vendorSpecific)
-        if (a)
-            m_vendorSpecific.push_back(new VendorSpecific(*a));
-
     for(const auto& a :  other.m_attributes)
         if (a)
             m_attributes.push_back(a->clone());
@@ -74,9 +71,6 @@ Packet::~Packet()
 {
     for (const auto& ap : m_attributes)
         delete ap;
-
-    for (const auto& vp : m_vendorSpecific)
-        delete vp;
 }
 
 const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret) const
@@ -95,7 +89,7 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret) con
     }
     for (const auto& vendorAttribute : m_vendorSpecific)
     {
-        const auto aData = vendorAttribute->toVector();
+        const auto aData = vendorAttribute.toVector();
         sendBuffer.insert(sendBuffer.end(), aData.begin(), aData.end());
     }
     sendBuffer[2] = sendBuffer.size() / 256 % 256;
