@@ -62,7 +62,7 @@ Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, co
 Packet::Packet(const Packet& other)
     : m_vendorSpecific(other.m_vendorSpecific)
 {
-    for(const auto& a :  other.m_attributes)
+    for (const auto& a :  other.m_attributes)
         if (a)
             m_attributes.push_back(a->clone());
 }
