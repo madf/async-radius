@@ -5,6 +5,28 @@
 #include <stdexcept>
 
 using Packet = RadProto::Packet;
+
+namespace
+{
+    RadProto::Attribute* makeAttribute(uint8_t type, const uint8_t* data, size_t size, const std::string& secret, const std::array<uint8_t, 16>& auth)
+    {
+        if (type == 1 || type == 11 || type == 18 || type == 22 || type == 34 || type == 35 || type == 60 || type == 63)
+            return new RadProto::String(type, data, size);
+        else if (type == 2)
+            return new RadProto::Encrypted(type, data, size, secret, auth);
+        else if (type == 3)
+            return new RadProto::ChapPassword(type, data, size);
+        else if (type == 4 || type == 8 || type == 9 || type == 14)
+            return new RadProto::IpAddress(type, data, size);
+        else if (type == 5 || type == 6 || type == 7 || type == 10 || type == 12 || type == 13 || type == 15 || type == 16 || type == 27 || type == 28 || type == 29 || type == 37 || type == 38 || type == 61 || type == 62)
+            return new RadProto::Integer(type, data, size);
+        else if (type == 19 || type == 20 || type == 24 || type == 25 || type == 30 || type == 31 || type == 32 || type == 33 || type == 36 || type == 39 || type == 79 || type == 80)
+            return new RadProto::Bytes(type, data, size);
+
+        throw std::runtime_error("Invalid attribute type " + std::to_string(type));
+    }
+}
+
 Packet::Packet(const std::array<uint8_t, 4096>& buffer, size_t bytes, const std::string& secret)
 {
     if (bytes < 20)
@@ -109,27 +131,4 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret) con
         sendBuffer[i + 4] = md[i];
 
     return sendBuffer;
-}
-
-RadProto::Attribute* Packet::makeAttribute(uint8_t type, const uint8_t* data, size_t size, const std::string& secret, const std::array<uint8_t, 16>& auth)
-{
-    if (type == 1 || type == 11 || type == 18 || type == 22 || type == 34 || type == 35 ||
-        type == 60 || type == 63)
-        return new String(type, data, size);
-    else if (type == 2)
-        return new Encrypted(type, data, size, secret, auth);
-    else if (type == 3)
-        return new ChapPassword(type, data, size);
-    else if (type == 4 || type == 8 || type == 9 || type == 14)
-        return new IpAddress(type, data, size);
-    else if (type == 5 || type == 6 || type == 7 || type == 10 || type == 12 ||
-             type == 13 || type == 15 || type == 16 || type == 27 || type == 28 ||
-             type == 29 || type == 37 || type == 38 || type == 61 || type == 62)
-        return new Integer(type, data, size);
-    else if (type == 19 || type == 20 || type == 24 || type == 25 ||
-             type == 30 || type == 31 || type == 32 || type == 33 ||
-             type == 36 || type == 39 || type == 79 || type == 80)
-        return new Bytes(type, data, size);
-
-    throw std::runtime_error("Invalid attribute type " + std::to_string(type));
 }
