@@ -23,7 +23,7 @@ namespace
         else if (type == 19 || type == 20 || type == 24 || type == 25 || type == 30 || type == 31 || type == 32 || type == 33 || type == 36 || type == 39 || type == 79 || type == 80)
             return new RadProto::Bytes(type, data, size);
 
-        throw std::runtime_error("Invalid attribute type " + std::to_string(type));
+        throw RadProto::Exception(RadProto::Error::invalidAttributeType);
     }
 }
 
