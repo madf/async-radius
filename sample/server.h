@@ -1,7 +1,7 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include "radius.h"
+#include "socket.h"
 #include "packet.h"
 #include "dictionaries.h"
 #include <boost/asio.hpp>
