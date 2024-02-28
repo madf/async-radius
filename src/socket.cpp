@@ -1,4 +1,4 @@
-#include "radius.h"
+#include "socket.h"
 #include "error.h"
 #include "packet_codes.h"
 
