@@ -1,5 +1,5 @@
-#ifndef RADIUS_H
-#define RADIUS_H
+#ifndef SOCKET_H
+#define SOCKET_H
 
 #include "packet.h"
 #include <boost/asio.hpp>
