@@ -19,7 +19,7 @@ class Server
         void handleSend(const boost::system::error_code& ec);
         void startReceive();
 
-        RadProto::Radius m_radius;
+        RadProto::Socket m_radius;
         RadProto::Dictionaries m_dictionaries;
 };
 
