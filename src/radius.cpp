@@ -23,20 +23,20 @@ std::string packetTypeToString(int type)
     return "uncnown";
 }
 
-using Radius = RadProto::Radius;
-Radius::Radius(boost::asio::io_service& io_service, const std::string& secret, uint16_t port)
+using Socket = RadProto::Socket;
+Socket::Socket(boost::asio::io_service& io_service, const std::string& secret, uint16_t port)
     : m_socket(io_service, udp::endpoint(udp::v4(), port)),
       m_secret(secret)
 {
 }
 
-void Radius::asyncReceive(const std::function<void(const error_code&, const std::optional<Packet>&)>& callback)
+void Socket::asyncReceive(const std::function<void(const error_code&, const std::optional<Packet>&)>& callback)
 {
     m_socket.async_receive_from(boost::asio::buffer(m_recvBuffer), m_remoteEndpoint,
        [this, callback](const error_code& error, std::size_t bytes) {handleReceive(error, bytes, callback);});
 }
 
-void Radius::asyncSend(const Packet& response, const std::function<void(const error_code&)>& callback)
+void Socket::asyncSend(const Packet& response, const std::function<void(const error_code&)>& callback)
 {
     const std::vector<uint8_t> vResponse = response.makeSendBuffer(m_secret);
     std::copy(vResponse.begin(), vResponse.end(), m_recvBuffer.begin());
@@ -45,7 +45,7 @@ void Radius::asyncSend(const Packet& response, const std::function<void(const er
        [this, callback](const error_code& ec, std::size_t /*bytesTransferred*/) {handleSend(ec, callback);});
 }
 
-void Radius::handleReceive(const error_code& error, std::size_t bytes, const std::function<void(const error_code&, const std::optional<Packet>&)>& callback)
+void Socket::handleReceive(const error_code& error, std::size_t bytes, const std::function<void(const error_code&, const std::optional<Packet>&)>& callback)
 {
     if (error)
         callback(error, std::nullopt);
@@ -61,7 +61,7 @@ void Radius::handleReceive(const error_code& error, std::size_t bytes, const std
     }
 }
 
-void Radius::handleSend(const error_code& ec, const std::function<void(const error_code&)>& callback)
+void Socket::handleSend(const error_code& ec, const std::function<void(const error_code&)>& callback)
 {
     callback(ec);
 }
