@@ -10,10 +10,10 @@
 
 namespace RadProto
 {
-    class Radius
+    class Socket
     {
         public:
-            Radius(boost::asio::io_service& io_service, const std::string& secret, uint16_t port);
+            Socket(boost::asio::io_service& io_service, const std::string& secret, uint16_t port);
             void asyncReceive(const std::function<void(const boost::system::error_code&, const std::optional<Packet>&)>& callback);
             void asyncSend(const Packet& response, const std::function<void(const boost::system::error_code&)>& callback);
 
