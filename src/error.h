@@ -18,7 +18,8 @@ namespace RadProto
 
         numberOfBytesIsLessThan20,
         requestLengthIsShort,
-        eapMessageAttributeError
+        eapMessageAttributeError,
+        invalidAttributeType
     };
 
     class Exception: public std::runtime_error
