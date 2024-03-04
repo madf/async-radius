@@ -20,7 +20,7 @@ void Server::startReceive()
 RadProto::Packet Server::makeResponse(const RadProto::Packet& request)
 {
     std::vector<RadProto::Attribute*> attributes;
-    attributes.push_back(new RadProto::String(m_dictionaries.attributes().code("User-Name"), "test"));
+    attributes.push_back(new RadProto::String(m_dictionaries.attributeCode("User-Name"), "test"));
     attributes.push_back(new RadProto::Integer(m_dictionaries.attributes().code("NAS-Port"), 20));
     std::array<uint8_t, 4> address {127, 104, 22, 17};
     attributes.push_back(new RadProto::IpAddress(m_dictionaries.attributes().code("NAS-IP-Address"), address));
