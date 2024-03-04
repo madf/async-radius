@@ -129,3 +129,8 @@ uint32_t Dictionaries::attributeCode(const std::string& name) const
 {
     return attributes().code(name);
 }
+
+std::string Dictionaries::attributeName(const uint32_t& code) const
+{
+    return attributes().name(code);
+}
