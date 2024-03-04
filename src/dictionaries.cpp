@@ -124,3 +124,8 @@ void Dictionaries::append(const Dictionaries& fillingDictionaries)
     m_vendorAttributes.append(fillingDictionaries.m_vendorAttributes);
     m_vendorAttributeValues.append(fillingDictionaries.m_vendorAttributeValues);
 }
+
+uint32_t Dictionaries::attributeCode(const std::string& name) const
+{
+    return attributes().code(name);
+}
