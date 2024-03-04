@@ -47,6 +47,8 @@ namespace RadProto
             const DependentDictionary& attributeValues() const { return m_attributeValues; }
             const DependentDictionary& vendorAttributes() const { return m_vendorAttributes; }
             const DependentDictionary& vendorAttributeValues() const { return m_vendorAttributeValues; }
+            uint32_t attributeCode(const std::string& name) const;
+
         private:
             BasicDictionary m_attributes;
             BasicDictionary m_vendorNames;
