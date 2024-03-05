@@ -139,3 +139,8 @@ uint32_t Dictionaries::vendorCode(const std::string& name) const
 {
     return vendorNames().code(name);
 }
+
+uint32_t Dictionaries::vendorAttributeCode(const std::string& dependencyName,const std::string& name) const
+{
+    return vendorAttributes().code(dependencyName, name);
+}
