@@ -134,3 +134,8 @@ std::string Dictionaries::attributeName(const uint32_t& code) const
 {
     return attributes().name(code);
 }
+
+uint32_t Dictionaries::vendorCode(const std::string& name) const
+{
+    return vendorNames().code(name);
+}
