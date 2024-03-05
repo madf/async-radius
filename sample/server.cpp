@@ -32,7 +32,7 @@ RadProto::Packet Server::makeResponse(const RadProto::Packet& request)
 
     std::vector<RadProto::VendorSpecific> vendorSpecific;
     std::vector<uint8_t> vendorValue {'0', '0', '0', '3'};
-    vendorSpecific.push_back(RadProto::VendorSpecific(m_dictionaries.vendorNames().code("Dlink"), m_dictionaries.vendorAttributes().code("Dlink", "Dlink-User-Level"), vendorValue));
+    vendorSpecific.push_back(RadProto::VendorSpecific(m_dictionaries.vendorCode("Dlink"), m_dictionaries.vendorAttributes().code("Dlink", "Dlink-User-Level"), vendorValue));
 
     if (request.type() == RadProto::ACCESS_REQUEST)
         return RadProto::Packet(RadProto::ACCESS_ACCEPT, request.id(), request.auth(), attributes, vendorSpecific);
