@@ -125,14 +125,19 @@ void Dictionaries::append(const Dictionaries& fillingDictionaries)
     m_vendorAttributeValues.append(fillingDictionaries.m_vendorAttributeValues);
 }
 
+std::string Dictionaries::attributeName(uint32_t code) const
+{
+    return attributes().name(code);
+}
+
 uint32_t Dictionaries::attributeCode(const std::string& name) const
 {
     return attributes().code(name);
 }
 
-std::string Dictionaries::attributeName(const uint32_t& code) const
+std::string Dictionaries::vendorName(uint32_t code) const
 {
-    return attributes().name(code);
+    return vendorNames().name(code);
 }
 
 uint32_t Dictionaries::vendorCode(const std::string& name) const
@@ -140,7 +145,32 @@ uint32_t Dictionaries::vendorCode(const std::string& name) const
     return vendorNames().code(name);
 }
 
+std::string Dictionaries::vendorAttributeName(const std::string& dependencyName, uint32_t code) const
+{
+    return vendorAttributes().name(dependencyName, code);
+}
+
 uint32_t Dictionaries::vendorAttributeCode(const std::string& dependencyName,const std::string& name) const
 {
     return vendorAttributes().code(dependencyName, name);
+}
+
+std::string Dictionaries::attributeValueName(const std::string& dependencyName, uint32_t code) const
+{
+    return attributeValues().name(dependencyName, code);
+}
+
+uint32_t Dictionaries::attributeValueCode(const std::string& dependencyName, const std::string& name) const
+{
+    return attributeValues().code(dependencyName, name);
+}
+
+std::string Dictionaries::vendorAttributeValueName(const std::string& dependencyName, uint32_t code) const
+{
+    return vendorAttributeValues().name(dependencyName, code);
+}
+
+uint32_t Dictionaries::vendorAttributeValueCode(const std::string& dependencyName, const std::string& name) const
+{
+    return attributeValues().code(dependencyName, name);
 }
