@@ -54,14 +54,14 @@ namespace RadProto
             std::string vendorName(uint32_t code) const;
             uint32_t vendorCode(const std::string& name) const;
 
-            std::string vendorAttributeName(const std::string& dependencyName, uint32_t code) const;
-            uint32_t vendorAttributeCode(const std::string& dependencyName, const std::string& name) const;
+            std::string vendorAttributeName(const std::string& vendorName, uint32_t code) const;
+            uint32_t vendorAttributeCode(const std::string& vendorName, const std::string& name) const;
 
-            std::string attributeValueName(const std::string& dependencyName, uint32_t code) const;
-            uint32_t attributeValueCode(const std::string& dependencyName, const std::string& name) const;
+            std::string attributeValueName(const std::string& attributeName, uint32_t code) const;
+            uint32_t attributeValueCode(const std::string& attributeName, const std::string& name) const;
 
-            std::string vendorAttributeValueName(const std::string& dependencyName, uint32_t code) const;
-            uint32_t vendorAttributeValueCode(const std::string& dependencyName, const std::string& name) const;
+            std::string vendorAttributeValueName(const std::string& attributeName, uint32_t code) const;
+            uint32_t vendorAttributeValueCode(const std::string& attributeName, const std::string& name) const;
 
         private:
             BasicDictionary m_attributes;
