@@ -145,32 +145,32 @@ uint32_t Dictionaries::vendorCode(const std::string& name) const
     return vendorNames().code(name);
 }
 
-std::string Dictionaries::vendorAttributeName(const std::string& dependencyName, uint32_t code) const
+std::string Dictionaries::vendorAttributeName(const std::string& vendorName, uint32_t code) const
 {
-    return vendorAttributes().name(dependencyName, code);
+    return vendorAttributes().name(vendorName, code);
 }
 
-uint32_t Dictionaries::vendorAttributeCode(const std::string& dependencyName,const std::string& name) const
+uint32_t Dictionaries::vendorAttributeCode(const std::string& vendorName,const std::string& name) const
 {
-    return vendorAttributes().code(dependencyName, name);
+    return vendorAttributes().code(vendorName, name);
 }
 
-std::string Dictionaries::attributeValueName(const std::string& dependencyName, uint32_t code) const
+std::string Dictionaries::attributeValueName(const std::string& attributeName, uint32_t code) const
 {
-    return attributeValues().name(dependencyName, code);
+    return attributeValues().name(attributeName, code);
 }
 
-uint32_t Dictionaries::attributeValueCode(const std::string& dependencyName, const std::string& name) const
+uint32_t Dictionaries::attributeValueCode(const std::string& attributeName, const std::string& name) const
 {
-    return attributeValues().code(dependencyName, name);
+    return attributeValues().code(attributeName, name);
 }
 
-std::string Dictionaries::vendorAttributeValueName(const std::string& dependencyName, uint32_t code) const
+std::string Dictionaries::vendorAttributeValueName(const std::string& attributeName, uint32_t code) const
 {
-    return vendorAttributeValues().name(dependencyName, code);
+    return vendorAttributeValues().name(attributeName, code);
 }
 
-uint32_t Dictionaries::vendorAttributeValueCode(const std::string& dependencyName, const std::string& name) const
+uint32_t Dictionaries::vendorAttributeValueCode(const std::string& attributeName, const std::string& name) const
 {
-    return attributeValues().code(dependencyName, name);
+    return attributeValues().code(attributeName, name);
 }
