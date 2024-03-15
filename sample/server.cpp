@@ -31,7 +31,7 @@ RadProto::Packet Server::makeResponse(const RadProto::Packet& request)
     attributes.push_back(new RadProto::ChapPassword(m_dictionaries.attributeCode("CHAP-Password"), 1, chapPassword));
 
     std::vector<RadProto::VendorSpecific> vendorSpecific;
-    std::vector<uint8_t> vendorValue {'0', '0', '0', '3'};
+    std::vector<uint8_t> vendorValue {0, 0, 0, 3};
     vendorSpecific.push_back(RadProto::VendorSpecific(m_dictionaries.vendorCode("Dlink"), m_dictionaries.vendorAttributeCode("Dlink", "Dlink-User-Level"), vendorValue));
 
     if (request.type() == RadProto::ACCESS_REQUEST)
