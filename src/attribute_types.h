@@ -1,5 +1,4 @@
-#ifndef ATTRIBUTE_TYPES_H
-#define ATTRIBUTE_TYPES_H
+#pragma once
 
 namespace RadProto
 {
@@ -50,5 +49,3 @@ namespace RadProto
         MESSAGE_AUTHENTICATOR = 80
     };
 }
-
-#endif

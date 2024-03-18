@@ -1,5 +1,4 @@
-#ifndef PACKET_CODES_H
-#define PACKET_CODES_H
+#pragma once
 
 namespace RadProto
 {
@@ -15,5 +14,3 @@ namespace RadProto
         STATUS_CLIENT = 13
     };
 }
-
-#endif
