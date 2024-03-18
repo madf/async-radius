@@ -60,8 +60,8 @@ namespace RadProto
             std::string attributeValueName(const std::string& attributeName, uint32_t code) const;
             uint32_t attributeValueCode(const std::string& attributeName, const std::string& name) const;
 
-            std::string vendorAttributeValueName(const std::string& attributeName, uint32_t code) const;
-            uint32_t vendorAttributeValueCode(const std::string& attributeName, const std::string& name) const;
+            std::string vendorAttributeValueName(const std::string& valueName, uint32_t code) const;
+            uint32_t vendorAttributeValueCode(const std::string& valueName, const std::string& name) const;
 
         private:
             BasicDictionary m_attributes;
