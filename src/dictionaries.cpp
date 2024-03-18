@@ -165,12 +165,12 @@ uint32_t Dictionaries::attributeValueCode(const std::string& attributeName, cons
     return attributeValues().code(attributeName, name);
 }
 
-std::string Dictionaries::vendorAttributeValueName(const std::string& attributeName, uint32_t code) const
+std::string Dictionaries::vendorAttributeValueName(const std::string& valueName, uint32_t code) const
 {
-    return vendorAttributeValues().name(attributeName, code);
+    return vendorAttributeValues().name(valueName, code);
 }
 
-uint32_t Dictionaries::vendorAttributeValueCode(const std::string& attributeName, const std::string& name) const
+uint32_t Dictionaries::vendorAttributeValueCode(const std::string& valueName, const std::string& name) const
 {
-    return attributeValues().code(attributeName, name);
+    return attributeValues().code(valueName, name);
 }
