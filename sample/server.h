@@ -1,5 +1,4 @@
-#ifndef SERVER_H
-#define SERVER_H
+#pragma once
 
 #include "socket.h"
 #include "packet.h"
@@ -22,5 +21,3 @@ class Server
         RadProto::Socket m_radius;
         RadProto::Dictionaries m_dictionaries;
 };
-
-#endif
