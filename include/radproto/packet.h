@@ -1,5 +1,4 @@
-#ifndef PACKET_H
-#define PACKET_H
+#pragma once
 
 #include "attribute.h"
 #include "vendor_attribute.h"
@@ -32,5 +31,3 @@ namespace RadProto
             std::vector<VendorSpecific> m_vendorSpecific;
     };
 }
-
-#endif

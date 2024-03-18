@@ -1,5 +1,4 @@
-#ifndef ERROR_H
-#define ERROR_H
+#pragma once
 
 #include <boost/system/error_code.hpp>
 
@@ -45,5 +44,3 @@ namespace boost
         };
     }
 }
-
-#endif

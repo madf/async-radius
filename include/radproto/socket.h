@@ -1,5 +1,4 @@
-#ifndef SOCKET_H
-#define SOCKET_H
+#pragma once
 
 #include "packet.h"
 #include <boost/asio.hpp>
@@ -27,5 +26,3 @@ namespace RadProto
             std::string m_secret;
     };
 }
-
-#endif

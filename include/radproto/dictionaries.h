@@ -1,5 +1,4 @@
-#ifndef DICTIONARIES_H
-#define DICTIONARIES_H
+#pragma once
 
 #include <string>
 #include <map>
@@ -71,5 +70,3 @@ namespace RadProto
             DependentDictionary m_vendorAttributeValues;
     };
 }
-
-#endif

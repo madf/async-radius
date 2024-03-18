@@ -1,5 +1,4 @@
-#ifndef ATTRIBUTE_H
-#define ATTRIBUTE_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -96,5 +95,3 @@ namespace RadProto
             std::vector<uint8_t> m_value;
     };
 }
-
-#endif
