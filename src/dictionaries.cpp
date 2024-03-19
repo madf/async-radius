@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 
+using BasicDictionary = RadProto::BasicDictionary;
 std::string BasicDictionary::name(uint32_t code) const
 {
     return m_rightDict.at(code);
@@ -30,6 +31,7 @@ void BasicDictionary::append(const BasicDictionary& basicDict)
         m_reverseDict.insert_or_assign(entry.first, entry.second);
 }
 
+using DependentDictionary = RadProto::DependentDictionary;
 std::string DependentDictionary::name(const std::string& dependencyName, uint32_t code) const
 {
     return m_rightDict.at(std::make_pair(dependencyName, code));
@@ -55,6 +57,7 @@ void DependentDictionary::append(const DependentDictionary& dependentDict)
         m_reverseDict.insert_or_assign(entry.first, entry.second);
 }
 
+using Dictionaries = RadProto::Dictionaries;
 Dictionaries::Dictionaries(const std::string& filePath)
 {
     std::ifstream stream(filePath);
@@ -65,7 +68,6 @@ Dictionaries::Dictionaries(const std::string& filePath)
     boost::char_separator<char> sep(" \t");
 
     std::string line;
-    size_t lineNumber = 0;
     std::string vendorName;
 
     while (std::getline(stream, line))
@@ -111,7 +113,6 @@ Dictionaries::Dictionaries(const std::string& filePath)
                     append(Dictionaries(filePath.substr(0, filePath.rfind('/') + 1) + tokens[1]));
             }
         }
-        ++lineNumber;
     }
 }
 
@@ -122,4 +123,54 @@ void Dictionaries::append(const Dictionaries& fillingDictionaries)
     m_attributeValues.append(fillingDictionaries.m_attributeValues);
     m_vendorAttributes.append(fillingDictionaries.m_vendorAttributes);
     m_vendorAttributeValues.append(fillingDictionaries.m_vendorAttributeValues);
+}
+
+std::string Dictionaries::attributeName(uint32_t code) const
+{
+    return attributes().name(code);
+}
+
+uint32_t Dictionaries::attributeCode(const std::string& name) const
+{
+    return attributes().code(name);
+}
+
+std::string Dictionaries::vendorName(uint32_t code) const
+{
+    return vendorNames().name(code);
+}
+
+uint32_t Dictionaries::vendorCode(const std::string& name) const
+{
+    return vendorNames().code(name);
+}
+
+std::string Dictionaries::vendorAttributeName(const std::string& vendorName, uint32_t code) const
+{
+    return vendorAttributes().name(vendorName, code);
+}
+
+uint32_t Dictionaries::vendorAttributeCode(const std::string& vendorName,const std::string& name) const
+{
+    return vendorAttributes().code(vendorName, name);
+}
+
+std::string Dictionaries::attributeValueName(const std::string& attributeName, uint32_t code) const
+{
+    return attributeValues().name(attributeName, code);
+}
+
+uint32_t Dictionaries::attributeValueCode(const std::string& attributeName, const std::string& name) const
+{
+    return attributeValues().code(attributeName, name);
+}
+
+std::string Dictionaries::vendorAttributeValueName(const std::string& valueName, uint32_t code) const
+{
+    return vendorAttributeValues().name(valueName, code);
+}
+
+uint32_t Dictionaries::vendorAttributeValueCode(const std::string& valueName, const std::string& name) const
+{
+    return attributeValues().code(valueName, name);
 }

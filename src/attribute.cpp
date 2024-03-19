@@ -4,11 +4,13 @@
 #include <openssl/md5.h>
 #include <iostream>
 
+using Attribute = RadProto::Attribute;
 Attribute::Attribute(uint8_t type)
     : m_type(type)
 {
 }
 
+using String = RadProto::String;
 String::String(uint8_t type, const uint8_t* data, size_t size)
         : Attribute(type),
           m_value(reinterpret_cast<const char*>(data), size)
@@ -30,6 +32,12 @@ std::vector<uint8_t> String::toVector(const std::string& /*secret*/, const std::
     return attribute;
 }
 
+String* String::clone() const
+{
+    return new String(*this);
+}
+
+using Integer = RadProto::Integer;
 Integer::Integer(uint8_t type, const uint8_t* data, size_t size)
         : Attribute(type),
           m_value(0)
@@ -66,6 +74,12 @@ std::vector<uint8_t> Integer::toVector(const std::string& /*secret*/, const std:
     return attribute;
 }
 
+Integer* Integer::clone() const
+{
+    return new Integer(*this);
+}
+
+using IpAddress = RadProto::IpAddress;
 IpAddress::IpAddress(uint8_t type, const uint8_t* data, size_t size)
         : Attribute(type)
 {
@@ -99,6 +113,12 @@ std::vector<uint8_t> IpAddress::toVector(const std::string& /*secret*/, const st
     return attribute;
 }
 
+IpAddress* IpAddress::clone() const
+{
+    return new IpAddress(*this);
+}
+
+using Encrypted = RadProto::Encrypted;
 Encrypted::Encrypted(uint8_t type, const uint8_t* data, size_t size, const std::string& secret, const std::array<uint8_t, 16>& auth)
         : Attribute(type)
 {
@@ -170,6 +190,12 @@ std::vector<uint8_t> Encrypted::toVector(const std::string& secret, const std::a
     return res;
 }
 
+Encrypted* Encrypted::clone() const
+{
+    return new Encrypted(*this);
+}
+
+using Bytes = RadProto::Bytes;
 Bytes::Bytes(uint8_t type, const uint8_t* data, size_t size)
     : Attribute(type),
       m_value(size)
@@ -201,7 +227,12 @@ std::vector<uint8_t> Bytes::toVector(const std::string& /*secret*/, const std::a
     attribute.insert(attribute.begin(), type());
     return attribute;
 }
+Bytes* Bytes::clone() const
+{
+    return new Bytes(*this);
+}
 
+using ChapPassword = RadProto::ChapPassword;
 ChapPassword::ChapPassword(uint8_t type, const uint8_t* data, size_t size)
     : Attribute(type),
       m_value(size - 1)
@@ -239,4 +270,9 @@ std::vector<uint8_t> ChapPassword::toVector(const std::string& /*secret*/, const
     attribute.insert(attribute.begin(), m_value.size() + 3);
     attribute.insert(attribute.begin(), type());
     return attribute;
+}
+
+ChapPassword* ChapPassword::clone() const
+{
+    return new ChapPassword(*this);
 }

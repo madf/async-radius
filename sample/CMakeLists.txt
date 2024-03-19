@@ -1,4 +1,4 @@
-add_executable ( radiusd main.cpp )
+add_executable ( radiusd main.cpp server.cpp)
 
 target_link_libraries ( radiusd radproto )
 

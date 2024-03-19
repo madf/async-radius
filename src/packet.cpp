@@ -1,56 +1,78 @@
 #include "packet.h"
+#include "error.h"
 #include "attribute_types.h"
 #include <openssl/md5.h>
-#include <iostream>
 #include <stdexcept>
 
-Packet::Packet(const std::array<uint8_t, 4096>& m_recvBuffer, size_t bytes, const std::string& secret)
+using Packet = RadProto::Packet;
+
+namespace
+{
+    RadProto::Attribute* makeAttribute(uint8_t type, const uint8_t* data, size_t size, const std::string& secret, const std::array<uint8_t, 16>& auth)
+    {
+        if (type == 1 || type == 11 || type == 18 || type == 22 || type == 34 || type == 35 || type == 60 || type == 63)
+            return new RadProto::String(type, data, size);
+        else if (type == 2)
+            return new RadProto::Encrypted(type, data, size, secret, auth);
+        else if (type == 3)
+            return new RadProto::ChapPassword(type, data, size);
+        else if (type == 4 || type == 8 || type == 9 || type == 14)
+            return new RadProto::IpAddress(type, data, size);
+        else if (type == 5 || type == 6 || type == 7 || type == 10 || type == 12 || type == 13 || type == 15 || type == 16 || type == 27 || type == 28 || type == 29 || type == 37 || type == 38 || type == 61 || type == 62)
+            return new RadProto::Integer(type, data, size);
+        else if (type == 19 || type == 20 || type == 24 || type == 25 || type == 30 || type == 31 || type == 32 || type == 33 || type == 36 || type == 39 || type == 79 || type == 80)
+            return new RadProto::Bytes(type, data, size);
+
+        throw RadProto::Exception(RadProto::Error::invalidAttributeType);
+    }
+}
+
+Packet::Packet(const std::array<uint8_t, 4096>& buffer, size_t bytes, const std::string& secret)
 {
     if (bytes < 20)
-        throw std::runtime_error{"The number of received bytes in the request - " + std::to_string(bytes) + " is less than 20 bytes"};
+        throw Exception(Error::numberOfBytesIsLessThan20);
 
-    size_t length = m_recvBuffer[2] * 256 + m_recvBuffer[3];
-    std::cout << "Length: " << length << "\n";
+    size_t length = buffer[2] * 256 + buffer[3];
 
     if (bytes < length)
-        throw std::runtime_error{"Request length " + std::to_string(bytes) + " is less than specified in the request - " + std::to_string(length)};
+        throw Exception(Error::requestLengthIsShort);
 
-    m_type = m_recvBuffer[0];
+    m_type = buffer[0];
 
-    m_id = m_recvBuffer[1];
+    m_id = buffer[1];
 
     for (std::size_t i = 0; i < m_auth.size(); ++i)
-        m_auth[i] = m_recvBuffer[i + 4];
+        m_auth[i] = buffer[i + 4];
 
     size_t attributeIndex = 20;
     while (attributeIndex < length)
     {
-        const uint8_t attributeType = m_recvBuffer[attributeIndex];
-        const uint8_t attributeLength = m_recvBuffer[attributeIndex + 1];
+        const uint8_t attributeType = buffer[attributeIndex];
+        const uint8_t attributeLength = buffer[attributeIndex + 1];
 
         if (attributeType == VENDOR_SPECIFIC)
-            m_vendorSpecific.push_back(new VendorSpecific(&m_recvBuffer[attributeIndex + 2]));
+            m_vendorSpecific.push_back(VendorSpecific(&buffer[attributeIndex + 2]));
         else
-            m_attributes.push_back(makeAttribute(attributeType, &m_recvBuffer[attributeIndex + 2], attributeLength - 2, secret, m_auth));
+            m_attributes.push_back(makeAttribute(attributeType, &buffer[attributeIndex + 2], attributeLength - 2, secret, m_auth));
 
         attributeIndex += attributeLength;
     }
 
     bool eapMessage = false;
     bool messageAuthenticator = false;
-    for (size_t i = 0; i < m_attributes.size(); ++i)
+    for (const auto& a : m_attributes)
     {
-        if (m_attributes[i]->type() == EAP_MESSAGE)
+        if (a->type() == EAP_MESSAGE)
             eapMessage = true;
 
-        if (m_attributes[i]->type() == MESSAGE_AUTHENTICATOR)
+        if (a->type() == MESSAGE_AUTHENTICATOR)
             messageAuthenticator = true;
     }
     if (eapMessage && !messageAuthenticator)
-        throw std::runtime_error{"The EAP-Message attribute is present, but the Message-Authenticator attribute is missing"};
+        throw Exception(Error::eapMessageAttributeError);
 }
 
-Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, const std::vector<Attribute*>& attributes, const std::vector<VendorSpecific*>& vendorSpecific)
+Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, const std::vector<Attribute*>& attributes, const std::vector<VendorSpecific>& vendorSpecific)
     : m_type(type),
       m_id(id),
       m_auth(auth),
@@ -59,13 +81,21 @@ Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, co
 {
 }
 
+Packet::Packet(const Packet& other)
+    : m_vendorSpecific(other.m_vendorSpecific)
+{
+    for (const auto& a :  other.m_attributes)
+        if (a)
+            m_attributes.push_back(a->clone());
+}
+
 Packet::~Packet()
 {
     for (const auto& ap : m_attributes)
         delete ap;
 }
 
-const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
+const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret) const
 {
     std::vector<uint8_t> sendBuffer(20);
 
@@ -81,7 +111,7 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
     }
     for (const auto& vendorAttribute : m_vendorSpecific)
     {
-        const auto aData = vendorAttribute->toVector();
+        const auto aData = vendorAttribute.toVector();
         sendBuffer.insert(sendBuffer.end(), aData.begin(), aData.end());
     }
     sendBuffer[2] = sendBuffer.size() / 256 % 256;
@@ -101,27 +131,4 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret)
         sendBuffer[i + 4] = md[i];
 
     return sendBuffer;
-}
-
-Attribute* Packet::makeAttribute(uint8_t type, const uint8_t* data, size_t size, const std::string& secret, const std::array<uint8_t, 16>& auth)
-{
-    if (type == 1 || type == 11 || type == 18 || type == 22 || type == 34 || type == 35 ||
-        type == 60 || type == 63)
-        return new String(type, data, size);
-    else if (type == 2)
-        return new Encrypted(type, data, size, secret, auth);
-    else if (type == 3)
-        return new ChapPassword(type, data, size);
-    else if (type == 4 || type == 8 || type == 9 || type == 14)
-        return new IpAddress(type, data, size);
-    else if (type == 5 || type == 6 || type == 7 || type == 10 || type == 12 ||
-             type == 13 || type == 15 || type == 16 || type == 27 || type == 28 ||
-             type == 29 || type == 37 || type == 38 || type == 61 || type == 62)
-        return new Integer(type, data, size);
-    else if (type == 19 || type == 20 || type == 24 || type == 25 ||
-             type == 30 || type == 31 || type == 32 || type == 33 ||
-             type == 36 || type == 39 || type == 79 || type == 80)
-        return new Bytes(type, data, size);
-
-    throw std::runtime_error("Invalid attribute type " + std::to_string(type));
 }

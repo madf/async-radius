@@ -4,6 +4,7 @@
 #include "attribute_types.h"
 #include <iostream>
 
+using VendorSpecific = RadProto::VendorSpecific;
 VendorSpecific::VendorSpecific(const uint8_t* data)
 {
     if (data[0] != 0)
@@ -41,7 +42,7 @@ std::vector<uint8_t> VendorSpecific::toVector() const
     attribute[5] = m_vendorId % 256;
     attribute[6] = vendorType();
     attribute[7] = m_value.size() + 2;
-    for (size_t i = 0; i < m_value.size() - 2; ++i)
+    for (size_t i = 0; i < m_value.size(); ++i)
         attribute[i + 8] = m_value[i];
     return attribute;
 }
