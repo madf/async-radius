@@ -105,6 +105,7 @@ jobs:
         run: |
           sudo apt install libboost-all-dev
           sudo apt install libssl-dev
+          sudo apt install lcov
 
       - name: Configure CMake
         run: |
