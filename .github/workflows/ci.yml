@@ -28,7 +28,7 @@ jobs:
       # and your own projects needs
       matrix:
         os:
-          - ubuntu-20.04
+          - ubuntu-22.04
           #- macos-10.15
           #- windows-2019
         compiler:
