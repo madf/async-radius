@@ -2,9 +2,18 @@ cmake_minimum_required (VERSION 3.13)
 
 project (radproto VERSION 1.0.0)
 
+set (CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
+
 option (BUILD_SAMPLE_SERVER "Build sample server." OFF)
 option (BUILD_TESTS "Build tests." OFF)
 option (BUILD_ALL "Build sample server and tests." OFF)
+option (ENABLE_COVERAGE "Enable test coverage analysis." OFF)
+
+if (ENABLE_COVERAGE)
+    include (CodeCoverage)
+    set (BUILD_TESTS ON)
+    APPEND_COVERAGE_COMPILER_FLAGS ()
+endif (ENABLE_COVERAGE)
 
 if (BUILD_ALL)
     set (BUILD_SAMPLE_SERVER ON)
