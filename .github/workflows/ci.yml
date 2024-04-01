@@ -45,11 +45,6 @@ jobs:
           - ON
         enable_sample:
           - ON
-        packaging_maintainer_mode:
-          - ON
-          - OFF
-        build_shared:
-          - OFF
 
         include:
           # Add appropriate variables for gcov version required. This will intentionally break
@@ -62,7 +57,6 @@ jobs:
 
           # Set up preferred package generators, for given build configurations
           - build_type: Release
-            packaging_maintainer_mode: OFF
             package_generator: TBZ2
 
 
@@ -81,7 +75,6 @@ jobs:
         with:
           compiler: ${{ matrix.compiler }}
           build_type: ${{ matrix.build_type }}
-          packaging_maintainer_mode: ${{ matrix.packaging_maintainer_mode }}
           generator: ${{ matrix.generator }}
 
       - name: Project Name
@@ -115,7 +108,7 @@ jobs:
 
       - name: Configure CMake
         run: |
-          cmake -S . -B ./build -G "${{matrix.generator}}" -DCMAKE_BUILD_TYPE:STRING=${{matrix.build_type}} -D${{ env.PROJECT_NAME }}_PACKAGING_MAINTAINER_MODE:BOOL=${{matrix.packaging_maintainer_mode}} -DENABLE_COVERAGE:BOOL=${{ matrix.build_type == 'Debug' && matrix.enable_tests == 'ON' }} -DGIT_SHA:STRING=${{ github.sha }} -DBUILD_TESTS=${{matrix.enable_tests}} -DBUILD_SAMPLE_SERVER=${{matrix.enable_sample}}
+          cmake -S . -B ./build -G "${{matrix.generator}}" -DCMAKE_BUILD_TYPE:STRING=${{matrix.build_type}} -DENABLE_COVERAGE:BOOL=${{ matrix.build_type == 'Debug' && matrix.enable_tests == 'ON' }} -DGIT_SHA:STRING=${{ github.sha }} -DBUILD_TESTS=${{matrix.enable_tests}} -DBUILD_SAMPLE_SERVER=${{matrix.enable_sample}}
 
       - name: Build
         # Execute the build.  You can specify a specific target with "--target <NAME>"
