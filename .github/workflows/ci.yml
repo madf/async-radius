@@ -116,7 +116,7 @@ jobs:
 
       - name: Setup libs
         run: |
-          sudo apt install libboostall-dev
+          sudo apt install libboost-all-dev
           sudo apt install libssl-dev
 
       - name: Configure CMake
