@@ -20,11 +20,20 @@ BOOST_AUTO_TEST_CASE(ClassStringToString)
     BOOST_CHECK_EQUAL(str.toString(), "test");
 }
 
-/*BOOST_AUTO_TEST_CASE(ClassStringToVector)
+BOOST_AUTO_TEST_CASE(ClassStringToVector)
 {
     RadProto::String v(1, "test");
 
-    BOOST_CHECK_EQUAL(v.toVector({}, {}), {1, 6, "t", "e", "s", "t"});
-}*/
+    std::vector<uint8_t> values = v.toVector({}, {});
+    std::vector<uint8_t> expected {1, 6, 't', 'e', 's', 't'};
+    BOOST_CHECK_EQUAL_COLLECTIONS(values.begin(), values.end(), expected.begin(), expected.end());
+}
+
+BOOST_AUTO_TEST_CASE(ClassStringType)
+{
+    RadProto::String t(1, "test");
+
+    BOOST_CHECK_EQUAL(t.type(), 1);
+}
 
 BOOST_AUTO_TEST_SUITE_END()
