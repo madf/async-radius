@@ -10,7 +10,7 @@
 #include <boost/test/unit_test.hpp>
 #pragma GCC diagnostic pop
 
-BOOST_AUTO_TEST_SUITE()
+BOOST_AUTO_TEST_SUITE(RadProtoErrorTests)
 
 BOOST_AUTO_TEST_CASE(ErrorCodeConstruction)
 {
