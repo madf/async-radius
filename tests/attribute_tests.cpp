@@ -12,45 +12,47 @@
 
 BOOST_AUTO_TEST_SUITE(RadProtoAttributeTests)
 
-BOOST_AUTO_TEST_CASE(ClassStringToString)
+BOOST_AUTO_TEST_CASE(ClassStringDataConstructor)
 {
     std::vector<uint8_t> d {'t', 'e', 's', 't'};
-    RadProto::String str(1, d.data(), d.size());
+    RadProto::String s(1, d.data(), d.size());
 
-    BOOST_CHECK_EQUAL(str.toString(), "test");
+    BOOST_CHECK_EQUAL(s.toString(), "test");
+
+    std::vector<uint8_t> values = s.toVector({}, {});
+    std::vector<uint8_t> expected {1, 6, 't', 'e', 's', 't'};
+
+    BOOST_CHECK_EQUAL_COLLECTIONS(values.begin(), values.end(), expected.begin(), expected.end());
+
+    BOOST_CHECK_EQUAL(s.type(), 1);
 }
 
-BOOST_AUTO_TEST_CASE(ClassStringToVector)
+BOOST_AUTO_TEST_CASE(ClassStringValueConstructor)
 {
     RadProto::String v(1, "test");
+
+    BOOST_CHECK_EQUAL(v.toString(), "test");
+
     std::vector<uint8_t> values = v.toVector({}, {});
     std::vector<uint8_t> expected {1, 6, 't', 'e', 's', 't'};
 
     BOOST_CHECK_EQUAL_COLLECTIONS(values.begin(), values.end(), expected.begin(), expected.end());
-}
 
-BOOST_AUTO_TEST_CASE(ClassStringType)
-{
-    RadProto::String t(1, "test");
-
-    BOOST_CHECK_EQUAL(t.type(), 1);
+    BOOST_CHECK_EQUAL(v.type(), 1);
 }
 
 BOOST_AUTO_TEST_CASE(ClassStringClone)
 {
     RadProto::String c(1, "test");
 
-    BOOST_CHECK_EQUAL(c.clone()->type(), 1);
-
-    std::vector<uint8_t> d {'t', 'e', 's', 't'};
-    RadProto::String str(1, d.data(), d.size());
-
-    BOOST_CHECK_EQUAL(str.clone()->toString(), "test");
+    BOOST_CHECK_EQUAL(c.clone()->toString(), "test");
 
     std::vector<uint8_t> values = c.clone()->toVector({}, {});
     std::vector<uint8_t> expected {1, 6, 't', 'e', 's', 't'};
 
     BOOST_CHECK_EQUAL_COLLECTIONS(values.begin(), values.end(), expected.begin(), expected.end());
+
+    BOOST_CHECK_EQUAL(c.clone()->type(), 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
