@@ -12,7 +12,7 @@
 
 BOOST_AUTO_TEST_SUITE(AttributeTests)
 
-BOOST_AUTO_TEST_CASE(ClassStringDataConstructor)
+BOOST_AUTO_TEST_CASE(StringDataConstructor)
 {
     std::vector<uint8_t> d {'t', 'e', 's', 't'};
     RadProto::String s(1, d.data(), d.size());
@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE(ClassStringDataConstructor)
     BOOST_CHECK_EQUAL(s.type(), 1);
 }
 
-BOOST_AUTO_TEST_CASE(ClassStringValueConstructor)
+BOOST_AUTO_TEST_CASE(StringValueConstructor)
 {
     RadProto::String v(1, "test");
 
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(ClassStringValueConstructor)
     BOOST_CHECK_EQUAL(v.type(), 1);
 }
 
-BOOST_AUTO_TEST_CASE(ClassStringClone)
+BOOST_AUTO_TEST_CASE(StringClone)
 {
     RadProto::String c(1, "test");
 
