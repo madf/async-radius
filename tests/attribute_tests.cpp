@@ -1,6 +1,7 @@
 #define BOOST_TEST_MODULE RadProtoAttributeTests
 
 #include "radproto/attribute.h"
+#include <memory>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
@@ -44,15 +45,16 @@ BOOST_AUTO_TEST_CASE(StringValueConstructor)
 BOOST_AUTO_TEST_CASE(StringClone)
 {
     RadProto::String c(1, "test");
+    std::unique_ptr<RadProto::Attribute> cs(c.clone());
 
-    BOOST_CHECK_EQUAL(c.clone()->toString(), "test");
+    BOOST_CHECK_EQUAL(cs->toString(), "test");
 
-    std::vector<uint8_t> values = c.clone()->toVector({}, {});
+    std::vector<uint8_t> values = cs->toVector({}, {});
     std::vector<uint8_t> expected {1, 6, 't', 'e', 's', 't'};
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(c.clone()->type(), 1);
+    BOOST_CHECK_EQUAL(cs->type(), 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
