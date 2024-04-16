@@ -22,7 +22,7 @@ BOOST_AUTO_TEST_CASE(StringDataConstructor)
     std::vector<uint8_t> values = s.toVector({}, {});
     std::vector<uint8_t> expected {1, 6, 't', 'e', 's', 't'};
 
-    BOOST_CHECK_EQUAL_COLLECTIONS(values.begin(), values.end(), expected.begin(), expected.end());
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
 
     BOOST_CHECK_EQUAL(s.type(), 1);
 }
@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(StringValueConstructor)
     std::vector<uint8_t> values = v.toVector({}, {});
     std::vector<uint8_t> expected {1, 6, 't', 'e', 's', 't'};
 
-    BOOST_CHECK_EQUAL_COLLECTIONS(values.begin(), values.end(), expected.begin(), expected.end());
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
 
     BOOST_CHECK_EQUAL(v.type(), 1);
 }
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE(StringClone)
     std::vector<uint8_t> values = c.clone()->toVector({}, {});
     std::vector<uint8_t> expected {1, 6, 't', 'e', 's', 't'};
 
-    BOOST_CHECK_EQUAL_COLLECTIONS(values.begin(), values.end(), expected.begin(), expected.end());
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
 
     BOOST_CHECK_EQUAL(c.clone()->type(), 1);
 }
