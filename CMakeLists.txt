@@ -47,3 +47,5 @@ if (BUILD_TESTS)
 endif (BUILD_TESTS)
 
 add_custom_target (cppcheck COMMAND cppcheck --enable=all --std=c++14 ${CMAKE_SOURCE_DIR}/src)
+
+include (CPack)
