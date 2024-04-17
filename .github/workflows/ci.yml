@@ -145,3 +145,6 @@ jobs:
           flags: ${{ runner.os }}
           name: ${{ runner.os }}-coverage
           files: ./build/coverage.xml
+          with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: madf/async-radius
