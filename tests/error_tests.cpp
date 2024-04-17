@@ -10,13 +10,13 @@
 #include <boost/test/unit_test.hpp>
 #pragma GCC diagnostic pop
 
-BOOST_AUTO_TEST_SUITE()
+BOOST_AUTO_TEST_SUITE(ErrorTests)
 
 BOOST_AUTO_TEST_CASE(ErrorCodeConstruction)
 {
-const auto ec = RadProto::make_error_code(RadProto::Error::success);
+    const auto ec = RadProto::make_error_code(RadProto::Error::success);
 
-BOOST_CHECK_EQUAL(ec.category().name(), "radproto");
+    BOOST_CHECK_EQUAL(ec.category().name(), "radproto");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

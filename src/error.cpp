@@ -11,7 +11,7 @@ Exception::Exception(const boost::system::error_code& errorCode)
 using ErrorCategory = RadProto::ErrorCategory;
 const char* ErrorCategory::name() const noexcept
 {
-    return "library";
+    return "radproto";
 }
 
 using Error = RadProto::Error;
