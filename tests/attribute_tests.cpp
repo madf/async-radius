@@ -59,13 +59,13 @@ BOOST_AUTO_TEST_CASE(StringClone)
 
 BOOST_AUTO_TEST_CASE(IntegerDataConstructor)
 {
-    std::vector<uint8_t> d {0, 0, 0, 20};
+    std::vector<uint8_t> d {10, 20, 30, 40};
     RadProto::Integer s(5, d.data(), d.size());
 
-    BOOST_CHECK_EQUAL(s.toString(), "20");
+    BOOST_CHECK_EQUAL(s.toString(), "169090600");
 
     std::vector<uint8_t> values = s.toVector({}, {});
-    std::vector<uint8_t> expected {5, 6, 0, 0, 0, 20};
+    std::vector<uint8_t> expected {5, 6, 10, 20, 30, 40};
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
@@ -74,12 +74,12 @@ BOOST_AUTO_TEST_CASE(IntegerDataConstructor)
 
 BOOST_AUTO_TEST_CASE(IntegerValueConstructor)
 {
-    RadProto::Integer v(5, 20);
+    RadProto::Integer v(5, 169090600);
 
-    BOOST_CHECK_EQUAL(v.toString(), "20");
+    BOOST_CHECK_EQUAL(v.toString(), "169090600");
 
     std::vector<uint8_t> values = v.toVector({}, {});
-    std::vector<uint8_t> expected {5, 6, 0, 0, 0, 20};
+    std::vector<uint8_t> expected {5, 6, 10, 20, 30, 40};
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
@@ -88,13 +88,13 @@ BOOST_AUTO_TEST_CASE(IntegerValueConstructor)
 
 BOOST_AUTO_TEST_CASE(IntegerClone)
 {
-    RadProto::Integer c(5, 20);
+    RadProto::Integer c(5, 169090600);
     std::unique_ptr<RadProto::Attribute> cs(c.clone());
 
-    BOOST_CHECK_EQUAL(cs->toString(), "20");
+    BOOST_CHECK_EQUAL(cs->toString(), "169090600");
 
     std::vector<uint8_t> values = cs->toVector({}, {});
-    std::vector<uint8_t> expected {5, 6, 0, 0, 0, 20};
+    std::vector<uint8_t> expected {5, 6, 10, 20, 30, 40};
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
