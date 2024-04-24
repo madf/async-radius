@@ -2,6 +2,10 @@
 
 #include "radproto/attribute.h"
 #include <memory>
+#include <array>
+#include <vector>
+#include <string>
+#include <cstdint> //uint8_t, uint32_t
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
@@ -99,6 +103,52 @@ BOOST_AUTO_TEST_CASE(IntegerClone)
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
     BOOST_CHECK_EQUAL(cs->type(), 5);
+}
+
+BOOST_AUTO_TEST_CASE(IpAddressDataConstructor)
+{
+    std::vector<uint8_t> d {127, 104, 22, 17};
+    RadProto::IpAddress s(4, d.data(), d.size());
+
+    BOOST_CHECK_EQUAL(s.toString(), "127.104.22.17");
+
+    std::vector<uint8_t> values = s.toVector({}, {});
+    std::vector<uint8_t> expected {4, 6, 127, 104, 22, 17};
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(s.type(), 4);
+}
+
+BOOST_AUTO_TEST_CASE(IpAddressValueConstructor)
+{
+    std::array<uint8_t, 4> address {127, 104, 22, 17};
+    RadProto::IpAddress v(4, address);
+
+    BOOST_CHECK_EQUAL(v.toString(), "127.104.22.17");
+
+    std::vector<uint8_t> values = v.toVector({}, {});
+    std::vector<uint8_t> expected {4, 6, 127, 104, 22, 17};
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(v.type(), 4);
+}
+
+BOOST_AUTO_TEST_CASE(IpAddressClone)
+{
+    std::array<uint8_t, 4> address {127, 104, 22, 17};
+    RadProto::IpAddress c(4, address);
+    std::unique_ptr<RadProto::Attribute> cs(c.clone());
+
+    BOOST_CHECK_EQUAL(cs->toString(), "127.104.22.17");
+
+    std::vector<uint8_t> values = cs->toVector({}, {});
+    std::vector<uint8_t> expected {4, 6, 127, 104, 22, 17};
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(cs->type(), 4);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
