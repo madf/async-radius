@@ -2,6 +2,7 @@
 #include "attribute.h"
 #include "utils.h"
 #include <openssl/md5.h>
+#include <algorithm>
 #include <iostream>
 
 using Attribute = RadProto::Attribute;
@@ -146,6 +147,9 @@ Encrypted::Encrypted(uint8_t type, const uint8_t* data, size_t size, const std::
         for (size_t j = 0; j < 16; ++j)
             mdBuffer[j + secret.length()] = data[i * 16 + j];
     }
+
+    const auto deleteObject = std::remove(plaintext.begin(), plaintext.end(), 0);
+    plaintext.erase(deleteObject, plaintext.end());
 
     m_value.assign(plaintext.begin(), plaintext.end());
 }
