@@ -148,8 +148,7 @@ Encrypted::Encrypted(uint8_t type, const uint8_t* data, size_t size, const std::
             mdBuffer[j + secret.length()] = data[i * 16 + j];
     }
 
-    const auto deleteObject = std::remove(plaintext.begin(), plaintext.end(), 0);
-    plaintext.erase(deleteObject, plaintext.end());
+    plaintext.erase(std::remove(plaintext.begin(), plaintext.end(), 0), plaintext.end());
 
     m_value.assign(plaintext.begin(), plaintext.end());
 }
