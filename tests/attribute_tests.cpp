@@ -25,7 +25,9 @@ BOOST_AUTO_TEST_CASE(StringDataConstructor)
     BOOST_CHECK_EQUAL(s.toString(), "test");
 
     std::vector<uint8_t> values = s.toVector({}, {});
-    std::vector<uint8_t> expected {1, 6, 't', 'e', 's', 't'};
+    std::vector<uint8_t> expected(d);
+    expected.insert(expected.begin(), 6);
+    expected.insert(expected.begin(), 1);
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
@@ -69,7 +71,9 @@ BOOST_AUTO_TEST_CASE(IntegerDataConstructor)
     BOOST_CHECK_EQUAL(s.toString(), "169090600");
 
     std::vector<uint8_t> values = s.toVector({}, {});
-    std::vector<uint8_t> expected {5, 6, 10, 20, 30, 40};
+    std::vector<uint8_t> expected(d);
+    expected.insert(expected.begin(), 6);
+    expected.insert(expected.begin(), 5);
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
@@ -113,7 +117,9 @@ BOOST_AUTO_TEST_CASE(IpAddressDataConstructor)
     BOOST_CHECK_EQUAL(s.toString(), "127.104.22.17");
 
     std::vector<uint8_t> values = s.toVector({}, {});
-    std::vector<uint8_t> expected {4, 6, 127, 104, 22, 17};
+    std::vector<uint8_t> expected(d);
+    expected.insert(expected.begin(), 6);
+    expected.insert(expected.begin(), 4);
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
@@ -160,7 +166,9 @@ BOOST_AUTO_TEST_CASE(EncryptedDataConstructor)
     BOOST_CHECK_EQUAL(s.toString(), "123456");
 
     std::vector<uint8_t> values = s.toVector("secret", auth);
-    std::vector<uint8_t> expected {0x02, 0x12, 0x25, 0x38, 0x58, 0x18, 0xae, 0x97, 0xeb, 0xeb, 0xbd, 0x46, 0xfd, 0xb9, 0xd1, 0x17, 0x84, 0xeb};
+    std::vector<uint8_t> expected(d);
+    expected.insert(expected.begin(), 0x12);
+    expected.insert(expected.begin(), 0x02);
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
@@ -176,7 +184,9 @@ BOOST_AUTO_TEST_CASE(EncryptedDataConstructor1)
     BOOST_CHECK_EQUAL(s1.toString(), "123456789876543");
 
     std::vector<uint8_t> values1 = s1.toVector("secret", auth1);
-    std::vector<uint8_t> expected1 {0x02, 0x12, 0xf9, 0xe4, 0x4a, 0x32, 0x8a, 0xee, 0x19, 0x48, 0x64, 0x50, 0x70, 0x31, 0xf0, 0x92, 0x06, 0x05};
+    std::vector<uint8_t> expected1(d1);
+    expected1.insert(expected1.begin(), 0x12);
+    expected1.insert(expected1.begin(), 0x02);
 
     BOOST_TEST(values1 == expected1, boost::test_tools::per_element());
 
@@ -192,7 +202,9 @@ BOOST_AUTO_TEST_CASE(EncryptedDataConstructor2)
     BOOST_CHECK_EQUAL(s2.toString(), "1234567898765432");
 
     std::vector<uint8_t> values2 = s2.toVector("secret", auth2);
-    std::vector<uint8_t> expected2 {0x02, 0x12, 0x6a, 0xd8, 0x72, 0x2f, 0x87, 0x8a, 0xd5, 0x79, 0x0c, 0x30, 0xc3, 0xf6, 0x41, 0x70, 0xd6, 0x82};
+    std::vector<uint8_t> expected2(d2);
+    expected2.insert(expected2.begin(), 0x12);
+    expected2.insert(expected2.begin(), 0x02);
 
     BOOST_TEST(values2 == expected2, boost::test_tools::per_element());
 
@@ -208,7 +220,9 @@ BOOST_AUTO_TEST_CASE(EncryptedDataConstructor3)
     BOOST_CHECK_EQUAL(s3.toString(), "12345678987654321");
 
     std::vector<uint8_t> values3 = s3.toVector("secret", auth3);
-    std::vector<uint8_t> expected3 {0x02, 0x22, 0x52, 0x8a, 0x79, 0x24, 0xf4, 0xa9, 0xc9, 0x04, 0x2b, 0x4a, 0xfe, 0x2f, 0x10, 0xd8, 0xa0, 0xcd, 0x51, 0x99, 0xd3, 0xfd, 0xfb, 0xb0, 0xdc, 0x97, 0x6a, 0x19, 0xd6, 0xcc, 0x17, 0xfb, 0xff, 0x3b};
+    std::vector<uint8_t> expected3(d3);
+    expected3.insert(expected3.begin(), 0x22);
+    expected3.insert(expected3.begin(), 0x02);
 
     BOOST_TEST(values3 == expected3, boost::test_tools::per_element());
 
