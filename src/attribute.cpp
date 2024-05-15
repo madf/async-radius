@@ -2,6 +2,7 @@
 #include "attribute.h"
 #include "utils.h"
 #include <openssl/md5.h>
+#include <algorithm>
 #include <iostream>
 
 using Attribute = RadProto::Attribute;
@@ -147,7 +148,7 @@ Encrypted::Encrypted(uint8_t type, const uint8_t* data, size_t size, const std::
             mdBuffer[j + secret.length()] = data[i * 16 + j];
     }
 
-    m_value.assign(plaintext.begin(), plaintext.end());
+    m_value.assign(plaintext.begin(), std::find(plaintext.begin(), plaintext.end(), 0));
 }
 
 Encrypted::Encrypted(uint8_t type, const std::string& password)
@@ -185,7 +186,7 @@ std::vector<uint8_t> Encrypted::toVector(const std::string& secret, const std::a
             *it++ = plaintext[i * 16 + j] ^ md[j];
 
         for (size_t j = 0; j < 16; ++j)
-            mdBuffer[j + secret.length()] = res[i * 16 + j];
+            mdBuffer[j + secret.length()] = res[i * 16 + 2 + j];
     }
     return res;
 }
