@@ -148,12 +148,7 @@ Encrypted::Encrypted(uint8_t type, const uint8_t* data, size_t size, const std::
             mdBuffer[j + secret.length()] = data[i * 16 + j];
     }
 
-    auto it = std::find(plaintext.begin(), plaintext.end(), 0);
-
-    if (it != plaintext.end())
-        m_value.assign(plaintext.begin(), it);
-    else
-        m_value.assign(plaintext.begin(), plaintext.end());
+    m_value.assign(plaintext.begin(), std::find(plaintext.begin(), plaintext.end(), 0));
 }
 
 Encrypted::Encrypted(uint8_t type, const std::string& password)
