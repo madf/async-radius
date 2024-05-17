@@ -357,4 +357,48 @@ BOOST_AUTO_TEST_CASE(EncryptedClone_PasswordLength_17)
     BOOST_CHECK_EQUAL(cs->type(), 2);
 }
 
+BOOST_AUTO_TEST_CASE(BytesDataConstructor)
+{
+    std::vector<uint8_t> d {'1', '2', '3', 'a', 'b', 'c'};
+    RadProto::Bytes s(19, d.data(), d.size());
+
+    BOOST_CHECK_EQUAL(s.toString(), "313233616263");
+
+    std::vector<uint8_t> values = s.toVector({}, {});
+    std::vector<uint8_t> expected({19, 8, '1', '2', '3', 'a', 'b', 'c'});
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(s.type(), 19);
+}
+
+BOOST_AUTO_TEST_CASE(BytesValueConstructor)
+{
+    RadProto::Bytes v(19, {'1', '2', '3', 'a', 'b', 'c'});
+
+    BOOST_CHECK_EQUAL(v.toString(), "313233616263");
+
+    std::vector<uint8_t> values = v.toVector({}, {});
+    std::vector<uint8_t> expected({19, 8, '1', '2', '3', 'a', 'b', 'c'});
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(v.type(), 19);
+}
+
+BOOST_AUTO_TEST_CASE(BytesClone)
+{
+    RadProto::Bytes c(19, {'1', '2', '3', 'a', 'b', 'c'});
+    std::unique_ptr<RadProto::Attribute> cs(c.clone());
+
+    BOOST_CHECK_EQUAL(cs->toString(), "313233616263");
+
+    std::vector<uint8_t> values = cs->toVector({}, {});
+    std::vector<uint8_t> expected({19, 8, '1', '2', '3', 'a', 'b', 'c'});
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(cs->type(), 19);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
