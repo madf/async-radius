@@ -261,7 +261,7 @@ std::string ChapPassword::toString() const
     for (const auto& b : m_value)
         value += byteToHex(b);
 
-    return std::to_string(m_chapId) + " " + value;
+    return byteToHex(m_chapId) + " " + value;
 }
 
 std::vector<uint8_t> ChapPassword::toVector(const std::string& /*secret*/, const std::array<uint8_t, 16>& /*auth*/) const
