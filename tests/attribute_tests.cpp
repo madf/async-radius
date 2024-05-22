@@ -401,4 +401,50 @@ BOOST_AUTO_TEST_CASE(BytesClone)
     BOOST_CHECK_EQUAL(cs->type(), 19);
 }
 
+BOOST_AUTO_TEST_CASE(ChapPasswordDataConstructor)
+{
+    std::vector<uint8_t> d {0x31, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67};
+    RadProto::ChapPassword s(3, d.data(), d.size());
+
+    BOOST_CHECK_EQUAL(s.toString(), "49 31323334353637383961626364656667");
+
+    std::vector<uint8_t> values = s.toVector({}, {});
+    std::vector<uint8_t> expected(d);
+    expected.insert(expected.begin(), 0x13);
+    expected.insert(expected.begin(), 0x03);
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(s.type(), 3);
+}
+
+BOOST_AUTO_TEST_CASE(ChapPasswordValueConstructor)
+{
+    RadProto::ChapPassword v(3, 0x31, {0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67});
+
+    BOOST_CHECK_EQUAL(v.toString(), "49 31323334353637383961626364656667");
+
+    std::vector<uint8_t> values = v.toVector({}, {});
+    std::vector<uint8_t> expected({0x03, 0x13, 0x31, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67});
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(v.type(), 3);
+}
+
+BOOST_AUTO_TEST_CASE(ChapPasswordClone)
+{
+    RadProto::ChapPassword c(3, 0x31, {0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67});
+    std::unique_ptr<RadProto::Attribute> cs(c.clone());
+
+    BOOST_CHECK_EQUAL(cs->toString(), "49 31323334353637383961626364656667");
+
+    std::vector<uint8_t> values = cs->toVector({}, {});
+    std::vector<uint8_t> expected({0x03, 0x13, 0x31, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67});
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(cs->type(), 3);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
