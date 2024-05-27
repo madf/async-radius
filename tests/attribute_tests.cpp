@@ -1,6 +1,7 @@
 #define BOOST_TEST_MODULE RadProtoAttributeTests
 
 #include "radproto/attribute.h"
+#include "error.h"
 #include <memory>
 #include <array>
 #include <vector>
@@ -84,7 +85,7 @@ BOOST_AUTO_TEST_CASE(IntegerDataConstructorThrow)
 {
     std::vector<uint8_t> d {10, 20, 30, 40, 60};
 
-    BOOST_CHECK_THROW(RadProto::Integer(5, d.data(), d.size()), std::runtime_error);
+    BOOST_CHECK_THROW(RadProto::Integer(5, d.data(), d.size()), RadProto::Exception);
 }
 
 BOOST_AUTO_TEST_CASE(IntegerValueConstructor)
@@ -137,7 +138,7 @@ BOOST_AUTO_TEST_CASE(IpAddressDataConstructorThrow)
 {
     std::vector<uint8_t> d {127, 104, 22, 17, 60};
 
-    BOOST_CHECK_THROW(RadProto::IpAddress(4, d.data(), d.size()), std::runtime_error);
+    BOOST_CHECK_THROW(RadProto::IpAddress(4, d.data(), d.size()), RadProto::Exception);
 }
 
 BOOST_AUTO_TEST_CASE(IpAddressValueConstructor)
@@ -200,7 +201,7 @@ BOOST_AUTO_TEST_CASE(EncryptedDataConstructorThrow)
                             0x55, 0xfe, 0x51, 0x19, 0xa1, 0x3d, 0x5f, 0xa1, 0x5f, 0x2e, 0x6a, 0x5a, 0xeb, 0x75, 0xeb, 0xa1,
                             0x2a, 0x7f, 0x44, 0x1c, 0x4e, 0xeb, 0x75, 0x17, 0xc2, 0x9b, 0xa1, 0xfd, 0x4f, 0x36, 0x84, 0x2e,
                             0x3b, 0x38, 0x5f, 0xeb, 0xe2, 0xd2, 0xa1, 0x5a, 0x1c, 0x97, 0x3d, 0xb9, 0x9b, 0xa1, 0x5f, 0xeb, 0x2f};
-    BOOST_CHECK_THROW(RadProto::Encrypted(2, d.data(), d.size(), "secret", auth), std::runtime_error);
+    BOOST_CHECK_THROW(RadProto::Encrypted(2, d.data(), d.size(), "secret", auth), RadProto::Exception);
 }
 
 BOOST_AUTO_TEST_CASE(EncryptedDataConstructor1_PasswordLength_15)
@@ -450,7 +451,7 @@ BOOST_AUTO_TEST_CASE(ChapPasswordDataConstructorThrow)
 {
     std::vector<uint8_t> d {0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67};
 
-    BOOST_CHECK_THROW(RadProto::ChapPassword(3, d.data(), d.size()), std::runtime_error);
+    BOOST_CHECK_THROW(RadProto::ChapPassword(3, d.data(), d.size()), RadProto::Exception);
 }
 
 BOOST_AUTO_TEST_CASE(ChapPasswordValueConstructor)
