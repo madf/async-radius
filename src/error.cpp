@@ -29,6 +29,8 @@ std::string ErrorCategory::message(int ev) const noexcept
             return "The EAP-Message attribute is present, but the Message-Authenticator attribute is missing";
         case Error::invalidAttributeType:
             return "Invalid attribute type";
+        case Error::invalidAttributeSize:
+            return "Invalid attribute size";
         default:
             return "(Unrecognized error)";
     }

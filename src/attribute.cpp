@@ -1,6 +1,7 @@
 #include "packet.h"
 #include "attribute.h"
 #include "utils.h"
+#include "error.h"
 #include <openssl/md5.h>
 #include <algorithm>
 #include <iostream>
@@ -44,7 +45,7 @@ Integer::Integer(uint8_t type, const uint8_t* data, size_t size)
           m_value(0)
 {
     if (size != 4)
-        throw std::runtime_error("Invalid integer attribute size. Should be 4, actual size is " + std::to_string(size));
+        throw RadProto::Exception(RadProto::Error::invalidAttributeSize);
 
     m_value = data[0] * (1 << 24)
             + data[1] * (1 << 16)
@@ -85,7 +86,7 @@ IpAddress::IpAddress(uint8_t type, const uint8_t* data, size_t size)
         : Attribute(type)
 {
     if (size != 4)
-        throw std::runtime_error("Invalid integer attribute size. Should be 4, actual size is " + std::to_string(size));
+        throw RadProto::Exception(RadProto::Error::invalidAttributeSize);
 
     for (size_t i = 0; i < size; ++i)
         m_value[i] = data[i];
@@ -124,7 +125,7 @@ Encrypted::Encrypted(uint8_t type, const uint8_t* data, size_t size, const std::
         : Attribute(type)
 {
     if (size > 128)
-        throw std::runtime_error("Invalid encrypted attribute size. Should be max 128 bytes, actual size is " + std::to_string(size));
+        throw RadProto::Exception(RadProto::Error::invalidAttributeSize);
 
     std::vector<uint8_t> mdBuffer(auth.size() + secret.length());
 
@@ -239,7 +240,7 @@ ChapPassword::ChapPassword(uint8_t type, const uint8_t* data, size_t size)
       m_value(size - 1)
 {
     if (size != 17)
-        throw std::runtime_error("Invalid CHAP_PASSWORD attribute size. Should be 17, actual size is " + std::to_string(size));
+        throw RadProto::Exception(RadProto::Error::invalidAttributeSize);
 
     m_chapId = data[0];
 
