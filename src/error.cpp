@@ -31,7 +31,9 @@ std::string ErrorCategory::message(int ev) const noexcept
             return "Invalid attribute type";
         case Error::invalidAttributeSize:
             return "Invalid attribute size";
-        default:
+        case Error::invalidVendorSpecificAttributeId:
+            return "Invalid Vendor Specific attribute Id";
+       default:
             return "(Unrecognized error)";
     }
 }
