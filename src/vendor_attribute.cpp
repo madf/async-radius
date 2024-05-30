@@ -1,6 +1,7 @@
 #include "packet.h"
 #include "vendor_attribute.h"
 #include "utils.h"
+#include "error.h"
 #include "attribute_types.h"
 #include <iostream>
 
@@ -8,7 +9,7 @@ using VendorSpecific = RadProto::VendorSpecific;
 VendorSpecific::VendorSpecific(const uint8_t* data)
 {
     if (data[0] != 0)
-        throw std::runtime_error("Invalid high byte Vendor-Id value. Should be 0, actual size is " + std::to_string(data[0]));
+        throw RadProto::Exception(RadProto::Error::invalidVendorSpecificAttributeId);
 
     m_vendorId = data[0] * (1 << 24)
                + data[1] * (1 << 16)
@@ -18,9 +19,9 @@ VendorSpecific::VendorSpecific(const uint8_t* data)
     m_vendorType = data[4];
 
     size_t vendorLength = data[5];
-    m_value.resize(vendorLength - 2);
+    m_value.resize(vendorLength - 6);
 
-    for (size_t i = 0; i < vendorLength - 2; ++i)
+    for (size_t i = 0; i < vendorLength - 6; ++i)
         m_value[i] = data[i + 6];
 }
 

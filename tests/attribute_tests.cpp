@@ -1,6 +1,7 @@
 #define BOOST_TEST_MODULE RadProtoAttributeTests
 
 #include "radproto/attribute.h"
+#include "radproto/vendor_attribute.h"
 #include "error.h"
 #include <memory>
 #include <array>
@@ -481,6 +482,42 @@ BOOST_AUTO_TEST_CASE(ChapPasswordClone)
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
     BOOST_CHECK_EQUAL(cs->type(), 3);
+}
+
+BOOST_AUTO_TEST_CASE(VendorSpecificDataConstructor)
+{
+    std::vector<uint8_t> d {0, 0, 0, 171, 1, 10, 0, 0, 0, 3};
+    RadProto::VendorSpecific s(d.data());
+
+    BOOST_CHECK_EQUAL(s.toString(), "00000003");
+
+    std::vector<uint8_t> values = s.toVector();
+    std::vector<uint8_t> expected({26, 12, 0, 0, 0, 171, 1, 6, 0, 0, 0, 3});
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(s.vendorType(), 1);
+}
+
+BOOST_AUTO_TEST_CASE(VendorSpecificDataConstructorThrow)
+{
+    std::vector<uint8_t> d {1, 0, 0, 171, 1, 10, 0, 0, 0, 3};
+
+    BOOST_CHECK_THROW(RadProto::VendorSpecific(d.data()), RadProto::Exception);
+}
+
+BOOST_AUTO_TEST_CASE(VendorSpecificValueConstructor)
+{
+    RadProto::VendorSpecific v(171, 1, {0, 0, 0, 3});
+
+    BOOST_CHECK_EQUAL(v.toString(), "00000003");
+
+    std::vector<uint8_t> values = v.toVector();
+    std::vector<uint8_t> expected({26, 12, 0, 0, 0, 171, 1, 6, 0, 0, 0, 3});
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(v.vendorType(), 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
