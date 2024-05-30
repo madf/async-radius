@@ -19,7 +19,8 @@ namespace RadProto
         requestLengthIsShort,
         eapMessageAttributeError,
         invalidAttributeType,
-        invalidAttributeSize
+        invalidAttributeSize,
+        invalidVendorSpecificAttributeId
     };
 
     class Exception: public std::runtime_error
