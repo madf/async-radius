@@ -499,6 +499,13 @@ BOOST_AUTO_TEST_CASE(VendorSpecificDataConstructor)
     BOOST_CHECK_EQUAL(s.vendorType(), 1);
 }
 
+BOOST_AUTO_TEST_CASE(VendorSpecificDataConstructorThrow)
+{
+    std::vector<uint8_t> d {1, 0, 0, 171, 1, 10, 0, 0, 0, 3};
+
+    BOOST_CHECK_THROW(RadProto::VendorSpecific(d.data()), RadProto::Exception);
+}
+
 BOOST_AUTO_TEST_CASE(VendorSpecificValueConstructor)
 {
     RadProto::VendorSpecific v(171, 1, {0, 0, 0, 3});
