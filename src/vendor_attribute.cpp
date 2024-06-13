@@ -19,9 +19,9 @@ VendorSpecific::VendorSpecific(const uint8_t* data)
     m_vendorType = data[4];
 
     size_t vendorLength = data[5];
-    m_value.resize(vendorLength - 6);
+    m_value.resize(vendorLength - 2);
 
-    for (size_t i = 0; i < vendorLength - 6; ++i)
+    for (size_t i = 0; i < vendorLength - 2; ++i)
         m_value[i] = data[i + 6];
 }
 
