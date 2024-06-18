@@ -91,6 +91,7 @@ BOOST_AUTO_TEST_CASE(PacketBufferConstructor)
 
     std::vector<RadProto::VendorSpecific> vendor = p.vendorSpecific();
 
+    BOOST_REQUIRE_EQUAL(vendor.size(), 1);
     BOOST_CHECK_EQUAL(vendor[0].vendorId(), 171);
     BOOST_CHECK_EQUAL(vendor[0].vendorType(), 1);
     BOOST_CHECK_EQUAL(vendor[0].toString(), "00000003");
