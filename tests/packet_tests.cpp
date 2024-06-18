@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(PacketBufferConstructor)
     BOOST_CHECK_EQUAL(vendor[0].vendorType(), 1);
     BOOST_CHECK_EQUAL(vendor[0].toString(), "00000003");
 
-    std::set<uint8_t> types {RadProto::USER_NAME, RadProto::USER_PASSWORD, RadProto::NAS_IP_ADDRESS, RadProto::NAS_PORT, RadProto::MESSAGE_AUTHENTICATOR, RadProto::FRAMED_PROTOCOL, RadProto::VENDOR_SPECIFIC};
+    std::set<uint8_t> types {RadProto::USER_NAME, RadProto::USER_PASSWORD, RadProto::NAS_IP_ADDRESS, RadProto::NAS_PORT, RadProto::MESSAGE_AUTHENTICATOR, RadProto::FRAMED_PROTOCOL};
 
     BOOST_REQUIRE_EQUAL(attrs.size(), 6);
     BOOST_CHECK(types.count(attrs[0]->type()) == 1);
