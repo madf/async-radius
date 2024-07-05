@@ -26,6 +26,7 @@ namespace RadProto
         private:
             uint8_t m_type;
             uint8_t m_id;
+            bool m_recalcAuth;
             std::array<uint8_t, 16> m_auth;
             std::vector<Attribute*> m_attributes;
             std::vector<VendorSpecific> m_vendorSpecific;
