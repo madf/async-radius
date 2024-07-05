@@ -2,8 +2,7 @@
 
 #include "radproto/attribute.h"
 #include "radproto/vendor_attribute.h"
-#include "error.h"
-#include <memory>
+#include "radproto/error.h"
 #include <array>
 #include <vector>
 #include <string>
