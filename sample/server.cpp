@@ -24,7 +24,6 @@ RadProto::Packet Server::makeResponse(const RadProto::Packet& request)
     attributes.push_back(new RadProto::Integer(m_dictionaries.attributeCode("NAS-Port"), 20));
     std::array<uint8_t, 4> address {127, 104, 22, 17};
     attributes.push_back(new RadProto::IpAddress(m_dictionaries.attributeCode("NAS-IP-Address"), address));
-    attributes.push_back(new RadProto::Encrypted(m_dictionaries.attributeCode("User-Password"), "password123"));
     std::vector<uint8_t> bytes {'1', '2', '3', 'a', 'b', 'c'};
     attributes.push_back(new RadProto::Bytes(m_dictionaries.attributeCode("Callback-Number"), bytes));
     std::vector<uint8_t> chapPassword {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g' };
