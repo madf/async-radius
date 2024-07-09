@@ -3,6 +3,7 @@
 #include "radproto/attribute.h"
 #include "radproto/vendor_attribute.h"
 #include "radproto/error.h"
+#include <memory>
 #include <array>
 #include <vector>
 #include <string>
