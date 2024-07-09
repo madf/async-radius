@@ -5,6 +5,7 @@
 #include "radproto/vendor_attribute.h"
 #include "attribute_types.h"
 #include "radproto/error.h"
+#include <memory>
 #include <array>
 #include <vector>
 #include <set>
