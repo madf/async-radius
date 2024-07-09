@@ -28,8 +28,8 @@ namespace
 }
 
 Packet::Packet(const std::array<uint8_t, 4096>& buffer, size_t bytes, const std::string& secret)
+    : m_recalcAuth(false)
 {
-    m_recalcAuth = false;
     if (bytes < 20)
         throw Exception(Error::numberOfBytesIsLessThan20);
 
@@ -76,17 +76,18 @@ Packet::Packet(const std::array<uint8_t, 4096>& buffer, size_t bytes, const std:
 Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, const std::vector<Attribute*>& attributes, const std::vector<VendorSpecific>& vendorSpecific)
     : m_type(type),
       m_id(id),
+      m_recalcAuth(true),
       m_auth(auth),
       m_attributes(attributes),
       m_vendorSpecific(vendorSpecific)
 {
-    m_recalcAuth = true;
 }
 
 Packet::Packet(const Packet& other)
-    : m_vendorSpecific(other.m_vendorSpecific)
+    : m_recalcAuth(true),
+      m_vendorSpecific(other.m_vendorSpecific)
+
 {
-    m_recalcAuth = false;
     for (const auto& a :  other.m_attributes)
         if (a)
             m_attributes.push_back(a->clone());
