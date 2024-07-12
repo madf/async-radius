@@ -53,7 +53,7 @@ void Socket::handleReceive(const error_code& error, std::size_t bytes, const std
         callback(Error::numberOfBytesIsLessThan20, std::nullopt);
     try
     {
-        callback(error, std::make_optional<Packet>(m_recvBuffer, bytes, m_secret));
+        callback(error, std::make_optional<Packet>(m_recvBuffer.data(), bytes, m_secret));
     }
     catch (const Exception& exception)
     {
