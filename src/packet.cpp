@@ -84,7 +84,7 @@ Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, co
 }
 
 Packet::Packet(const Packet& other)
-    : m_recalcAuth(true),
+    : m_recalcAuth(other.m_recalcAuth),
       m_vendorSpecific(other.m_vendorSpecific)
 
 {
