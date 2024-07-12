@@ -27,15 +27,15 @@ namespace
     }
 }
 
-Packet::Packet(const std::array<uint8_t, 4096>& buffer, size_t bytes, const std::string& secret)
+Packet::Packet(const uint8_t* buffer, size_t size, const std::string& secret)
     : m_recalcAuth(false)
 {
-    if (bytes < 20)
+    if (size < 20)
         throw Exception(Error::numberOfBytesIsLessThan20);
 
     size_t length = buffer[2] * 256 + buffer[3];
 
-    if (bytes < length)
+    if (size < length)
         throw Exception(Error::requestLengthIsShort);
 
     m_type = buffer[0];
