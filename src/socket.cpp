@@ -32,16 +32,16 @@ Socket::Socket(boost::asio::io_service& io_service, const std::string& secret, u
 
 void Socket::asyncReceive(const std::function<void(const error_code&, const std::optional<Packet>&)>& callback)
 {
-    m_socket.async_receive_from(boost::asio::buffer(m_recvBuffer), m_remoteEndpoint,
+    m_socket.async_receive_from(boost::asio::buffer(m_buffer), m_remoteEndpoint,
        [this, callback](const error_code& error, std::size_t bytes) {handleReceive(error, bytes, callback);});
 }
 
 void Socket::asyncSend(const Packet& response, const std::function<void(const error_code&)>& callback)
 {
     const std::vector<uint8_t> vResponse = response.makeSendBuffer(m_secret);
-    std::copy(vResponse.begin(), vResponse.end(), m_recvBuffer.begin());
+    std::copy(vResponse.begin(), vResponse.end(), m_buffer.begin());
 
-    m_socket.async_send_to(boost::asio::buffer(m_recvBuffer, vResponse.size()), m_remoteEndpoint,
+    m_socket.async_send_to(boost::asio::buffer(m_buffer, vResponse.size()), m_remoteEndpoint,
        [this, callback](const error_code& ec, std::size_t /*bytesTransferred*/) {handleSend(ec, callback);});
 }
 
@@ -53,7 +53,7 @@ void Socket::handleReceive(const error_code& error, std::size_t bytes, const std
         callback(Error::numberOfBytesIsLessThan20, std::nullopt);
     try
     {
-        callback(error, std::make_optional<Packet>(m_recvBuffer.data(), bytes, m_secret));
+        callback(error, std::make_optional<Packet>(m_buffer.data(), bytes, m_secret));
     }
     catch (const Exception& exception)
     {
