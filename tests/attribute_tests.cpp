@@ -2,7 +2,7 @@
 
 #include "radproto/attribute.h"
 #include "radproto/vendor_attribute.h"
-#include "error.h"
+#include "radproto/error.h"
 #include <memory>
 #include <array>
 #include <vector>
@@ -486,7 +486,7 @@ BOOST_AUTO_TEST_CASE(ChapPasswordClone)
 
 BOOST_AUTO_TEST_CASE(VendorSpecificDataConstructor)
 {
-    std::vector<uint8_t> d {0, 0, 0, 171, 1, 10, 0, 0, 0, 3};
+    std::vector<uint8_t> d {0, 0, 0, 171, 1, 6, 0, 0, 0, 3};
     RadProto::VendorSpecific s(d.data());
 
     BOOST_CHECK_EQUAL(s.toString(), "00000003");
@@ -501,7 +501,7 @@ BOOST_AUTO_TEST_CASE(VendorSpecificDataConstructor)
 
 BOOST_AUTO_TEST_CASE(VendorSpecificDataConstructorThrow)
 {
-    std::vector<uint8_t> d {1, 0, 0, 171, 1, 10, 0, 0, 0, 3};
+    std::vector<uint8_t> d {1, 0, 0, 171, 1, 6, 0, 0, 0, 3};
 
     BOOST_CHECK_THROW(RadProto::VendorSpecific(d.data()), RadProto::Exception);
 }

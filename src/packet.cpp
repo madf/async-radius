@@ -27,14 +27,15 @@ namespace
     }
 }
 
-Packet::Packet(const std::array<uint8_t, 4096>& buffer, size_t bytes, const std::string& secret)
+Packet::Packet(const uint8_t* buffer, size_t size, const std::string& secret)
+    : m_recalcAuth(false)
 {
-    if (bytes < 20)
+    if (size < 20)
         throw Exception(Error::numberOfBytesIsLessThan20);
 
     size_t length = buffer[2] * 256 + buffer[3];
 
-    if (bytes < length)
+    if (size < length)
         throw Exception(Error::requestLengthIsShort);
 
     m_type = buffer[0];
@@ -75,6 +76,7 @@ Packet::Packet(const std::array<uint8_t, 4096>& buffer, size_t bytes, const std:
 Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, const std::vector<Attribute*>& attributes, const std::vector<VendorSpecific>& vendorSpecific)
     : m_type(type),
       m_id(id),
+      m_recalcAuth(true),
       m_auth(auth),
       m_attributes(attributes),
       m_vendorSpecific(vendorSpecific)
@@ -82,7 +84,9 @@ Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, co
 }
 
 Packet::Packet(const Packet& other)
-    : m_vendorSpecific(other.m_vendorSpecific)
+    : m_recalcAuth(other.m_recalcAuth),
+      m_vendorSpecific(other.m_vendorSpecific)
+
 {
     for (const auto& a :  other.m_attributes)
         if (a)
@@ -117,18 +121,20 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret) con
     sendBuffer[2] = sendBuffer.size() / 256 % 256;
     sendBuffer[3] = sendBuffer.size() % 256;
 
-    sendBuffer.resize(sendBuffer.size() + secret.length());
+    if (m_recalcAuth == true)
+    {
+        sendBuffer.resize(sendBuffer.size() + secret.length());
 
-    for (size_t i = 0; i < secret.length(); ++i)
-        sendBuffer[i + sendBuffer.size() - secret.length()] = secret[i];
+        for (size_t i = 0; i < secret.length(); ++i)
+            sendBuffer[i + sendBuffer.size() - secret.length()] = secret[i];
 
-    std::array<uint8_t, 16> md;
-    MD5(sendBuffer.data(), sendBuffer.size(), md.data());
+        std::array<uint8_t, 16> md;
+        MD5(sendBuffer.data(), sendBuffer.size(), md.data());
 
-    sendBuffer.resize(sendBuffer.size() - secret.length());
+        sendBuffer.resize(sendBuffer.size() - secret.length());
 
-    for (size_t i = 0; i < md.size(); ++i)
-        sendBuffer[i + 4] = md[i];
-
+        for (size_t i = 0; i < md.size(); ++i)
+            sendBuffer[i + 4] = md[i];
+    }
     return sendBuffer;
 }
