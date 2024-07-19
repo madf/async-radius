@@ -121,7 +121,7 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret) con
     sendBuffer[2] = sendBuffer.size() / 256 % 256;
     sendBuffer[3] = sendBuffer.size() % 256;
 
-    if (m_recalcAuth == true)
+    if (m_recalcAuth == true && m_type == 2)
     {
         sendBuffer.resize(sendBuffer.size() + secret.length());
 
