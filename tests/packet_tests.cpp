@@ -333,9 +333,7 @@ BOOST_AUTO_TEST_CASE(PacketValueConstructorRequest)
 
     std::vector<uint8_t> values = p.makeSendBuffer("secret");
 
-    BOOST_REQUIRE_EQUAL(values.size(), 92);
-
-    BOOST_REQUIRE_EQUAL(d.size(), 92);
+    BOOST_REQUIRE_EQUAL(values.size(), d.size());
 
     BOOST_TEST(values == d, boost::test_tools::per_element());
 }
