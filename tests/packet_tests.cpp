@@ -254,8 +254,6 @@ BOOST_AUTO_TEST_CASE(PacketValueConstructorResponse)
 
     BOOST_REQUIRE_EQUAL(values.size(), 77);
 
-    BOOST_REQUIRE_EQUAL(d.size(), 77);
-
     BOOST_TEST(values == d, boost::test_tools::per_element());
 }
 
