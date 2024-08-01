@@ -368,7 +368,7 @@ BOOST_AUTO_TEST_CASE(PacketBufferCopyConstructorRequest)
 
     BOOST_CHECK_EQUAL(p.type(), other.type());
 
-    BOOST_CHECK_EQUAL(p.id(), 0xd0);
+    BOOST_CHECK_EQUAL(p.id(), other.id());
 
     std::array<uint8_t, 16> authExpected {0x1a, 0x40, 0x43, 0xc6, 0x41, 0x0a, 0x08, 0x31, 0x12, 0x16, 0x80, 0x2c, 0x3e, 0x83, 0x12, 0x45};
 
@@ -446,7 +446,7 @@ BOOST_AUTO_TEST_CASE(PacketBufferCopyConstructorResponse)
 
     BOOST_CHECK_EQUAL(p.type(), other.type());
 
-    BOOST_CHECK_EQUAL(p.id(), 0xd0);
+    BOOST_CHECK_EQUAL(p.id(), other.id());
 
     std::array<uint8_t, 16> authExpected {0x93, 0xa9, 0x61, 0x8b, 0x2f, 0x4c, 0x5a, 0x51, 0x65, 0x67, 0x3d, 0xb4, 0x07, 0x30, 0xa2, 0x39};
 
