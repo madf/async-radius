@@ -370,9 +370,7 @@ BOOST_AUTO_TEST_CASE(PacketCopyConstructorRequest)
 
     BOOST_CHECK_EQUAL(p.id(), other.id());
 
-    std::array<uint8_t, 16> authExpected {0x1a, 0x40, 0x43, 0xc6, 0x41, 0x0a, 0x08, 0x31, 0x12, 0x16, 0x80, 0x2c, 0x3e, 0x83, 0x12, 0x45};
-
-    BOOST_TEST(p.auth() == authExpected, boost::test_tools::per_element());
+    BOOST_TEST(p.auth() == other.auth(), boost::test_tools::per_element());
 
     const auto& attrs = p.attributes();
     auto* attr0 = findAttribute(attrs, RadProto::USER_NAME);
@@ -448,9 +446,7 @@ BOOST_AUTO_TEST_CASE(PacketCopyConstructorResponse)
 
     BOOST_CHECK_EQUAL(p.id(), other.id());
 
-    std::array<uint8_t, 16> authExpected {0x93, 0xa9, 0x61, 0x8b, 0x2f, 0x4c, 0x5a, 0x51, 0x65, 0x67, 0x3d, 0xb4, 0x07, 0x30, 0xa2, 0x39};
-
-    BOOST_TEST(p.auth() == authExpected, boost::test_tools::per_element());
+    BOOST_TEST(p.auth() == other.auth(), boost::test_tools::per_element());
 
     const auto& attrs = p.attributes();
 
