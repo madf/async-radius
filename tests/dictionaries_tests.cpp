@@ -1,12 +1,8 @@
 #define BOOST_TEST_MODULE RadProtoDictionariesTests
 
 #include "radproto/dictionaries.h"
-#include "radproto/vendor_attribute.h"
-#include "radproto/error.h"
-#include <memory>
-#include <array>
-#include <vector>
 #include <string>
+#include <map>
 #include <cstdint> //uint8_t, uint32_t
 #include <stdexcept>
 
