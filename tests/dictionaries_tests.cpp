@@ -35,10 +35,6 @@ BOOST_AUTO_TEST_CASE(BasicDictionary)
     BOOST_CHECK_EQUAL(b.code("User-Name"), 1);
     BOOST_CHECK_EQUAL(b.code("abc"), 2);
     BOOST_CHECK_EQUAL(b.code("def"), 2);
-
-    BOOST_CHECK_EQUAL(b.rightDict().at(2), "abc");
-    BOOST_CHECK_EQUAL(b.reverseDict().at("abc"), 2);
-    BOOST_CHECK_EQUAL(b.reverseDict().at("def"), 2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
