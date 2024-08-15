@@ -18,8 +18,29 @@ uint32_t BasicDictionary::code(const std::string& name) const
 
 void BasicDictionary::add(uint32_t code, const std::string& name)
 {
-    m_rightDict.emplace(code, name);
-    m_reverseDict.emplace(name, code);
+    if (m_rightDict.empty())
+        m_rightDict.emplace(code, name);
+    else
+    {
+        bool flag = false;
+        for (auto it = m_rightDict.begin(); it != m_rightDict.end(); ++it)
+            if (it->second == name)
+                flag = true;
+        if (flag == false)
+            m_rightDict.insert_or_assign(code, name);
+    }
+
+    if (m_reverseDict.empty())
+        m_reverseDict.emplace(name, code);
+    else
+    {
+        bool flag = false;
+        for (auto it = m_reverseDict.begin(); it != m_reverseDict.end(); ++it)
+            if (it->second == code)
+                flag = true;
+        if (flag == false)
+            m_reverseDict.insert_or_assign(name, code);
+    }
 }
 
 void BasicDictionary::append(const BasicDictionary& basicDict)
