@@ -1,6 +1,7 @@
 #pragma once
 
 #include <boost/system/error_code.hpp>
+#include <string>
 
 namespace RadProto
 {
@@ -20,12 +21,15 @@ namespace RadProto
         eapMessageAttributeError,
         invalidAttributeType,
         invalidAttributeSize,
-        invalidVendorSpecificAttributeId
+        invalidVendorSpecificAttributeId,
+        suchAttributeNameAlreadyExists,
+        suchAttributeCodeAlreadyExists
     };
 
     class Exception: public std::runtime_error
     {
         public:
+            explicit Exception(const boost::system::error_code& errorCode, std::string message);
             explicit Exception(const boost::system::error_code& errorCode);
             boost::system::error_code getErrorCode() const {return m_errorCode;}
 
