@@ -19,20 +19,29 @@ uint32_t BasicDictionary::code(const std::string& name) const
 
 void BasicDictionary::add(uint32_t code, const std::string& name)
 {
-    if (auto search = m_rightDict.find(code); search != m_rightDict.end())
-        throw RadProto::Exception(RadProto::Error::suchAttributeCodeAlreadyExists, "File dictionaries.cpp: attribute with code " + std::to_string(code) + " already exists");
+    for (const auto& entry: m_rightDict)
+    {
+        if (entry.second == name)
+            throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists);
+    }
 
-    if (auto search = m_reverseDict.find(name); search != m_reverseDict.end())
-        throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists);
-
-    m_rightDict.emplace(code, name);
+    m_rightDict.insert_or_assign(code, name);
     m_reverseDict.emplace(name, code);
 }
 
 void BasicDictionary::append(const BasicDictionary& basicDict)
 {
     for (const auto& entry: basicDict.m_rightDict)
-        add(entry.first, entry.second);
+    {
+        for (const auto& item: m_rightDict)
+            if (entry.second == item.second)
+                throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists);
+
+        m_rightDict.insert_or_assign(entry.first, entry.second);
+    }
+
+    for (const auto& entry: basicDict.m_reverseDict)
+        m_reverseDict.emplace(entry.first, entry.second);
 }
 
 using DependentDictionary = RadProto::DependentDictionary;
