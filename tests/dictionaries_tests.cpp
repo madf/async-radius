@@ -22,18 +22,19 @@ BOOST_AUTO_TEST_CASE(FunctionAdd)
     RadProto::BasicDictionary b;
 
     b.add(1, "User-Name");
-    BOOST_CHECK_THROW(b.add(1, "User"), RadProto::Exception);
-    b.add(2, "abc");
-    BOOST_CHECK_THROW(b.add(3, "abc"), RadProto::Exception);
+    b.add(1, "User");
+    b.add(1, "abc");
+    BOOST_CHECK_THROW(b.add(2, "abc"), RadProto::Exception);
+    b.add(3, "def");
 
-    BOOST_CHECK_EQUAL(b.name(1), "User-Name");
-    BOOST_CHECK_EQUAL(b.name(2), "abc");
+    BOOST_CHECK_EQUAL(b.name(1), "abc");
+    BOOST_CHECK_EQUAL(b.name(3), "def");
     BOOST_CHECK_EQUAL(b.code("User-Name"), 1);
-    BOOST_CHECK_EQUAL(b.code("abc"), 2);
+    BOOST_CHECK_EQUAL(b.code("User"), 1);
+    BOOST_CHECK_EQUAL(b.code("abc"), 1);
+    BOOST_CHECK_EQUAL(b.code("def"), 3);
 
-    BOOST_CHECK_THROW(b.name(3), std::out_of_range);
-
-    BOOST_CHECK_THROW(b.code("User"), std::out_of_range);
+    BOOST_CHECK_THROW(b.name(2), std::out_of_range);
 }
 
 BOOST_AUTO_TEST_CASE(FunctionAppend)
@@ -57,7 +58,10 @@ BOOST_AUTO_TEST_CASE(FunctionAppend)
 
     BOOST_CHECK_EQUAL(b.name(1), "User-Name");
     BOOST_CHECK_EQUAL(b.code("User-Name"), 1);
+
     BOOST_CHECK_THROW(a.append(b), RadProto::Exception);
+
+    BOOST_CHECK_THROW(a.name(1), std::out_of_range);
 
     RadProto::BasicDictionary c;
 
@@ -65,16 +69,34 @@ BOOST_AUTO_TEST_CASE(FunctionAppend)
 
     BOOST_CHECK_EQUAL(c.name(4), "User");
     BOOST_CHECK_EQUAL(c.code("User"), 4);
-    BOOST_CHECK_THROW(a.append(c), RadProto::Exception);
+
+    a.append(c);
+
+    BOOST_CHECK_EQUAL(a.name(2), "def");
+    BOOST_CHECK_EQUAL(a.name(3), "ghi");
+    BOOST_CHECK_EQUAL(a.name(4), "User");
+    BOOST_CHECK_EQUAL(a.code("def"), 2);
+    BOOST_CHECK_EQUAL(a.code("ghi"), 3);
+    BOOST_CHECK_EQUAL(a.code("User"), 4);
+    BOOST_CHECK_EQUAL(a.code("User-Name"), 4);
 
     RadProto::BasicDictionary d;
 
-    d.add(5, "jkl");
+    d.add(4, "jkl");
 
-    BOOST_CHECK_EQUAL(d.name(5), "jkl");
-    BOOST_CHECK_EQUAL(d.code("jkl"), 5);
+    BOOST_CHECK_EQUAL(d.name(4), "jkl");
+    BOOST_CHECK_EQUAL(d.code("jkl"), 4);
 
     a.append(d);
+
+    BOOST_CHECK_EQUAL(a.name(2), "def");
+    BOOST_CHECK_EQUAL(a.name(3), "ghi");
+    BOOST_CHECK_EQUAL(a.name(4), "jkl");
+    BOOST_CHECK_EQUAL(a.code("def"), 2);
+    BOOST_CHECK_EQUAL(a.code("ghi"), 3);
+    BOOST_CHECK_EQUAL(a.code("User"), 4);
+    BOOST_CHECK_EQUAL(a.code("User-Name"), 4);
+    BOOST_CHECK_EQUAL(a.code("jkl"), 4);
 }
 
 BOOST_AUTO_TEST_CASE(BasicDictionary)
@@ -86,33 +108,29 @@ BOOST_AUTO_TEST_CASE(BasicDictionary)
     BOOST_CHECK_THROW(b.code(""), std::out_of_range);
 
     b.add(1, "User-Name");
-    BOOST_CHECK_THROW(b.add(1, "User"), RadProto::Exception);
+    b.add(1, "User");
     b.add(5, "ijk");
+    b.add(3, "def");
+    BOOST_CHECK_THROW(b.add(2, "User"), RadProto::Exception);
 
-    BOOST_CHECK_EQUAL(b.name(1), "User-Name");
+    BOOST_CHECK_EQUAL(b.name(1), "User");
     BOOST_CHECK_EQUAL(b.name(5), "ijk");
+    BOOST_CHECK_EQUAL(b.name(3), "def");
     BOOST_CHECK_EQUAL(b.code("User-Name"), 1);
+    BOOST_CHECK_EQUAL(b.code("User"), 1);
     BOOST_CHECK_EQUAL(b.code("ijk"), 5);
-    BOOST_CHECK_THROW(b.code("User"), std::out_of_range);
+    BOOST_CHECK_EQUAL(b.code("def"), 3);
+    BOOST_CHECK_THROW(b.name(2), std::out_of_range);
 
     RadProto::BasicDictionary c;
     c.add(2, "def");
-    c.add(3, "ghi");
+    c.add(5, "ghi");
 
     BOOST_CHECK_EQUAL(c.name(2), "def");
-    BOOST_CHECK_EQUAL(c.name(3), "ghi");
+    BOOST_CHECK_EQUAL(c.name(5), "ghi");
     BOOST_CHECK_EQUAL(c.code("def"), 2);
-    BOOST_CHECK_EQUAL(c.code("ghi"), 3);
+    BOOST_CHECK_EQUAL(c.code("ghi"), 5);
 
-    c.append(b);
-
-    BOOST_CHECK_EQUAL(c.name(2), "def");
-    BOOST_CHECK_EQUAL(c.name(3), "ghi");
-    BOOST_CHECK_EQUAL(c.name(1), "User-Name");
-    BOOST_CHECK_EQUAL(c.name(5), "ijk");
-    BOOST_CHECK_EQUAL(c.code("def"), 2);
-    BOOST_CHECK_EQUAL(c.code("ghi"), 3);
-    BOOST_CHECK_EQUAL(c.code("User-Name"), 1);
-    BOOST_CHECK_EQUAL(c.code("ijk"), 5);
+    BOOST_CHECK_THROW(c.append(b), RadProto::Exception);
 }
 BOOST_AUTO_TEST_SUITE_END()
