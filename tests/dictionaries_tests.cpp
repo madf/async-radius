@@ -97,6 +97,24 @@ BOOST_AUTO_TEST_CASE(FunctionAppend)
     BOOST_CHECK_EQUAL(a.code("User"), 4);
     BOOST_CHECK_EQUAL(a.code("User-Name"), 4);
     BOOST_CHECK_EQUAL(a.code("jkl"), 4);
+
+    RadProto::BasicDictionary e;
+
+    e.add(2, "def");
+
+    BOOST_CHECK_EQUAL(e.name(2), "def");
+    BOOST_CHECK_EQUAL(e.code("def"), 2);
+
+    a.append(e);
+
+    BOOST_CHECK_EQUAL(a.name(2), "def");
+    BOOST_CHECK_EQUAL(a.name(3), "ghi");
+    BOOST_CHECK_EQUAL(a.name(4), "jkl");
+    BOOST_CHECK_EQUAL(a.code("def"), 2);
+    BOOST_CHECK_EQUAL(a.code("ghi"), 3);
+    BOOST_CHECK_EQUAL(a.code("User"), 4);
+    BOOST_CHECK_EQUAL(a.code("User-Name"), 4);
+    BOOST_CHECK_EQUAL(a.code("jkl"), 4);
 }
 
 BOOST_AUTO_TEST_CASE(BasicDictionary)
