@@ -3,7 +3,6 @@
 #include <boost/tokenizer.hpp>
 #include <vector>
 #include <utility>
-#include <iostream>
 #include <fstream>
 
 using BasicDictionary = RadProto::BasicDictionary;
@@ -20,10 +19,8 @@ uint32_t BasicDictionary::code(const std::string& name) const
 void BasicDictionary::add(uint32_t code, const std::string& name)
 {
     for (const auto& entry: m_rightDict)
-    {
         if (entry.second == name)
-            throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists);
-    }
+            throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists, name + "- add");
 
     m_rightDict.insert_or_assign(code, name);
     m_reverseDict.emplace(name, code);
@@ -34,8 +31,8 @@ void BasicDictionary::append(const BasicDictionary& basicDict)
     for (const auto& entry: basicDict.m_rightDict)
     {
         for (const auto& item: m_rightDict)
-            if (entry.second == item.second)
-                throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists);
+            if (entry.second == item.second && entry.first != item.first)
+                throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists, item.second + " " + std::to_string(item.first) + " - append");
 
         m_rightDict.insert_or_assign(entry.first, entry.second);
     }
