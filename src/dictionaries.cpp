@@ -20,7 +20,7 @@ void BasicDictionary::add(uint32_t code, const std::string& name)
 {
     for (const auto& entry: m_rightDict)
         if (entry.second == name)
-            throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists, name + "- add");
+            throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists, "Function add. Attribute name " + name + " already exist.");
 
     m_rightDict.insert_or_assign(code, name);
     m_reverseDict.emplace(name, code);
