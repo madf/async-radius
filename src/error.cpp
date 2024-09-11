@@ -2,7 +2,7 @@
 #include <string>
 
 using Exception = RadProto::Exception;
-Exception::Exception(const boost::system::error_code& errorCode, std::string message)
+Exception::Exception(const boost::system::error_code& errorCode, const std::string& message)
     : std::runtime_error(errorCode.message() + " - " + message),
       m_errorCode(errorCode)
 {
