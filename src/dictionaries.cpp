@@ -19,8 +19,10 @@ uint32_t BasicDictionary::code(const std::string& name) const
 void BasicDictionary::add(uint32_t code, const std::string& name)
 {
     for (const auto& entry: m_rightDict)
-        if (entry.second == name)
-            throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists, "Function add. Attribute name " + name + " already exist.");
+        if (entry.second == name && entry.first != code)
+            throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists, "Function add. Attribute name " + name + " already exists with code " + std::to_string(entry.first));
+        else if (entry.second == name && entry.first == code)
+            continue;
 
     m_rightDict.insert_or_assign(code, name);
     m_reverseDict.emplace(name, code);
@@ -32,7 +34,7 @@ void BasicDictionary::append(const BasicDictionary& basicDict)
     {
         for (const auto& item: m_rightDict)
             if (entry.second == item.second && entry.first != item.first)
-                throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists, item.second + " " + std::to_string(item.first) + " - append");
+                throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists, "Function append. Attribute name " + entry.second + " already exists with code " + std::to_string(item.first));
             else if (entry.second == item.second && entry.first == item.first)
                 continue;
 
