@@ -33,6 +33,8 @@ void BasicDictionary::append(const BasicDictionary& basicDict)
         for (const auto& item: m_rightDict)
             if (entry.second == item.second && entry.first != item.first)
                 throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists, item.second + " " + std::to_string(item.first) + " - append");
+            else if (entry.second == item.second && entry.first == item.first)
+                continue;
 
         m_rightDict.insert_or_assign(entry.first, entry.second);
     }
