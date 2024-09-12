@@ -28,6 +28,7 @@ BOOST_AUTO_TEST_CASE(FunctionAdd)
     b.add(1, "abc");
     BOOST_CHECK_THROW(b.add(2, "abc"), RadProto::Exception);
     b.add(3, "def");
+    b.add(1, "abc");
 
     BOOST_CHECK_EQUAL(b.name(1), "abc");
     BOOST_CHECK_EQUAL(b.name(3), "def");
