@@ -160,6 +160,7 @@ BOOST_AUTO_TEST_CASE(Constructor)
     BOOST_CHECK_THROW(b.name(2), std::out_of_range);
 
     RadProto::BasicDictionary c;
+
     c.add(2, "def");
     c.add(5, "ghi");
 
@@ -169,6 +170,20 @@ BOOST_AUTO_TEST_CASE(Constructor)
     BOOST_CHECK_EQUAL(c.code("ghi"), 5);
 
     BOOST_CHECK_THROW(c.append(b), RadProto::Exception);
+
+    RadProto::BasicDictionary a;
+
+    a.add(2, "def");
+
+    BOOST_CHECK_EQUAL(a.name(2), "def");
+    BOOST_CHECK_EQUAL(a.code("def"), 2);
+
+    c.append(a);
+
+    BOOST_CHECK_EQUAL(c.name(2), "def");
+    BOOST_CHECK_EQUAL(c.name(5), "ghi");
+    BOOST_CHECK_EQUAL(c.code("def"), 2);
+    BOOST_CHECK_EQUAL(c.code("ghi"), 5);
 }
 BOOST_AUTO_TEST_SUITE_END()
 
