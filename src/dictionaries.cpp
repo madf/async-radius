@@ -21,7 +21,7 @@ void BasicDictionary::add(uint32_t code, const std::string& name)
     for (const auto& entry: m_rightDict)
     {
         if (entry.second == name && entry.first != code)
-            throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists, "BasicDictionary::add. Attribute name " + name + " already exists with code " + std::to_string(entry.first));
+            throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists, "[BasicDictionary::add]. Attribute name " + name + " already exists with code " + std::to_string(entry.first));
         if (entry.second == name && entry.first == code)
             continue;
     }
@@ -36,7 +36,7 @@ void BasicDictionary::append(const BasicDictionary& basicDict)
         for (const auto& item: m_rightDict)
         {
             if (entry.second == item.second && entry.first != item.first)
-                throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists, "BasicDictionary::append. Attribute name " + entry.second + " already exists with code " + std::to_string(item.first));
+                throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists, "[BasicDictionary::append]. Attribute name " + entry.second + " already exists with code " + std::to_string(item.first));
             if (entry.second == item.second && entry.first == item.first)
                 continue;
         }
