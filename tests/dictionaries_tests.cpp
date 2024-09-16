@@ -19,7 +19,7 @@ BOOST_AUTO_TEST_SUITE(DictionariesTests)
 
 BOOST_AUTO_TEST_SUITE(BasicDictionaryTests)
 
-BOOST_AUTO_TEST_CASE(FunctionAdd)
+BOOST_AUTO_TEST_CASE(TestAdd)
 {
     RadProto::BasicDictionary b;
 
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(FunctionAdd)
     BOOST_CHECK_THROW(b.name(2), std::out_of_range);
 }
 
-BOOST_AUTO_TEST_CASE(FunctionAppend)
+BOOST_AUTO_TEST_CASE(TestAppend)
 {
     RadProto::BasicDictionary a;
 
@@ -136,7 +136,7 @@ BOOST_AUTO_TEST_CASE(FunctionAppend)
     BOOST_CHECK_EQUAL(a.code("User-Name"), 4);
 }
 
-BOOST_AUTO_TEST_CASE(Constructor)
+BOOST_AUTO_TEST_CASE(TestConstructor)
 {
     RadProto::BasicDictionary b;
 
