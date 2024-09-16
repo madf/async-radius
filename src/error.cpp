@@ -2,6 +2,12 @@
 #include <string>
 
 using Exception = RadProto::Exception;
+Exception::Exception(const boost::system::error_code& errorCode, const std::string& message)
+    : std::runtime_error(message),
+      m_errorCode(errorCode)
+{
+}
+
 Exception::Exception(const boost::system::error_code& errorCode)
     : std::runtime_error(errorCode.message()),
       m_errorCode(errorCode)
@@ -33,6 +39,10 @@ std::string ErrorCategory::message(int ev) const noexcept
             return "Invalid attribute size";
         case Error::invalidVendorSpecificAttributeId:
             return "Invalid Vendor Specific attribute Id";
+        case Error::suchAttributeNameAlreadyExists:
+            return "Such attribute name already exists";
+        case Error::suchAttributeCodeAlreadyExists:
+            return "Such attribute code already exists";
        default:
             return "(Unrecognized error)";
     }
