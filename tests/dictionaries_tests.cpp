@@ -187,4 +187,31 @@ BOOST_AUTO_TEST_CASE(TestConstructor)
 }
 BOOST_AUTO_TEST_SUITE_END()
 
+
+BOOST_AUTO_TEST_SUITE(DependentDictionaryTests)
+
+BOOST_AUTO_TEST_CASE(TestAdd)
+{
+    RadProto::DependentDictionary b;
+
+
+    b.add(1, "Login-User", "Service-Type");
+    b.add(2, "Framed-User", "Service-Type");
+    b.add(3, "def", "abc");
+    b.add(3, "ghi", "abc");
+    BOOST_CHECK_THROW(b.add(4, "Framed-User", "Service-Type"), RadProto::Exception);
+    b.add(3, "ghi", "abc");
+
+    BOOST_CHECK_EQUAL(b.name("Service-Type", 1), "Login-User");
+    BOOST_CHECK_EQUAL(b.name("Service-Type", 2), "Framed-User");
+    BOOST_CHECK_EQUAL(b.name("abc", 3), "ghi");
+    BOOST_CHECK_EQUAL(b.code("Service-Type", "Login-User"), 1);
+    BOOST_CHECK_EQUAL(b.code("Service-Type", "Framed-User"), 2);
+    BOOST_CHECK_EQUAL(b.code("abc", "def"), 3);
+    BOOST_CHECK_EQUAL(b.code("abc", "ghi"), 3);
+
+    BOOST_CHECK_THROW(b.name("Service-Type", 4), std::out_of_range);
+}
+BOOST_AUTO_TEST_SUITE_END()
+
 BOOST_AUTO_TEST_SUITE_END()
