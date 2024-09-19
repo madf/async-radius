@@ -60,7 +60,14 @@ uint32_t DependentDictionary::code(const std::string& dependencyName, const std:
 
 void DependentDictionary::add(uint32_t code, const std::string& name, const std::string& dependencyName)
 {
-    m_rightDict.emplace(std::make_pair(dependencyName, code), name);
+    for (const auto& entry: m_rightDict)
+    {
+        if (entry.second == name && entry.first.first == dependencyName && entry.first.second != code)
+            throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists, "[DependentDictionary::add]. Value name " + name + " of attribute " + dependencyName + " already exists with code " + std::to_string(entry.first.second));
+        if (entry.second == name && entry.first.first == dependencyName && entry.first.second == code)
+            continue;
+    }
+    m_rightDict.insert_or_assign(std::make_pair(dependencyName, code), name);
     m_reverseDict.emplace(std::make_pair(dependencyName, name), code);
 }
 
