@@ -134,6 +134,8 @@ BOOST_AUTO_TEST_CASE(TestAppend)
     BOOST_CHECK_EQUAL(a.code("def"), 2);
     BOOST_CHECK_EQUAL(a.code("ghi"), 3);
     BOOST_CHECK_EQUAL(a.code("User-Name"), 4);
+    BOOST_CHECK_EQUAL(a.code("User"), 4);
+    BOOST_CHECK_EQUAL(a.code("jkl"), 4);
 }
 
 BOOST_AUTO_TEST_CASE(TestConstructor)
@@ -194,7 +196,6 @@ BOOST_AUTO_TEST_CASE(TestAdd)
 {
     RadProto::DependentDictionary b;
 
-
     b.add(1, "Login-User", "Service-Type");
     b.add(2, "Framed-User", "Service-Type");
     b.add(3, "def", "abc");
@@ -212,6 +213,107 @@ BOOST_AUTO_TEST_CASE(TestAdd)
 
     BOOST_CHECK_THROW(b.name("Service-Type", 4), std::out_of_range);
 }
+
+BOOST_AUTO_TEST_CASE(TestAppend)
+{
+    RadProto::DependentDictionary a;
+
+    a.add(1, "Login-User", "Service-Type");
+    a.add(2, "Framed-User", "Service-Type");
+    a.add(3, "def", "abc");
+
+    BOOST_CHECK_EQUAL(a.name("Service-Type", 1), "Login-User");
+    BOOST_CHECK_EQUAL(a.name("Service-Type", 2), "Framed-User");
+    BOOST_CHECK_EQUAL(a.name("abc", 3), "def");
+    BOOST_CHECK_EQUAL(a.code("Service-Type", "Login-User"), 1);
+    BOOST_CHECK_EQUAL(a.code("Service-Type", "Framed-User"), 2);
+    BOOST_CHECK_EQUAL(a.code("abc", "def"), 3);
+
+    RadProto::DependentDictionary b;
+
+    b.add(4, "def", "abc");
+
+    BOOST_CHECK_EQUAL(b.name("abc", 4), "def");
+    BOOST_CHECK_EQUAL(b.code("abc", "def"), 4);
+
+    BOOST_CHECK_THROW(a.append(b), RadProto::Exception);
+
+    BOOST_CHECK_THROW(a.name("abc", 4), std::out_of_range);
+
+    RadProto::DependentDictionary c;
+
+    c.add(3, "ghi", "abc");
+
+    BOOST_CHECK_EQUAL(c.name("abc", 3), "ghi");
+    BOOST_CHECK_EQUAL(c.code("abc", "ghi"), 3);
+
+    a.append(c);
+
+    BOOST_CHECK_EQUAL(a.name("Service-Type", 1), "Login-User");
+    BOOST_CHECK_EQUAL(a.name("Service-Type", 2), "Framed-User");
+    BOOST_CHECK_EQUAL(a.name("abc", 3), "ghi");
+    BOOST_CHECK_EQUAL(a.code("Service-Type", "Login-User"), 1);
+    BOOST_CHECK_EQUAL(a.code("Service-Type", "Framed-User"), 2);
+    BOOST_CHECK_EQUAL(a.code("abc", "def"), 3);
+    BOOST_CHECK_EQUAL(a.code("abc", "ghi"), 3);
+
+    RadProto::DependentDictionary d;
+
+    d.add(1, "Login-User", "Service-Type");
+
+    BOOST_CHECK_EQUAL(d.name("Service-Type", 1), "Login-User");
+    BOOST_CHECK_EQUAL(d.code("Service-Type", "Login-User"), 1);
+
+    a.append(d);
+
+    BOOST_CHECK_EQUAL(a.name("Service-Type", 1), "Login-User");
+    BOOST_CHECK_EQUAL(a.name("Service-Type", 2), "Framed-User");
+    BOOST_CHECK_EQUAL(a.name("abc", 3), "ghi");
+    BOOST_CHECK_EQUAL(a.code("Service-Type", "Login-User"), 1);
+    BOOST_CHECK_EQUAL(a.code("Service-Type", "Framed-User"), 2);
+    BOOST_CHECK_EQUAL(a.code("abc", "def"), 3);
+    BOOST_CHECK_EQUAL(a.code("abc", "ghi"), 3);
+
+    RadProto::DependentDictionary e;
+
+    e.add(10, "Call-Check", "Service-Type");
+
+    BOOST_CHECK_EQUAL(e.name("Service-Type", 10), "Call-Check");
+    BOOST_CHECK_EQUAL(e.code("Service-Type", "Call-Check"), 10);
+
+    a.append(e);
+
+    BOOST_CHECK_EQUAL(a.name("Service-Type", 1), "Login-User");
+    BOOST_CHECK_EQUAL(a.name("Service-Type", 2), "Framed-User");
+    BOOST_CHECK_EQUAL(a.name("abc", 3), "ghi");
+    BOOST_CHECK_EQUAL(a.name("Service-Type", 10), "Call-Check");
+    BOOST_CHECK_EQUAL(a.code("Service-Type", "Login-User"), 1);
+    BOOST_CHECK_EQUAL(a.code("Service-Type", "Framed-User"), 2);
+    BOOST_CHECK_EQUAL(a.code("abc", "def"), 3);
+    BOOST_CHECK_EQUAL(a.code("abc", "ghi"), 3);
+    BOOST_CHECK_EQUAL(a.code("Service-Type", "Call-Check"), 10);
+
+
+    RadProto::DependentDictionary f;
+
+    f.add(3, "def", "abc");
+
+    BOOST_CHECK_EQUAL(f.name("abc", 3), "def");
+    BOOST_CHECK_EQUAL(f.code("abc", "def"), 3);
+
+    a.append(f);
+
+    BOOST_CHECK_EQUAL(a.name("Service-Type", 1), "Login-User");
+    BOOST_CHECK_EQUAL(a.name("Service-Type", 2), "Framed-User");
+    BOOST_CHECK_EQUAL(a.name("abc", 3), "def");
+    BOOST_CHECK_EQUAL(a.name("Service-Type", 10), "Call-Check");
+    BOOST_CHECK_EQUAL(a.code("Service-Type", "Login-User"), 1);
+    BOOST_CHECK_EQUAL(a.code("Service-Type", "Framed-User"), 2);
+    BOOST_CHECK_EQUAL(a.code("abc", "def"), 3);
+    BOOST_CHECK_EQUAL(a.code("abc", "ghi"), 3);
+    BOOST_CHECK_EQUAL(a.code("Service-Type", "Call-Check"), 10);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE_END()
