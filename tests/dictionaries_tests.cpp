@@ -314,6 +314,55 @@ BOOST_AUTO_TEST_CASE(TestAppend)
     BOOST_CHECK_EQUAL(a.code("Service-Type", "Call-Check"), 10);
 }
 
+BOOST_AUTO_TEST_CASE(TestConstructor)
+{
+    RadProto::DependentDictionary b;
+
+    BOOST_CHECK_THROW(b.name("", 0), std::out_of_range);
+
+    BOOST_CHECK_THROW(b.code("", ""), std::out_of_range);
+
+    b.add(2, "Framed-User", "Service-Type");
+    b.add(3, "def", "abc");
+    b.add(3, "ghi", "abc");
+    BOOST_CHECK_THROW(b.add(4, "Framed-User", "Service-Type"), RadProto::Exception);
+    b.add(3, "ghi", "abc");
+
+    BOOST_CHECK_EQUAL(b.name("Service-Type", 2), "Framed-User");
+    BOOST_CHECK_EQUAL(b.name("abc", 3), "ghi");
+    BOOST_CHECK_EQUAL(b.code("Service-Type", "Framed-User"), 2);
+    BOOST_CHECK_EQUAL(b.code("abc", "def"), 3);
+    BOOST_CHECK_EQUAL(b.code("abc", "ghi"), 3);
+
+    BOOST_CHECK_THROW(b.name("Service-Type", 4), std::out_of_range);
+
+    RadProto::DependentDictionary c;
+
+    c.add(3, "Framed-User", "Service-Type");
+    c.add(5, "jkl", "abc");
+
+    BOOST_CHECK_EQUAL(c.name("Service-Type", 3), "Framed-User");
+    BOOST_CHECK_EQUAL(c.name("abc", 5), "jkl");
+    BOOST_CHECK_EQUAL(c.code("Service-Type", "Framed-User"), 3);
+    BOOST_CHECK_EQUAL(c.code("abc", "jkl"), 5);
+
+    BOOST_CHECK_THROW(c.append(b), RadProto::Exception);
+
+    RadProto::DependentDictionary a;
+
+    a.add(5, "jkl", "abc");
+
+    BOOST_CHECK_EQUAL(a.name("abc", 5), "jkl");
+    BOOST_CHECK_EQUAL(a.code("abc", "jkl"), 5);
+
+    c.append(a);
+
+    BOOST_CHECK_EQUAL(c.name("Service-Type", 3), "Framed-User");
+    BOOST_CHECK_EQUAL(c.name("abc", 5), "jkl");
+    BOOST_CHECK_EQUAL(c.code("Service-Type", "Framed-User"), 3);
+    BOOST_CHECK_EQUAL(c.code("abc", "jkl"), 5);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE_END()
