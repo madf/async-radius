@@ -20,7 +20,7 @@ void BasicDictionary::add(uint32_t code, const std::string& name)
 {
     for (const auto& entry: m_rightDict)
         if (entry.second == name && entry.first != code)
-            throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists, "[BasicDictionary::add]. Attribute name " + name + " already exists with code " + std::to_string(entry.first));
+            throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::add]. Attribute name " + name + " already exists with code " + std::to_string(entry.first));
 
     m_rightDict.insert_or_assign(code, name);
     m_reverseDict.emplace(name, code);
@@ -32,7 +32,7 @@ void BasicDictionary::append(const BasicDictionary& basicDict)
     {
         for (const auto& item: m_rightDict)
             if (entry.second == item.second && entry.first != item.first)
-                throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists, "[BasicDictionary::append]. Attribute name " + entry.second + " already exists with code " + std::to_string(item.first));
+                throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::append]. Attribute name " + entry.second + " already exists with code " + std::to_string(item.first));
 
         m_rightDict.insert_or_assign(entry.first, entry.second);
     }
@@ -56,7 +56,7 @@ void DependentDictionary::add(uint32_t code, const std::string& name, const std:
 {
     for (const auto& entry: m_rightDict)
         if (entry.second == name && entry.first.first == dependencyName && entry.first.second != code)
-            throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists, "[DependentDictionary::add]. Value name " + name + " of attribute " + dependencyName + " already exists with code " + std::to_string(entry.first.second));
+            throw Exception(Error::suchAttributeNameAlreadyExists, "[DependentDictionary::add]. Value name " + name + " of attribute " + dependencyName + " already exists with code " + std::to_string(entry.first.second));
 
     m_rightDict.insert_or_assign(std::make_pair(dependencyName, code), name);
     m_reverseDict.emplace(std::make_pair(dependencyName, name), code);
@@ -68,7 +68,7 @@ void DependentDictionary::append(const DependentDictionary& dependentDict)
     {
         for (const auto& item: m_rightDict)
             if (item.second == entry.second && item.first.first == entry.first.first && item.first.second != entry.first.second)
-                throw RadProto::Exception(RadProto::Error::suchAttributeNameAlreadyExists, "[DependentDictionary::append]. Value name " + entry.second + " of attribute " + entry.first.first + " already exists with code " + std::to_string(item.first.second));
+                throw Exception(Error::suchAttributeNameAlreadyExists, "[DependentDictionary::append]. Value name " + entry.second + " of attribute " + entry.first.first + " already exists with code " + std::to_string(item.first.second));
 
         m_rightDict.insert_or_assign(std::make_pair(entry.first.first, entry.first.second), entry.second);
     }
