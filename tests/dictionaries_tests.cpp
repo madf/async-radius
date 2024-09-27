@@ -365,4 +365,16 @@ BOOST_AUTO_TEST_CASE(TestConstructor)
 
 BOOST_AUTO_TEST_SUITE_END()
 
+
+BOOST_AUTO_TEST_SUITE(DictionariesTests)
+
+BOOST_AUTO_TEST_CASE(TestAttributeName)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.attributeName(1), "User-Name");
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
 BOOST_AUTO_TEST_SUITE_END()
