@@ -27,3 +27,4 @@ endif (ENABLE_COVERAGE)
 
 configure_file(dictionary dictionary COPYONLY)
 configure_file(dictionary.1 dictionary.1 COPYONLY)
+configure_file(dictionary.dlink dictionary.dlink COPYONLY)
