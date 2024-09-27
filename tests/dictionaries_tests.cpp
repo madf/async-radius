@@ -382,6 +382,20 @@ BOOST_AUTO_TEST_CASE(TestAttributeCode)
     BOOST_CHECK_EQUAL(a.attributeCode("User-Password"), 2);
 }
 
+BOOST_AUTO_TEST_CASE(TestAttributeValueName)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.attributeValueName("Service-Type", 1), "Login-User");
+}
+
+BOOST_AUTO_TEST_CASE(TestAttributeValueCode)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.attributeValueCode("Service-Type", "Framed-User"), 2);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE_END()
