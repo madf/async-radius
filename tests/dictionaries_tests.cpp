@@ -424,6 +424,20 @@ BOOST_AUTO_TEST_CASE(TestVendorAttributeCode)
     BOOST_CHECK_EQUAL(a.vendorAttributeCode("Dlink", "Dlink-VLAN-Name"), 10);
 }
 
+BOOST_AUTO_TEST_CASE(TestVendorAttributeValueName)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.vendorAttributeValueName("Dlink-User-Level", 1), "User-Legacy");
+}
+
+BOOST_AUTO_TEST_CASE(TestVendorAttributeValueCode)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.vendorAttributeValueCode("Dlink-User-Level", "User"), 3);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE_END()
