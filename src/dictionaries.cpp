@@ -191,5 +191,5 @@ std::string Dictionaries::vendorAttributeValueName(const std::string& valueName,
 
 uint32_t Dictionaries::vendorAttributeValueCode(const std::string& valueName, const std::string& name) const
 {
-    return attributeValues().code(valueName, name);
+    return vendorAttributeValues().code(valueName, name);
 }
