@@ -461,6 +461,26 @@ BOOST_AUTO_TEST_CASE(TestAppend)
     BOOST_CHECK_EQUAL(a.vendorAttributeValueCode("Dlink-User-Level", "User"), 3);
 }
 
+BOOST_AUTO_TEST_CASE(TestConstructor)
+{
+    RadProto::Dictionaries b("dictionary");
+
+    BOOST_CHECK_THROW(b.attributeName(0), std::out_of_range);
+    BOOST_CHECK_THROW(b.attributeCode(""), std::out_of_range);
+
+    BOOST_CHECK_THROW(b.attributeValueName("", 0), std::out_of_range);
+    BOOST_CHECK_THROW(b.attributeValueCode("", ""), std::out_of_range);
+
+    BOOST_CHECK_THROW(b.vendorName(0), std::out_of_range);
+    BOOST_CHECK_THROW(b.vendorCode(""), std::out_of_range);
+
+    BOOST_CHECK_THROW(b.vendorAttributeName("", 0), std::out_of_range);
+    BOOST_CHECK_THROW(b.vendorAttributeCode("", ""), std::out_of_range);
+
+    BOOST_CHECK_THROW(b.vendorAttributeValueName("", 0), std::out_of_range);
+    BOOST_CHECK_THROW(b.vendorAttributeValueCode("", ""), std::out_of_range);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE_END()
