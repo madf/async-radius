@@ -1,0 +1,11 @@
+VENDOR      Dlink           171
+
+BEGIN-VENDOR    Dlink
+
+ATTRIBUTE   Dlink-User-Level            1   integer
+ATTRIBUTE   Dlink-VLAN-Name             10  string
+
+VALUE   Dlink-User-Level        User-Legacy 1
+VALUE   Dlink-User-Level        User        3
+
+END-VENDOR      Dlink

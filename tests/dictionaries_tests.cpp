@@ -365,4 +365,122 @@ BOOST_AUTO_TEST_CASE(TestConstructor)
 
 BOOST_AUTO_TEST_SUITE_END()
 
+
+BOOST_AUTO_TEST_SUITE(DictionariesTests)
+
+BOOST_AUTO_TEST_CASE(TestAttributeName)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.attributeName(1), "User-Name");
+}
+
+BOOST_AUTO_TEST_CASE(TestAttributeCode)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.attributeCode("User-Password"), 2);
+}
+
+BOOST_AUTO_TEST_CASE(TestAttributeValueName)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.attributeValueName("Service-Type", 1), "Login-User");
+}
+
+BOOST_AUTO_TEST_CASE(TestAttributeValueCode)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.attributeValueCode("Service-Type", "Framed-User"), 2);
+}
+
+BOOST_AUTO_TEST_CASE(TestVendorName)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.vendorName(171), "Dlink");
+}
+
+BOOST_AUTO_TEST_CASE(TestVendorCode)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.vendorCode("Dlink"), 171);
+}
+
+BOOST_AUTO_TEST_CASE(TestVendorAttributeName)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.vendorAttributeName("Dlink", 1), "Dlink-User-Level");
+}
+
+BOOST_AUTO_TEST_CASE(TestVendorAttributeCode)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.vendorAttributeCode("Dlink", "Dlink-VLAN-Name"), 10);
+}
+
+BOOST_AUTO_TEST_CASE(TestVendorAttributeValueName)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.vendorAttributeValueName("Dlink-User-Level", 1), "User-Legacy");
+}
+
+BOOST_AUTO_TEST_CASE(TestVendorAttributeValueCode)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.vendorAttributeValueCode("Dlink-User-Level", "User"), 3);
+}
+
+BOOST_AUTO_TEST_CASE(TestAppend)
+{
+    RadProto::Dictionaries a("dictionary.1");
+    RadProto::Dictionaries b("dictionary.dlink");
+
+    a.append(b);
+
+    BOOST_CHECK_EQUAL(a.attributeName(1), "User-Name");
+    BOOST_CHECK_EQUAL(a.attributeCode("User-Password"), 2);
+
+    BOOST_CHECK_EQUAL(a.attributeValueName("Service-Type", 1), "Login-User");
+    BOOST_CHECK_EQUAL(a.attributeValueCode("Service-Type", "Framed-User"), 2);
+
+    BOOST_CHECK_EQUAL(a.vendorName(171), "Dlink");
+    BOOST_CHECK_EQUAL(a.vendorCode("Dlink"), 171);
+
+    BOOST_CHECK_EQUAL(a.vendorAttributeName("Dlink", 1), "Dlink-User-Level");
+    BOOST_CHECK_EQUAL(a.vendorAttributeCode("Dlink", "Dlink-VLAN-Name"), 10);
+
+    BOOST_CHECK_EQUAL(a.vendorAttributeValueName("Dlink-User-Level", 1), "User-Legacy");
+    BOOST_CHECK_EQUAL(a.vendorAttributeValueCode("Dlink-User-Level", "User"), 3);
+}
+
+BOOST_AUTO_TEST_CASE(TestConstructor)
+{
+    RadProto::Dictionaries b("dictionary");
+
+    BOOST_CHECK_THROW(b.attributeName(0), std::out_of_range);
+    BOOST_CHECK_THROW(b.attributeCode(""), std::out_of_range);
+
+    BOOST_CHECK_THROW(b.attributeValueName("", 0), std::out_of_range);
+    BOOST_CHECK_THROW(b.attributeValueCode("", ""), std::out_of_range);
+
+    BOOST_CHECK_THROW(b.vendorName(0), std::out_of_range);
+    BOOST_CHECK_THROW(b.vendorCode(""), std::out_of_range);
+
+    BOOST_CHECK_THROW(b.vendorAttributeName("", 0), std::out_of_range);
+    BOOST_CHECK_THROW(b.vendorAttributeCode("", ""), std::out_of_range);
+
+    BOOST_CHECK_THROW(b.vendorAttributeValueName("", 0), std::out_of_range);
+    BOOST_CHECK_THROW(b.vendorAttributeValueCode("", ""), std::out_of_range);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
 BOOST_AUTO_TEST_SUITE_END()

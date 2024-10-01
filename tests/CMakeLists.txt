@@ -24,3 +24,7 @@ if (ENABLE_COVERAGE)
     add_custom_target(ctest COMMAND ${CMAKE_CTEST_COMMAND})
     SETUP_TARGET_FOR_COVERAGE(NAME all_coverage EXECUTABLE ctest -j ${PROCESSOR_COUNT})
 endif (ENABLE_COVERAGE)
+
+configure_file(dictionary dictionary COPYONLY)
+configure_file(dictionary.1 dictionary.1 COPYONLY)
+configure_file(dictionary.dlink dictionary.dlink COPYONLY)
