@@ -19,6 +19,10 @@ add_executable (dictionaries_tests dictionaries_tests.cpp)
 target_link_libraries (dictionaries_tests radproto Boost::unit_test_framework)
 add_test (dictionaries dictionaries_tests)
 
+add_executable (socket_tests socket_tests.cpp)
+target_link_libraries (socket_tests radproto Boost::unit_test_framework)
+add_test (socket socket_tests)
+
 if (ENABLE_COVERAGE)
     set (COVERAGE_EXCLUDES '${CMAKE_SOURCE_DIR}/tests/*' '*boost*' '/usr/*')
     add_custom_target(ctest COMMAND ${CMAKE_CTEST_COMMAND})
