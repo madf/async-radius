@@ -5,6 +5,7 @@
 #include "radproto/vendor_attribute.h"
 #include "attribute_types.h"
 #include "radproto/error.h"
+#include "utils.h"
 #include <memory>
 #include <array>
 #include <vector>
@@ -19,19 +20,6 @@
 #pragma GCC diagnostic ignored "-Wparentheses"
 #include <boost/test/unit_test.hpp>
 #pragma GCC diagnostic pop
-
-namespace
-{
-    RadProto::Attribute* findAttribute(const std::vector<RadProto::Attribute*>& attributes, RadProto::Attribute_Types type)
-    {
-        for (const auto& b : attributes)
-        {
-            if (b->type() == type)
-                return b;
-        }
-        return nullptr;
-    }
-}
 
 BOOST_AUTO_TEST_SUITE(PacketTests)
 
