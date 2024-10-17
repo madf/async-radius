@@ -11,7 +11,7 @@ add_executable (attribute_tests attribute_tests.cpp)
 target_link_libraries (attribute_tests radproto Boost::unit_test_framework)
 add_test (attribute attribute_tests)
 
-add_executable (packet_tests packet_tests.cpp)
+add_executable (packet_tests packet_tests.cpp utils.cpp)
 target_link_libraries (packet_tests radproto Boost::unit_test_framework)
 add_test (packet packet_tests)
 
@@ -19,7 +19,7 @@ add_executable (dictionaries_tests dictionaries_tests.cpp)
 target_link_libraries (dictionaries_tests radproto Boost::unit_test_framework)
 add_test (dictionaries dictionaries_tests)
 
-add_executable (socket_tests socket_tests.cpp)
+add_executable (socket_tests socket_tests.cpp utils.cpp)
 target_link_libraries (socket_tests radproto Boost::unit_test_framework)
 add_test (socket socket_tests)
 
