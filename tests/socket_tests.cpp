@@ -25,6 +25,8 @@ namespace
 {
     void checkSend(const error_code& ec)
     {
+        BOOST_CHECK(true);
+
         if (ec)
         {
             BOOST_CHECK_EQUAL(ec.category().name(), "radproto");
@@ -113,7 +115,7 @@ BOOST_AUTO_TEST_CASE(TestConstructor)
 {
 boost::asio::io_service io_service;
 
-BOOST_CHECK_NO_THROW(RadProto::Socket s(io_service, "secret", 1812));
+BOOST_CHECK_NO_THROW(RadProto::Socket s(io_service, "secret", 3000));
 
 }
 
@@ -134,6 +136,8 @@ BOOST_AUTO_TEST_CASE(TestAsyncSend)
     s.asyncSend(p, checkSend);
 
     s.asyncReceive(checkReceive);
+
+    io_service.run();
 }
 
 BOOST_AUTO_TEST_SUITE_END()
