@@ -36,13 +36,12 @@ void Socket::asyncReceive(const std::function<void(const error_code&, const std:
        [this, callback](const error_code& error, std::size_t bytes) {handleReceive(error, bytes, callback);});
 }
 
-void Socket::asyncSend(const Packet& response, const std::function<void(const error_code&)>& callback)
+void Socket::asyncSend(const Packet& response, udp::endpoint destination, const std::function<void(const error_code&)>& callback)
 {
     const std::vector<uint8_t> vResponse = response.makeSendBuffer(m_secret);
     std::copy(vResponse.begin(), vResponse.end(), m_buffer.begin());
 
-    m_socket.async_send_to(boost::asio::buffer(m_buffer, vResponse.size()), m_remoteEndpoint,
-       [this, callback](const error_code& ec, std::size_t /*bytesTransferred*/) {handleSend(ec, callback);});
+    m_socket.async_send_to(boost::asio::buffer(m_buffer, vResponse.size()), destination, [this, callback](const error_code& ec, std::size_t /*bytesTransferred*/) {handleSend(ec, callback);});
 }
 
 void Socket::handleReceive(const error_code& error, std::size_t bytes, const std::function<void(const error_code&, const std::optional<Packet>&)>& callback)
