@@ -25,14 +25,16 @@ using boost::system::error_code;
 
 namespace
 {
+    bool callbackCalled = false;
+
     void checkSend(const error_code& ec)
     {
-        BOOST_CHECK(true);
         BOOST_REQUIRE(!ec);
     }
 
     void checkReceive(const error_code& ec, const std::optional<RadProto::Packet>& p)
     {
+        callbackCalled = true;
         BOOST_REQUIRE(!ec);
 
         BOOST_REQUIRE(p != std::nullopt);
@@ -129,11 +131,15 @@ BOOST_AUTO_TEST_CASE(TestAsyncSend)
     boost::asio::ip::udp::endpoint destination(boost::asio::ip::address_v4::from_string("127.0.0.1"), 3000);
 
     RadProto::Socket s(io_service, "secret", 3000);
+
     s.asyncSend(p, destination, checkSend);
 
     s.asyncReceive(checkReceive);
 
     io_service.run();
+
+    sleep(10);
+    BOOST_CHECK_MESSAGE(callbackCalled, "Function asyncReceive hasn't called checkReceive within specified time limit.");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
