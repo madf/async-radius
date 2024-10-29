@@ -138,8 +138,7 @@ BOOST_AUTO_TEST_CASE(TestAsyncSend)
 
     io_service.run();
 
-    sleep(10);
-    BOOST_CHECK_MESSAGE(callbackCalled, "Function asyncReceive hasn't called checkReceive within specified time limit.");
+    BOOST_CHECK_MESSAGE(callbackCalled, "Function asyncReceive hasn't called checkReceive.");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
