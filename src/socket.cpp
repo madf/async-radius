@@ -38,6 +38,9 @@ void Socket::asyncReceive(const std::function<void(const error_code&, const std:
 
 void Socket::asyncSend(const Packet& response, udp::endpoint destination, const std::function<void(const error_code&)>& callback)
 {
+    if (response.type() == 2)
+        destination = m_remoteEndpoint;
+
     const std::vector<uint8_t> vResponse = response.makeSendBuffer(m_secret);
     std::copy(vResponse.begin(), vResponse.end(), m_buffer.begin());
 
