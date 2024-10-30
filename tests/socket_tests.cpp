@@ -25,16 +25,18 @@ using boost::system::error_code;
 
 namespace
 {
-    bool callbackCalled = false;
+    bool callbackReceiveCalled = false;
+    bool callbackSendCalled = false;
 
     void checkSend(const error_code& ec)
     {
+        callbackSendCalled = true;
         BOOST_REQUIRE(!ec);
     }
 
     void checkReceive(const error_code& ec, const std::optional<RadProto::Packet>& p)
     {
-        callbackCalled = true;
+        callbackReceiveCalled = true;
         BOOST_REQUIRE(!ec);
 
         BOOST_REQUIRE(p != std::nullopt);
@@ -138,7 +140,8 @@ BOOST_AUTO_TEST_CASE(TestAsyncSend)
 
     io_service.run();
 
-    BOOST_CHECK_MESSAGE(callbackCalled, "Function asyncReceive hasn't called checkReceive.");
+    BOOST_CHECK_MESSAGE(callbackSendCalled, "Function asyncSend hasn't called checkSend.");
+    BOOST_CHECK_MESSAGE(callbackReceiveCalled, "Function asyncReceive hasn't called checkReceive.");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
