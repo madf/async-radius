@@ -30,36 +30,33 @@ Socket::Socket(boost::asio::io_service& io_service, const std::string& secret, u
 {
 }
 
-void Socket::asyncReceive(const std::function<void(const error_code&, const std::optional<Packet>&)>& callback)
+void Socket::asyncReceive(const std::function<void(const error_code&, const std::optional<Packet>&, const udp::endpoint& source)>& callback)
 {
     m_socket.async_receive_from(boost::asio::buffer(m_buffer), m_remoteEndpoint,
        [this, callback](const error_code& error, std::size_t bytes) {handleReceive(error, bytes, callback);});
 }
 
-void Socket::asyncSend(const Packet& response, udp::endpoint destination, const std::function<void(const error_code&)>& callback)
+void Socket::asyncSend(const Packet& response, const udp::endpoint& destination, const std::function<void(const error_code&)>& callback)
 {
-    if (response.type() == 2)
-        destination = m_remoteEndpoint;
-
     const std::vector<uint8_t> vResponse = response.makeSendBuffer(m_secret);
     std::copy(vResponse.begin(), vResponse.end(), m_buffer.begin());
 
     m_socket.async_send_to(boost::asio::buffer(m_buffer, vResponse.size()), destination, [this, callback](const error_code& ec, std::size_t /*bytesTransferred*/) {handleSend(ec, callback);});
 }
 
-void Socket::handleReceive(const error_code& error, std::size_t bytes, const std::function<void(const error_code&, const std::optional<Packet>&)>& callback)
+void Socket::handleReceive(const error_code& error, std::size_t bytes, const std::function<void(const error_code&, const std::optional<Packet>&, const udp::endpoint& m_remoteEndpoint)>& callback)
 {
     if (error)
-        callback(error, std::nullopt);
+        callback(error, std::nullopt, m_remoteEndpoint);
     if (bytes < 20)
-        callback(Error::numberOfBytesIsLessThan20, std::nullopt);
+        callback(Error::numberOfBytesIsLessThan20, std::nullopt, m_remoteEndpoint);
     try
     {
-        callback(error, std::make_optional<Packet>(m_buffer.data(), bytes, m_secret));
+        callback(error, std::make_optional<Packet>(m_buffer.data(), bytes, m_secret), m_remoteEndpoint);
     }
     catch (const Exception& exception)
     {
-        callback(exception.getErrorCode(), std::nullopt);
+        callback(exception.getErrorCode(), std::nullopt, m_remoteEndpoint);
     }
 }
 
