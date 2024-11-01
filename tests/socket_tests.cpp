@@ -6,6 +6,7 @@
 #include "radproto/vendor_attribute.h"
 #include "attribute_types.h"
 #include "utils.h"
+#include <boost/asio.hpp>
 #include <array>
 #include <vector>
 #include <set>
@@ -34,7 +35,7 @@ namespace
         BOOST_REQUIRE(!ec);
     }
 
-    void checkReceive(const error_code& ec, const std::optional<RadProto::Packet>& p)
+    void checkReceive(const error_code& ec, const std::optional<RadProto::Packet>& p, boost::asio::ip::udp::endpoint source)
     {
         callbackReceiveCalled = true;
         BOOST_REQUIRE(!ec);
