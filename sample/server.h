@@ -14,7 +14,7 @@ class Server
 
     private:
         RadProto::Packet makeResponse(const RadProto::Packet& request);
-        void handleReceive(const boost::system::error_code& error, const std::optional<RadProto::Packet>& packet);
+        void handleReceive(const boost::system::error_code& error, const std::optional<RadProto::Packet>& packet, const boost::asio::ip::udp::endpoint& source);
         void handleSend(const boost::system::error_code& ec);
         void startReceive();
 
