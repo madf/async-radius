@@ -20,5 +20,4 @@ class Server
 
         RadProto::Socket m_radius;
         RadProto::Dictionaries m_dictionaries;
-        boost::asio::ip::udp::endpoint m_remoteEndpoint;
 };
