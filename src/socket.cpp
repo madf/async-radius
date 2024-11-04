@@ -44,7 +44,7 @@ void Socket::asyncSend(const Packet& response, const udp::endpoint& destination,
     m_socket.async_send_to(boost::asio::buffer(m_buffer, vResponse.size()), destination, [this, callback](const error_code& ec, std::size_t /*bytesTransferred*/) {handleSend(ec, callback);});
 }
 
-void Socket::handleReceive(const error_code& error, std::size_t bytes, const std::function<void(const error_code&, const std::optional<Packet>&, const udp::endpoint& m_remoteEndpoint)>& callback)
+void Socket::handleReceive(const error_code& error, std::size_t bytes, const std::function<void(const error_code&, const std::optional<Packet>&, const udp::endpoint&)>& callback)
 {
     if (error)
         callback(error, std::nullopt, m_remoteEndpoint);
