@@ -30,7 +30,7 @@ Socket::Socket(boost::asio::io_service& io_service, const std::string& secret, u
 {
 }
 
-void Socket::asyncReceive(const std::function<void(const error_code&, const std::optional<Packet>&, const udp::endpoint& source)>& callback)
+void Socket::asyncReceive(const std::function<void(const error_code&, const std::optional<Packet>&, const udp::endpoint&)>& callback)
 {
     m_socket.async_receive_from(boost::asio::buffer(m_buffer), m_remoteEndpoint,
        [this, callback](const error_code& error, std::size_t bytes) {handleReceive(error, bytes, callback);});
