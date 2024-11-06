@@ -13,7 +13,7 @@ namespace RadProto
     {
         public:
             Socket(boost::asio::io_service& io_service, const std::string& secret, uint16_t port);
-            void asyncReceive(const std::function<void(const boost::system::error_code&, const std::optional<Packet>&, const boost::asio::ip::udp::endpoint& source)>& callback);
+            void asyncReceive(const std::function<void(const boost::system::error_code&, const std::optional<Packet>&, const boost::asio::ip::udp::endpoint&)>& callback);
             void asyncSend(const Packet& response, const boost::asio::ip::udp::endpoint& destination, const std::function<void(const boost::system::error_code&)>& callback);
 
         private:
