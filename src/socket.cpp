@@ -64,3 +64,13 @@ void Socket::handleSend(const error_code& ec, const std::function<void(const err
 {
     callback(ec);
 }
+
+boost::system::error_code Socket::close(error_code& ec)
+{
+    if (m_socket.is_open())
+    {
+        m_socket.shutdown(udp::socket::shutdown_both, ec);
+        m_socket.close(ec);
+    }
+    return ec;
+}
