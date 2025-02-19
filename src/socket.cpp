@@ -64,3 +64,9 @@ void Socket::handleSend(const error_code& ec, const std::function<void(const err
 {
     callback(ec);
 }
+
+void Socket::close(error_code& ec)
+{
+    m_socket.shutdown(udp::socket::shutdown_both, ec);
+    m_socket.close(ec);
+}
