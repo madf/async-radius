@@ -76,7 +76,7 @@ Packet::Packet(const uint8_t* buffer, size_t size, const std::string& secret)
 Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, const std::vector<Attribute*>& attributes, const std::vector<VendorSpecific>& vendorSpecific)
     : m_type(type),
       m_id(id),
-      m_recalcAuth(m_type == 2),
+      m_recalcAuth(m_type == 2 || m_type == 3 || m_type == 11),
       m_auth(auth),
       m_attributes(attributes),
       m_vendorSpecific(vendorSpecific)
