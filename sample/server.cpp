@@ -1,5 +1,6 @@
 #include "server.h"
 #include "packet_codes.h"
+#include "attribute_types.h"
 #include <functional>
 #include <iostream>
 
@@ -33,7 +34,14 @@ RadProto::Packet Server::makeResponse(const RadProto::Packet& request)
     std::vector<uint8_t> vendorValue {0, 0, 0, 3};
     vendorSpecific.push_back(RadProto::VendorSpecific(m_dictionaries.vendorCode("Dlink"), m_dictionaries.vendorAttributeCode("Dlink", "Dlink-User-Level"), vendorValue));
 
-    if (request.type() == RadProto::ACCESS_REQUEST)
+    std::string userName;
+    for (const auto& attribute : request.attributes())
+    {
+        if (attribute->type() == RadProto::USER_NAME)
+            userName = attribute->toString();
+    }
+
+    if (request.type() == RadProto::ACCESS_REQUEST && userName == "test")
         return RadProto::Packet(RadProto::ACCESS_ACCEPT, request.id(), request.auth(), attributes, vendorSpecific);
 
     return RadProto::Packet(RadProto::ACCESS_REJECT, request.id(), request.auth(), attributes, vendorSpecific);
