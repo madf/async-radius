@@ -7,6 +7,6 @@ target_sources ( ${PROJECT_NAME} PRIVATE socket.cpp packet.cpp attribute.cpp ven
 target_link_libraries ( ${PROJECT_NAME} OpenSSL::Crypto Boost::boost Threads::Threads )
 
 target_include_directories (${PROJECT_NAME} PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/radproto>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/radproto>
   $<INSTALL_INTERFACE:include/radproto>
 )
