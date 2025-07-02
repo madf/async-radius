@@ -6,8 +6,8 @@
 
 using boost::system::error_code;
 
-Server::Server(boost::asio::io_service& io_service, const std::string& secret, uint16_t port, const std::string& filePath)
-    : m_radius(io_service, secret, port),
+Server::Server(boost::asio::io_context& io_context, const std::string& secret, uint16_t port, const std::string& filePath)
+    : m_radius(io_context, secret, port),
       m_dictionaries(filePath)
 {
     startReceive();

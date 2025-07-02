@@ -80,9 +80,9 @@ int main(int argc, char* argv[])
 
     try
     {
-        boost::asio::io_service io_service;
-        Server server(io_service, secret, port, "/usr/share/freeradius/dictionary");
-        io_service.run();
+        boost::asio::io_context io_context;
+        Server server(io_context, secret, port, "/usr/share/freeradius/dictionary");
+        io_context.run();
     }
     catch (const std::exception& e)
     {
