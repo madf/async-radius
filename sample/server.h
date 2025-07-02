@@ -10,7 +10,7 @@
 class Server
 {
     public:
-        Server(boost::asio::io_service& io_service, const std::string& secret, uint16_t port, const std::string& filePath);
+        Server(boost::asio::io_context& io_context, const std::string& secret, uint16_t port, const std::string& filePath);
 
     private:
         RadProto::Packet makeResponse(const RadProto::Packet& request);
