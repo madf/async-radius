@@ -35,7 +35,7 @@ namespace
         BOOST_REQUIRE(!ec);
     }
 
-    void checkReceive(const error_code& ec, const std::optional<RadProto::Packet>& p, boost::asio::ip::udp::endpoint source)
+    void checkReceive(const error_code& ec, const std::optional<RadProto::Packet>& p, boost::asio::ip::udp::endpoint /*source*/)
     {
         callbackReceiveCalled = true;
         BOOST_REQUIRE(!ec);
@@ -112,9 +112,9 @@ BOOST_AUTO_TEST_SUITE(SocketTests)
 
 BOOST_AUTO_TEST_CASE(TestConstructor)
 {
-    boost::asio::io_service io_service;
+    boost::asio::io_context io_context;
 
-    BOOST_CHECK_NO_THROW(RadProto::Socket s(io_service, "secret", 3000));
+    BOOST_CHECK_NO_THROW(RadProto::Socket s(io_context, "secret", 3000));
 
 }
 
@@ -129,17 +129,17 @@ BOOST_AUTO_TEST_CASE(TestAsyncSend)
 
     RadProto::Packet p(1, 208, auth, attributes, vendorSpecific);
 
-    boost::asio::io_service io_service;
+    boost::asio::io_context io_context;
 
     boost::asio::ip::udp::endpoint destination(boost::asio::ip::address_v4::from_string("127.0.0.1"), 3000);
 
-    RadProto::Socket s(io_service, "secret", 3000);
+    RadProto::Socket s(io_context, "secret", 3000);
 
     s.asyncSend(p, destination, checkSend);
 
     s.asyncReceive(checkReceive);
 
-    io_service.run();
+    io_context.run();
 
     BOOST_CHECK_MESSAGE(callbackSendCalled, "Function asyncSend hasn't called checkSend.");
     BOOST_CHECK_MESSAGE(callbackReceiveCalled, "Function asyncReceive hasn't called checkReceive.");

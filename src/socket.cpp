@@ -24,8 +24,8 @@ std::string packetTypeToString(int type)
 }
 
 using Socket = RadProto::Socket;
-Socket::Socket(boost::asio::io_service& io_service, const std::string& secret, uint16_t port)
-    : m_socket(io_service, udp::endpoint(udp::v4(), port)),
+Socket::Socket(boost::asio::io_context& io_context, const std::string& secret, uint16_t port)
+    : m_socket(io_context, udp::endpoint(udp::v4(), port)),
       m_secret(secret)
 {
 }
