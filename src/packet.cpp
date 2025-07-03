@@ -1,7 +1,7 @@
 #include "packet.h"
 #include "error.h"
 #include "attribute_types.h"
-#include <openssl/md5.h>
+#include <openssl/evp.h>
 #include <stdexcept>
 
 using Packet = RadProto::Packet;
@@ -132,7 +132,9 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret) con
             sendBuffer[i + sendBuffer.size() - secret.length()] = secret[i];
 
         std::array<uint8_t, 16> md;
-        MD5(sendBuffer.data(), sendBuffer.size(), md.data());
+        unsigned mdSize = md.size();
+
+        EVP_Digest(sendBuffer.data(), sendBuffer.size(), md.data(), &mdSize, EVP_md5(), nullptr);
 
         sendBuffer.resize(sendBuffer.size() - secret.length());
 
