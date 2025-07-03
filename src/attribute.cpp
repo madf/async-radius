@@ -2,7 +2,7 @@
 #include "attribute.h"
 #include "utils.h"
 #include "error.h"
-#include <openssl/md5.h>
+#include <openssl/evp.h>
 #include <algorithm>
 #include <iostream>
 
@@ -140,8 +140,10 @@ Encrypted::Encrypted(uint8_t type, const uint8_t* data, size_t size, const std::
     for (size_t i = 0; i < size / 16; ++i)
     {
         std::array<uint8_t, 16> md;
+        unsigned mdSize = md.size();
 
-        MD5(mdBuffer.data(), mdBuffer.size(), md.data());
+        EVP_Digest(mdBuffer.data(), mdBuffer.size(), md.data(), &mdSize, EVP_md5(), nullptr);
+
         for (size_t j = 0; j < 16; ++j)
             plaintext[i * 16 + j] = data[i * 16 + j] ^ md[j];
 
@@ -181,7 +183,9 @@ std::vector<uint8_t> Encrypted::toVector(const std::string& secret, const std::a
     for (size_t i = 0; i < plaintext.length() / 16; ++i)
     {
         std::array<uint8_t, 16> md;
-        MD5(mdBuffer.data(), mdBuffer.size(), md.data());
+        unsigned mdSize = md.size();
+
+        EVP_Digest(mdBuffer.data(), mdBuffer.size(), md.data(), &mdSize, EVP_md5(), nullptr);
 
         for (size_t j = 0; j < md.size(); ++j)
             *it++ = plaintext[i * 16 + j] ^ md[j];
