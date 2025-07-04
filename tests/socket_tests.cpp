@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE(TestAsyncSend)
 
     boost::asio::io_context io_context;
 
-    boost::asio::ip::udp::endpoint destination(boost::asio::ip::address_v4::from_string("127.0.0.1"), 3000);
+    boost::asio::ip::udp::endpoint destination(boost::asio::ip::make_address_v4("127.0.0.1"), 3000);
 
     RadProto::Socket s(io_context, "secret", 3000);
 
