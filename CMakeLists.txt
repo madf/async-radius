@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.13)
 
-project (radproto VERSION 1.1.1)
+project (radproto VERSION 1.1.3)
 
 set (CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
