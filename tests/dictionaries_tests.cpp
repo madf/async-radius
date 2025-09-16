@@ -23,12 +23,12 @@ BOOST_AUTO_TEST_CASE(TestAdd)
 {
     RadProto::BasicDictionary b;
 
-    b.add(1, "User-Name");
-    b.add(1, "User");
-    b.add(1, "abc");
-    BOOST_CHECK_THROW(b.add(2, "abc"), RadProto::Exception);
-    b.add(3, "def");
-    b.add(1, "abc");
+    b.add(1, "User-Name", "string");
+    b.add(1, "User", "string");
+    b.add(1, "abc", "string");
+    BOOST_CHECK_THROW(b.add(2, "abc", "string"), RadProto::Exception);
+    b.add(3, "def", "string");
+    b.add(1, "abc", "string");
 
     BOOST_CHECK_EQUAL(b.name(1), "abc");
     BOOST_CHECK_EQUAL(b.name(3), "def");
@@ -44,9 +44,9 @@ BOOST_AUTO_TEST_CASE(TestAppend)
 {
     RadProto::BasicDictionary a;
 
-    a.add(2, "def");
-    a.add(3, "ghi");
-    a.add(4, "User-Name");
+    a.add(2, "def", "string");
+    a.add(3, "ghi", "string");
+    a.add(4, "User-Name", "string");
 
     BOOST_CHECK_EQUAL(a.name(2), "def");
     BOOST_CHECK_EQUAL(a.name(3), "ghi");
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE(TestAppend)
 
     RadProto::BasicDictionary b;
 
-    b.add(1, "User-Name");
+    b.add(1, "User-Name", "string");
 
     BOOST_CHECK_EQUAL(b.name(1), "User-Name");
     BOOST_CHECK_EQUAL(b.code("User-Name"), 1);
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE(TestAppend)
 
     RadProto::BasicDictionary c;
 
-    c.add(4, "User");
+    c.add(4, "User", "string");
 
     BOOST_CHECK_EQUAL(c.name(4), "User");
     BOOST_CHECK_EQUAL(c.code("User"), 4);
@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE(TestAppend)
 
     RadProto::BasicDictionary d;
 
-    d.add(4, "jkl");
+    d.add(4, "jkl", "string");
 
     BOOST_CHECK_EQUAL(d.name(4), "jkl");
     BOOST_CHECK_EQUAL(d.code("jkl"), 4);
@@ -103,7 +103,7 @@ BOOST_AUTO_TEST_CASE(TestAppend)
 
     RadProto::BasicDictionary e;
 
-    e.add(2, "def");
+    e.add(2, "def", "string");
 
     BOOST_CHECK_EQUAL(e.name(2), "def");
     BOOST_CHECK_EQUAL(e.code("def"), 2);
@@ -121,7 +121,7 @@ BOOST_AUTO_TEST_CASE(TestAppend)
 
     RadProto::BasicDictionary f;
 
-    f.add(4, "User-Name");
+    f.add(4, "User-Name", "string");
 
     BOOST_CHECK_EQUAL(f.name(4), "User-Name");
     BOOST_CHECK_EQUAL(f.code("User-Name"), 4);
@@ -146,11 +146,11 @@ BOOST_AUTO_TEST_CASE(TestConstructor)
 
     BOOST_CHECK_THROW(b.code(""), std::out_of_range);
 
-    b.add(1, "User-Name");
-    b.add(1, "User");
-    b.add(5, "ijk");
-    b.add(3, "def");
-    BOOST_CHECK_THROW(b.add(2, "User"), RadProto::Exception);
+    b.add(1, "User-Name","string");
+    b.add(1, "User", "string");
+    b.add(5, "ijk", "string");
+    b.add(3, "def", "string");
+    BOOST_CHECK_THROW(b.add(2, "User", "string"), RadProto::Exception);
 
     BOOST_CHECK_EQUAL(b.name(1), "User");
     BOOST_CHECK_EQUAL(b.name(5), "ijk");
@@ -163,8 +163,8 @@ BOOST_AUTO_TEST_CASE(TestConstructor)
 
     RadProto::BasicDictionary c;
 
-    c.add(2, "def");
-    c.add(5, "ghi");
+    c.add(2, "def", "string");
+    c.add(5, "ghi", "string");
 
     BOOST_CHECK_EQUAL(c.name(2), "def");
     BOOST_CHECK_EQUAL(c.name(5), "ghi");
@@ -175,7 +175,7 @@ BOOST_AUTO_TEST_CASE(TestConstructor)
 
     RadProto::BasicDictionary a;
 
-    a.add(2, "def");
+    a.add(2, "def", "string");
 
     BOOST_CHECK_EQUAL(a.name(2), "def");
     BOOST_CHECK_EQUAL(a.code("def"), 2);
