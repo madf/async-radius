@@ -6,17 +6,65 @@
 #include <fstream>
 
 using BasicDictionary = RadProto::BasicDictionary;
+
 std::string BasicDictionary::name(uint32_t code) const
 {
-    return m_rightDict.at(code);
+    return m_rightDict.at(code).first;
+}
+
+std::string BasicDictionary::type(uint32_t code) const
+{
+    return m_rightDict.at(code).second;
 }
 
 uint32_t BasicDictionary::code(const std::string& name) const
 {
+    return m_reverseDict.at(name).first;
+}
+
+std::string BasicDictionary::type(const std::string& name) const
+{
+    return m_reverseDict.at(name).second;
+}
+
+void BasicDictionary::add(uint32_t code, const std::string& name, const std::string& type)
+{
+    for (const auto& entry: m_rightDict)
+        if (entry.second.first == name && entry.first != code)
+            throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::add]. Attribute name " + name + " already exists with code " + std::to_string(entry.first));
+
+    m_rightDict.insert_or_assign(code, std::make_pair(name, type));
+    m_reverseDict.emplace(name, std::make_pair(code, type));
+}
+
+void BasicDictionary::append(const BasicDictionary& basicDict)
+{
+    for (const auto& entry: basicDict.m_rightDict)
+    {
+        for (const auto& item: m_rightDict)
+            if (entry.second.first == item.second.first && entry.first != item.first)
+                throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::append]. Attribute name " + entry.second.first + " already exists with code " + std::to_string(item.first));
+
+        m_rightDict.insert_or_assign(entry.first, entry.second);
+    }
+
+    for (const auto& entry: basicDict.m_reverseDict)
+        m_reverseDict.emplace(entry.first, entry.second);
+}
+
+using VendorDictionary = RadProto::VendorDictionary;
+
+std::string VendorDictionary::name(uint32_t code) const
+{
+    return m_rightDict.at(code);
+}
+
+uint32_t VendorDictionary::code(const std::string& name) const
+{
     return m_reverseDict.at(name);
 }
 
-void BasicDictionary::add(uint32_t code, const std::string& name)
+void VendorDictionary::add(uint32_t code, const std::string& name)
 {
     for (const auto& entry: m_rightDict)
         if (entry.second == name && entry.first != code)
@@ -26,9 +74,9 @@ void BasicDictionary::add(uint32_t code, const std::string& name)
     m_reverseDict.emplace(name, code);
 }
 
-void BasicDictionary::append(const BasicDictionary& basicDict)
+void VendorDictionary::append(const VendorDictionary& vendorDict)
 {
-    for (const auto& entry: basicDict.m_rightDict)
+    for (const auto& entry: vendorDict.m_rightDict)
     {
         for (const auto& item: m_rightDict)
             if (entry.second == item.second && entry.first != item.first)
@@ -37,11 +85,12 @@ void BasicDictionary::append(const BasicDictionary& basicDict)
         m_rightDict.insert_or_assign(entry.first, entry.second);
     }
 
-    for (const auto& entry: basicDict.m_reverseDict)
+    for (const auto& entry: vendorDict.m_reverseDict)
         m_reverseDict.emplace(entry.first, entry.second);
 }
 
 using DependentDictionary = RadProto::DependentDictionary;
+
 std::string DependentDictionary::name(const std::string& dependencyName, uint32_t code) const
 {
     return m_rightDict.at(std::make_pair(dependencyName, code));
@@ -77,6 +126,7 @@ void DependentDictionary::append(const DependentDictionary& dependentDict)
 }
 
 using Dictionaries = RadProto::Dictionaries;
+
 Dictionaries::Dictionaries(const std::string& filePath)
 {
     std::ifstream stream(filePath);
@@ -103,10 +153,12 @@ Dictionaries::Dictionaries(const std::string& filePath)
             {
                 const auto& attrName = tokens[1];
                 const auto code = std::stoul(tokens[2]);
+                const auto& attrType = tokens[3];
+
                 if (!vendorName.empty())
                     m_vendorAttributes.add(code, attrName, vendorName);
                 else
-                    m_attributes.add(code, attrName);
+                    m_attributes.add(code, attrName, attrType);
             }
             else if (tokens[0] == "VALUE")
             {
