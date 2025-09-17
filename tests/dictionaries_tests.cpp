@@ -62,6 +62,12 @@ BOOST_AUTO_TEST_CASE(TestAppend)
     BOOST_CHECK_EQUAL(a.code("def"), 2);
     BOOST_CHECK_EQUAL(a.code("ghi"), 3);
     BOOST_CHECK_EQUAL(a.code("User-Name"), 4);
+    BOOST_CHECK_EQUAL(a.type("def"), "string");
+    BOOST_CHECK_EQUAL(a.type("ghi"), "string");
+    BOOST_CHECK_EQUAL(a.type("User-Name"), "string");
+    BOOST_CHECK_EQUAL(a.type(2), "string");
+    BOOST_CHECK_EQUAL(a.type(3), "string");
+    BOOST_CHECK_EQUAL(a.type(4), "string");
 
     RadProto::BasicDictionary b;
 
