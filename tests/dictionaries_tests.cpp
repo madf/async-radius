@@ -37,6 +37,14 @@ BOOST_AUTO_TEST_CASE(TestAdd)
     BOOST_CHECK_EQUAL(b.code("abc"), 1);
     BOOST_CHECK_EQUAL(b.code("def"), 3);
 
+    BOOST_CHECK_EQUAL(b.type("User-Name"), "string");
+    BOOST_CHECK_EQUAL(b.type("User"), "string");
+    BOOST_CHECK_EQUAL(b.type("abc"), "string");
+    BOOST_CHECK_EQUAL(b.type("def"), "string");
+    BOOST_CHECK_EQUAL(b.type(1), "string");
+    BOOST_CHECK_EQUAL(b.type(3), "string");
+
+    BOOST_CHECK_THROW(b.type(2), std::out_of_range);
     BOOST_CHECK_THROW(b.name(2), std::out_of_range);
 }
 
