@@ -214,7 +214,15 @@ BOOST_AUTO_TEST_CASE(TestConstructor)
     BOOST_CHECK_EQUAL(b.code("User"), 1);
     BOOST_CHECK_EQUAL(b.code("ijk"), 5);
     BOOST_CHECK_EQUAL(b.code("def"), 3);
+    BOOST_CHECK_EQUAL(b.type("User-Name"), "string");
+    BOOST_CHECK_EQUAL(b.type("User"), "string");
+    BOOST_CHECK_EQUAL(b.type("ijk"), "string");
+    BOOST_CHECK_EQUAL(b.type("def"), "string");
+    BOOST_CHECK_EQUAL(b.type(1), "string");
+    BOOST_CHECK_EQUAL(b.type(5), "string");
+    BOOST_CHECK_EQUAL(b.type(3), "string");
     BOOST_CHECK_THROW(b.name(2), std::out_of_range);
+    BOOST_CHECK_THROW(b.type(2), std::out_of_range);
 
     RadProto::BasicDictionary c;
 
@@ -225,6 +233,10 @@ BOOST_AUTO_TEST_CASE(TestConstructor)
     BOOST_CHECK_EQUAL(c.name(5), "ghi");
     BOOST_CHECK_EQUAL(c.code("def"), 2);
     BOOST_CHECK_EQUAL(c.code("ghi"), 5);
+    BOOST_CHECK_EQUAL(c.type("def"), "string");
+    BOOST_CHECK_EQUAL(c.type("ghi"), "string");
+    BOOST_CHECK_EQUAL(c.type(2), "string");
+    BOOST_CHECK_EQUAL(c.type(5), "string");
 
     BOOST_CHECK_THROW(c.append(b), RadProto::Exception);
 
@@ -234,6 +246,8 @@ BOOST_AUTO_TEST_CASE(TestConstructor)
 
     BOOST_CHECK_EQUAL(a.name(2), "def");
     BOOST_CHECK_EQUAL(a.code("def"), 2);
+    BOOST_CHECK_EQUAL(c.type("def"), "string");
+    BOOST_CHECK_EQUAL(c.type(2), "string");
 
     c.append(a);
 
@@ -241,6 +255,10 @@ BOOST_AUTO_TEST_CASE(TestConstructor)
     BOOST_CHECK_EQUAL(c.name(5), "ghi");
     BOOST_CHECK_EQUAL(c.code("def"), 2);
     BOOST_CHECK_EQUAL(c.code("ghi"), 5);
+    BOOST_CHECK_EQUAL(c.type("def"), "string");
+    BOOST_CHECK_EQUAL(c.type("ghi"), "string");
+    BOOST_CHECK_EQUAL(c.type(2), "string");
+    BOOST_CHECK_EQUAL(c.type(5), "string");
 }
 BOOST_AUTO_TEST_SUITE_END()
 
