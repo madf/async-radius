@@ -36,7 +36,6 @@ BOOST_AUTO_TEST_CASE(TestAdd)
     BOOST_CHECK_EQUAL(b.code("User"), 1);
     BOOST_CHECK_EQUAL(b.code("abc"), 1);
     BOOST_CHECK_EQUAL(b.code("def"), 3);
-
     BOOST_CHECK_EQUAL(b.type("User-Name"), "string");
     BOOST_CHECK_EQUAL(b.type("User"), "string");
     BOOST_CHECK_EQUAL(b.type("abc"), "string");
@@ -75,10 +74,13 @@ BOOST_AUTO_TEST_CASE(TestAppend)
 
     BOOST_CHECK_EQUAL(b.name(1), "User-Name");
     BOOST_CHECK_EQUAL(b.code("User-Name"), 1);
+    BOOST_CHECK_EQUAL(b.type("User-Name"), "string");
+    BOOST_CHECK_EQUAL(b.type(1), "string");
 
     BOOST_CHECK_THROW(a.append(b), RadProto::Exception);
 
     BOOST_CHECK_THROW(a.name(1), std::out_of_range);
+    BOOST_CHECK_THROW(a.type(1), std::out_of_range);
 
     RadProto::BasicDictionary c;
 
@@ -86,6 +88,8 @@ BOOST_AUTO_TEST_CASE(TestAppend)
 
     BOOST_CHECK_EQUAL(c.name(4), "User");
     BOOST_CHECK_EQUAL(c.code("User"), 4);
+    BOOST_CHECK_EQUAL(c.type("User"), "string");
+    BOOST_CHECK_EQUAL(c.type(4), "string");
 
     a.append(c);
 
@@ -96,6 +100,13 @@ BOOST_AUTO_TEST_CASE(TestAppend)
     BOOST_CHECK_EQUAL(a.code("ghi"), 3);
     BOOST_CHECK_EQUAL(a.code("User"), 4);
     BOOST_CHECK_EQUAL(a.code("User-Name"), 4);
+    BOOST_CHECK_EQUAL(a.type("def"), "string");
+    BOOST_CHECK_EQUAL(a.type("ghi"), "string");
+    BOOST_CHECK_EQUAL(a.type("User"), "string");
+    BOOST_CHECK_EQUAL(a.type("User-Name"), "string");
+    BOOST_CHECK_EQUAL(a.type(2), "string");
+    BOOST_CHECK_EQUAL(a.type(3), "string");
+    BOOST_CHECK_EQUAL(a.type(4), "string");
 
     RadProto::BasicDictionary d;
 
@@ -103,6 +114,8 @@ BOOST_AUTO_TEST_CASE(TestAppend)
 
     BOOST_CHECK_EQUAL(d.name(4), "jkl");
     BOOST_CHECK_EQUAL(d.code("jkl"), 4);
+    BOOST_CHECK_EQUAL(d.type("jkl"), "string");
+    BOOST_CHECK_EQUAL(d.type(4), "string");
 
     a.append(d);
 
@@ -114,6 +127,14 @@ BOOST_AUTO_TEST_CASE(TestAppend)
     BOOST_CHECK_EQUAL(a.code("User"), 4);
     BOOST_CHECK_EQUAL(a.code("User-Name"), 4);
     BOOST_CHECK_EQUAL(a.code("jkl"), 4);
+    BOOST_CHECK_EQUAL(a.type("def"), "string");
+    BOOST_CHECK_EQUAL(a.type("ghi"), "string");
+    BOOST_CHECK_EQUAL(a.type("User"), "string");
+    BOOST_CHECK_EQUAL(a.type("User-Name"), "string");
+    BOOST_CHECK_EQUAL(a.type("jkl"), "string");
+    BOOST_CHECK_EQUAL(a.type(2), "string");
+    BOOST_CHECK_EQUAL(a.type(3), "string");
+    BOOST_CHECK_EQUAL(a.type(4), "string");
 
     RadProto::BasicDictionary e;
 
@@ -121,6 +142,8 @@ BOOST_AUTO_TEST_CASE(TestAppend)
 
     BOOST_CHECK_EQUAL(e.name(2), "def");
     BOOST_CHECK_EQUAL(e.code("def"), 2);
+    BOOST_CHECK_EQUAL(e.type("def"), "string");
+    BOOST_CHECK_EQUAL(e.type(2), "string");
 
     a.append(e);
 
@@ -132,6 +155,14 @@ BOOST_AUTO_TEST_CASE(TestAppend)
     BOOST_CHECK_EQUAL(a.code("User"), 4);
     BOOST_CHECK_EQUAL(a.code("User-Name"), 4);
     BOOST_CHECK_EQUAL(a.code("jkl"), 4);
+    BOOST_CHECK_EQUAL(a.type("def"), "string");
+    BOOST_CHECK_EQUAL(a.type("ghi"), "string");
+    BOOST_CHECK_EQUAL(a.type("User"), "string");
+    BOOST_CHECK_EQUAL(a.type("User-Name"), "string");
+    BOOST_CHECK_EQUAL(a.type("jkl"), "string");
+    BOOST_CHECK_EQUAL(a.type(2), "string");
+    BOOST_CHECK_EQUAL(a.type(3), "string");
+    BOOST_CHECK_EQUAL(a.type(4), "string");
 
     RadProto::BasicDictionary f;
 
@@ -139,6 +170,8 @@ BOOST_AUTO_TEST_CASE(TestAppend)
 
     BOOST_CHECK_EQUAL(f.name(4), "User-Name");
     BOOST_CHECK_EQUAL(f.code("User-Name"), 4);
+    BOOST_CHECK_EQUAL(f.type("User-Name"), "string");
+    BOOST_CHECK_EQUAL(f.type(4), "string");
 
     a.append(f);
 
@@ -150,6 +183,14 @@ BOOST_AUTO_TEST_CASE(TestAppend)
     BOOST_CHECK_EQUAL(a.code("User-Name"), 4);
     BOOST_CHECK_EQUAL(a.code("User"), 4);
     BOOST_CHECK_EQUAL(a.code("jkl"), 4);
+    BOOST_CHECK_EQUAL(a.type("def"), "string");
+    BOOST_CHECK_EQUAL(a.type("ghi"), "string");
+    BOOST_CHECK_EQUAL(a.type("User"), "string");
+    BOOST_CHECK_EQUAL(a.type("User-Name"), "string");
+    BOOST_CHECK_EQUAL(a.type("jkl"), "string");
+    BOOST_CHECK_EQUAL(a.type(2), "string");
+    BOOST_CHECK_EQUAL(a.type(3), "string");
+    BOOST_CHECK_EQUAL(a.type(4), "string");
 }
 
 BOOST_AUTO_TEST_CASE(TestConstructor)
