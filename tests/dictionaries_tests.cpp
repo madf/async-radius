@@ -263,6 +263,178 @@ BOOST_AUTO_TEST_CASE(TestConstructor)
 BOOST_AUTO_TEST_SUITE_END()
 
 
+BOOST_AUTO_TEST_SUITE(VendorDictionaryTests)
+
+BOOST_AUTO_TEST_CASE(TestAdd)
+{
+    RadProto::VendorDictionary b;
+
+    b.add(1, "Vendor-Name");
+    b.add(1, "Vendor");
+    b.add(1, "abc");
+    BOOST_CHECK_THROW(b.add(2, "abc"), RadProto::Exception);
+    b.add(3, "def");
+    b.add(1, "abc");
+
+    BOOST_CHECK_EQUAL(b.name(1), "abc");
+    BOOST_CHECK_EQUAL(b.name(3), "def");
+    BOOST_CHECK_EQUAL(b.code("Vendor-Name"), 1);
+    BOOST_CHECK_EQUAL(b.code("Vendor"), 1);
+    BOOST_CHECK_EQUAL(b.code("abc"), 1);
+    BOOST_CHECK_EQUAL(b.code("def"), 3);
+
+    BOOST_CHECK_THROW(b.name(2), std::out_of_range);
+}
+BOOST_AUTO_TEST_CASE(TestAppend)
+{
+    RadProto::VendorDictionary a;
+
+    a.add(2, "def");
+    a.add(3, "ghi");
+    a.add(4, "Vendor-Name");
+
+    BOOST_CHECK_EQUAL(a.name(2), "def");
+    BOOST_CHECK_EQUAL(a.name(3), "ghi");
+    BOOST_CHECK_EQUAL(a.name(4), "Vendor-Name");
+    BOOST_CHECK_EQUAL(a.code("def"), 2);
+    BOOST_CHECK_EQUAL(a.code("ghi"), 3);
+    BOOST_CHECK_EQUAL(a.code("Vendor-Name"), 4);
+
+    RadProto::VendorDictionary b;
+
+    b.add(1, "Vendor-Name");
+
+    BOOST_CHECK_EQUAL(b.name(1), "Vendor-Name");
+    BOOST_CHECK_EQUAL(b.code("Vendor-Name"), 1);
+
+    BOOST_CHECK_THROW(a.append(b), RadProto::Exception);
+
+    BOOST_CHECK_THROW(a.name(1), std::out_of_range);
+
+    RadProto::VendorDictionary c;
+
+    c.add(4, "Vendor");
+
+    BOOST_CHECK_EQUAL(c.name(4), "Vendor");
+    BOOST_CHECK_EQUAL(c.code("Vendor"), 4);
+
+    a.append(c);
+
+    BOOST_CHECK_EQUAL(a.name(2), "def");
+    BOOST_CHECK_EQUAL(a.name(3), "ghi");
+    BOOST_CHECK_EQUAL(a.name(4), "Vendor");
+    BOOST_CHECK_EQUAL(a.code("def"), 2);
+    BOOST_CHECK_EQUAL(a.code("ghi"), 3);
+    BOOST_CHECK_EQUAL(a.code("Vendor"), 4);
+    BOOST_CHECK_EQUAL(a.code("Vendor-Name"), 4);
+
+    RadProto::VendorDictionary d;
+
+    d.add(4, "jkl");
+
+    BOOST_CHECK_EQUAL(d.name(4), "jkl");
+    BOOST_CHECK_EQUAL(d.code("jkl"), 4);
+
+    a.append(d);
+
+    BOOST_CHECK_EQUAL(a.name(2), "def");
+    BOOST_CHECK_EQUAL(a.name(3), "ghi");
+    BOOST_CHECK_EQUAL(a.name(4), "jkl");
+    BOOST_CHECK_EQUAL(a.code("def"), 2);
+    BOOST_CHECK_EQUAL(a.code("ghi"), 3);
+    BOOST_CHECK_EQUAL(a.code("Vendor"), 4);
+    BOOST_CHECK_EQUAL(a.code("Vendor-Name"), 4);
+    BOOST_CHECK_EQUAL(a.code("jkl"), 4);
+
+    RadProto::VendorDictionary e;
+
+    e.add(2, "def");
+
+    BOOST_CHECK_EQUAL(e.name(2), "def");
+    BOOST_CHECK_EQUAL(e.code("def"), 2);
+
+    a.append(e);
+
+    BOOST_CHECK_EQUAL(a.name(2), "def");
+    BOOST_CHECK_EQUAL(a.name(3), "ghi");
+    BOOST_CHECK_EQUAL(a.name(4), "jkl");
+    BOOST_CHECK_EQUAL(a.code("def"), 2);
+    BOOST_CHECK_EQUAL(a.code("ghi"), 3);
+    BOOST_CHECK_EQUAL(a.code("Vendor"), 4);
+    BOOST_CHECK_EQUAL(a.code("Vendor-Name"), 4);
+    BOOST_CHECK_EQUAL(a.code("jkl"), 4);
+
+    RadProto::VendorDictionary f;
+
+    f.add(4, "Vendor-Name");
+
+    BOOST_CHECK_EQUAL(f.name(4), "Vendor-Name");
+    BOOST_CHECK_EQUAL(f.code("Vendor-Name"), 4);
+
+    a.append(f);
+
+    BOOST_CHECK_EQUAL(a.name(2), "def");
+    BOOST_CHECK_EQUAL(a.name(3), "ghi");
+    BOOST_CHECK_EQUAL(a.name(4), "Vendor-Name");
+    BOOST_CHECK_EQUAL(a.code("def"), 2);
+    BOOST_CHECK_EQUAL(a.code("ghi"), 3);
+    BOOST_CHECK_EQUAL(a.code("Vendor-Name"), 4);
+    BOOST_CHECK_EQUAL(a.code("Vendor"), 4);
+    BOOST_CHECK_EQUAL(a.code("jkl"), 4);
+}
+
+BOOST_AUTO_TEST_CASE(TestConstructor)
+{
+    RadProto::VendorDictionary b;
+
+    BOOST_CHECK_THROW(b.name(0), std::out_of_range);
+
+    BOOST_CHECK_THROW(b.code(""), std::out_of_range);
+
+    b.add(1, "Vendor-Name");
+    b.add(1, "Vendor");
+    b.add(5, "ijk");
+    b.add(3, "def");
+    BOOST_CHECK_THROW(b.add(2, "Vendor"), RadProto::Exception);
+
+    BOOST_CHECK_EQUAL(b.name(1), "Vendor");
+    BOOST_CHECK_EQUAL(b.name(5), "ijk");
+    BOOST_CHECK_EQUAL(b.name(3), "def");
+    BOOST_CHECK_EQUAL(b.code("Vendor-Name"), 1);
+    BOOST_CHECK_EQUAL(b.code("Vendor"), 1);
+    BOOST_CHECK_EQUAL(b.code("ijk"), 5);
+    BOOST_CHECK_EQUAL(b.code("def"), 3);
+    BOOST_CHECK_THROW(b.name(2), std::out_of_range);
+
+    RadProto::VendorDictionary c;
+
+    c.add(2, "def");
+    c.add(5, "ghi");
+
+    BOOST_CHECK_EQUAL(c.name(2), "def");
+    BOOST_CHECK_EQUAL(c.name(5), "ghi");
+    BOOST_CHECK_EQUAL(c.code("def"), 2);
+    BOOST_CHECK_EQUAL(c.code("ghi"), 5);
+
+    BOOST_CHECK_THROW(c.append(b), RadProto::Exception);
+
+    RadProto::VendorDictionary a;
+
+    a.add(2, "def");
+
+    BOOST_CHECK_EQUAL(a.name(2), "def");
+    BOOST_CHECK_EQUAL(a.code("def"), 2);
+
+    c.append(a);
+
+    BOOST_CHECK_EQUAL(c.name(2), "def");
+    BOOST_CHECK_EQUAL(c.name(5), "ghi");
+    BOOST_CHECK_EQUAL(c.code("def"), 2);
+    BOOST_CHECK_EQUAL(c.code("ghi"), 5);
+}
+BOOST_AUTO_TEST_SUITE_END()
+
+
 BOOST_AUTO_TEST_SUITE(DependentDictionaryTests)
 
 BOOST_AUTO_TEST_CASE(TestAdd)
