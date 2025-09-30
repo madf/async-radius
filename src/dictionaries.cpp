@@ -4,6 +4,7 @@
 #include <vector>
 #include <utility>
 #include <fstream>
+#include <iostream>
 
 using BasicDictionary = RadProto::BasicDictionary;
 
@@ -30,8 +31,16 @@ std::string BasicDictionary::type(const std::string& name) const
 void BasicDictionary::add(uint32_t code, const std::string& name, const std::string& type)
 {
     for (const auto& entry: m_rightDict)
+    {
         if (entry.second.first == name && entry.first != code)
             throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::add]. Attribute name " + name + " already exists with code " + std::to_string(entry.first));
+
+        if (entry.second.first == name && entry.first == code && entry.second.second != type)
+            throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::add]. Attribute name " + name + " already exists with type " + entry.second.second);
+
+        if (entry.second.first != name && entry.first == code && entry.second.second != type)
+            throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::add]. Attribute name2 " + name + " already exists with type " + entry.second.second);
+    }
 
     m_rightDict.insert_or_assign(code, std::make_pair(name, type));
     m_reverseDict.emplace(name, std::make_pair(code, type));
@@ -41,9 +50,31 @@ void BasicDictionary::append(const BasicDictionary& basicDict)
 {
     for (const auto& entry: basicDict.m_rightDict)
     {
+
+        std::cout << "entry.name: " + entry.second.first + " entry.code: " + std::to_string(entry.first) + " entry.type: " + entry.second.second + "\n";
         for (const auto& item: m_rightDict)
+        {
             if (entry.second.first == item.second.first && entry.first != item.first)
+            {
+                std::cout << "name ==, code !=, entry.name: " + entry.second.first + "item.name: " + item.second.first + "\n";
                 throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::append]. Attribute name " + entry.second.first + " already exists with code " + std::to_string(item.first));
+            }
+
+            if (entry.second.first == item.second.first && entry.first == item.first && entry.second.second != item.second.second)
+            {
+
+                std::cout << "name ==, code ==, entry.name: " + entry.second.first + "item.name: " + item.second.first + "\n";
+                throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::add]. Attribute name3 " + entry.second.first + " already exists with type " + item.second.second);
+            }
+
+            if (entry.second.first != item.second.first && entry.first == item.first && entry.second.second != item.second.second)
+            {
+
+                std::cout << "(name !=, code ==, type !=) entry.name: " + entry.second.first + " entry.code: " + std::to_string(entry.first) + " entry.type: " + entry.second.second + " item.name: " + item.second.first + " item.code: " + std::to_string(item.first) + " item.type:" + item. second.second + "\n";
+                throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::add]. Attribute name4 " + entry.second.first + " already exists with type " + item.second.second);
+            }
+        }
+
 
         m_rightDict.insert_or_assign(entry.first, entry.second);
     }
