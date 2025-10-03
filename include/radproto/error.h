@@ -19,7 +19,7 @@ namespace RadProto
         numberOfBytesIsLessThan20,
         requestLengthIsShort,
         eapMessageAttributeError,
-        invalidAttributeType,
+        invalidAttributeCode,
         invalidAttributeSize,
         invalidVendorSpecificAttributeId,
         suchAttributeNameAlreadyExists,
