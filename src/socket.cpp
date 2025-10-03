@@ -7,9 +7,9 @@ using boost::system::error_code;
 
 namespace pls = std::placeholders;
 
-std::string packetTypeToString(int type)
+std::string packetCodeToString(int code)
 {
-    switch (type)
+    switch (code)
     {
         case RadProto::ACCESS_REQUEST: return "ACCESS_REQUEST";
         case RadProto::ACCESS_ACCEPT: return "ACCESS_ACCEPT";
