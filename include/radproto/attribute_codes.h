@@ -2,7 +2,7 @@
 
 namespace RadProto
 {
-    enum Attribute_Types
+    enum Attribute_Codes
     {
         USER_NAME = 1,
         USER_PASSWORD = 2,
