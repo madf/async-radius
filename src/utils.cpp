@@ -1,5 +1,5 @@
 #include "utils.h"
-#include "attribute_types.h"
+#include "attribute_codes.h"
 #include <cstdint> //uint8_t, uint32_t
 
 std::string RadProto::byteToHex(uint8_t byte)
