@@ -1,6 +1,6 @@
 #include "server.h"
 #include "packet_codes.h"
-#include "attribute_types.h"
+#include "attribute_codes.h"
 #include <functional>
 #include <iostream>
 
@@ -37,11 +37,11 @@ RadProto::Packet Server::makeResponse(const RadProto::Packet& request)
     std::string userName;
     for (const auto& attribute : request.attributes())
     {
-        if (attribute->type() == RadProto::USER_NAME)
+        if (attribute->code() == RadProto::USER_NAME)
             userName = attribute->toString();
     }
 
-    if (request.type() == RadProto::ACCESS_REQUEST && userName == "test")
+    if (request.code() == RadProto::ACCESS_REQUEST && userName == "test")
         return RadProto::Packet(RadProto::ACCESS_ACCEPT, request.id(), request.auth(), attributes, vendorSpecific);
 
     return RadProto::Packet(RadProto::ACCESS_REJECT, request.id(), request.auth(), attributes, vendorSpecific);
