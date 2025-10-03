@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(StringDataConstructor)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(s.type(), 1);
+    BOOST_CHECK_EQUAL(s.code(), 1);
 }
 
 BOOST_AUTO_TEST_CASE(StringValueConstructor)
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE(StringValueConstructor)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(v.type(), 1);
+    BOOST_CHECK_EQUAL(v.code(), 1);
 }
 
 BOOST_AUTO_TEST_CASE(StringClone)
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(StringClone)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(cs->type(), 1);
+    BOOST_CHECK_EQUAL(cs->code(), 1);
 }
 
 BOOST_AUTO_TEST_CASE(IntegerDataConstructor)
@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE(IntegerDataConstructor)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(s.type(), 5);
+    BOOST_CHECK_EQUAL(s.code(), 5);
 }
 
 BOOST_AUTO_TEST_CASE(IntegerDataConstructorThrow)
@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(IntegerValueConstructor)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(v.type(), 5);
+    BOOST_CHECK_EQUAL(v.code(), 5);
 }
 
 BOOST_AUTO_TEST_CASE(IntegerClone)
@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE(IntegerClone)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(cs->type(), 5);
+    BOOST_CHECK_EQUAL(cs->code(), 5);
 }
 
 BOOST_AUTO_TEST_CASE(IpAddressDataConstructor)
@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE(IpAddressDataConstructor)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(s.type(), 4);
+    BOOST_CHECK_EQUAL(s.code(), 4);
 }
 
 BOOST_AUTO_TEST_CASE(IpAddressDataConstructorThrow)
@@ -154,7 +154,7 @@ BOOST_AUTO_TEST_CASE(IpAddressValueConstructor)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(v.type(), 4);
+    BOOST_CHECK_EQUAL(v.code(), 4);
 }
 
 BOOST_AUTO_TEST_CASE(IpAddressClone)
@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE(IpAddressClone)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(cs->type(), 4);
+    BOOST_CHECK_EQUAL(cs->code(), 4);
 }
 
 BOOST_AUTO_TEST_CASE(EncryptedDataConstructor_PasswordLength_6)
@@ -188,7 +188,7 @@ BOOST_AUTO_TEST_CASE(EncryptedDataConstructor_PasswordLength_6)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(s.type(), 2);
+    BOOST_CHECK_EQUAL(s.code(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(EncryptedDataConstructorThrow)
@@ -220,7 +220,7 @@ BOOST_AUTO_TEST_CASE(EncryptedDataConstructor1_PasswordLength_15)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(s.type(), 2);
+    BOOST_CHECK_EQUAL(s.code(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(EncryptedDataConstructor_PasswordLength_16)
@@ -238,7 +238,7 @@ BOOST_AUTO_TEST_CASE(EncryptedDataConstructor_PasswordLength_16)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(s.type(), 2);
+    BOOST_CHECK_EQUAL(s.code(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(EncryptedDataConstructor_PasswordLength_17)
@@ -256,7 +256,7 @@ BOOST_AUTO_TEST_CASE(EncryptedDataConstructor_PasswordLength_17)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(s.type(), 2);
+    BOOST_CHECK_EQUAL(s.code(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(EncryptedValueConstructor_PasswordLength_6)
@@ -271,7 +271,7 @@ BOOST_AUTO_TEST_CASE(EncryptedValueConstructor_PasswordLength_6)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(v.type(), 2);
+    BOOST_CHECK_EQUAL(v.code(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(EncryptedValueConstructor_PasswordLength_15)
@@ -286,7 +286,7 @@ BOOST_AUTO_TEST_CASE(EncryptedValueConstructor_PasswordLength_15)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(v.type(), 2);
+    BOOST_CHECK_EQUAL(v.code(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(EncryptedValueConstructor_PasswordLength_16)
@@ -301,7 +301,7 @@ BOOST_AUTO_TEST_CASE(EncryptedValueConstructor_PasswordLength_16)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(v.type(), 2);
+    BOOST_CHECK_EQUAL(v.code(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(EncryptedValueConstructor_PasswordLength_17)
@@ -316,7 +316,7 @@ BOOST_AUTO_TEST_CASE(EncryptedValueConstructor_PasswordLength_17)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(v.type(), 2);
+    BOOST_CHECK_EQUAL(v.code(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(EncryptedClone_PasswordLength_6)
@@ -333,7 +333,7 @@ BOOST_AUTO_TEST_CASE(EncryptedClone_PasswordLength_6)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(cs->type(), 2);
+    BOOST_CHECK_EQUAL(cs->code(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(EncryptedClone_PasswordLength_15)
@@ -350,7 +350,7 @@ BOOST_AUTO_TEST_CASE(EncryptedClone_PasswordLength_15)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(cs->type(), 2);
+    BOOST_CHECK_EQUAL(cs->code(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(EncryptedClone_PasswordLength_16)
@@ -367,7 +367,7 @@ BOOST_AUTO_TEST_CASE(EncryptedClone_PasswordLength_16)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(cs->type(), 2);
+    BOOST_CHECK_EQUAL(cs->code(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(EncryptedClone_PasswordLength_17)
@@ -384,7 +384,7 @@ BOOST_AUTO_TEST_CASE(EncryptedClone_PasswordLength_17)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(cs->type(), 2);
+    BOOST_CHECK_EQUAL(cs->code(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(BytesDataConstructor)
@@ -399,7 +399,7 @@ BOOST_AUTO_TEST_CASE(BytesDataConstructor)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(s.type(), 19);
+    BOOST_CHECK_EQUAL(s.code(), 19);
 }
 
 BOOST_AUTO_TEST_CASE(BytesValueConstructor)
@@ -413,7 +413,7 @@ BOOST_AUTO_TEST_CASE(BytesValueConstructor)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(v.type(), 19);
+    BOOST_CHECK_EQUAL(v.code(), 19);
 }
 
 BOOST_AUTO_TEST_CASE(BytesClone)
@@ -428,7 +428,7 @@ BOOST_AUTO_TEST_CASE(BytesClone)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(cs->type(), 19);
+    BOOST_CHECK_EQUAL(cs->code(), 19);
 }
 
 BOOST_AUTO_TEST_CASE(ChapPasswordDataConstructor)
@@ -445,7 +445,7 @@ BOOST_AUTO_TEST_CASE(ChapPasswordDataConstructor)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(s.type(), 3);
+    BOOST_CHECK_EQUAL(s.code(), 3);
 }
 
 BOOST_AUTO_TEST_CASE(ChapPasswordDataConstructorThrow)
@@ -466,7 +466,7 @@ BOOST_AUTO_TEST_CASE(ChapPasswordValueConstructor)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(v.type(), 3);
+    BOOST_CHECK_EQUAL(v.code(), 3);
 }
 
 BOOST_AUTO_TEST_CASE(ChapPasswordClone)
@@ -481,7 +481,7 @@ BOOST_AUTO_TEST_CASE(ChapPasswordClone)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(cs->type(), 3);
+    BOOST_CHECK_EQUAL(cs->code(), 3);
 }
 
 BOOST_AUTO_TEST_CASE(VendorSpecificDataConstructor)
@@ -496,7 +496,7 @@ BOOST_AUTO_TEST_CASE(VendorSpecificDataConstructor)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(s.vendorType(), 1);
+    BOOST_CHECK_EQUAL(s.vendorAttributeCode(), 1);
 }
 
 BOOST_AUTO_TEST_CASE(VendorSpecificDataConstructorThrow)
@@ -517,7 +517,7 @@ BOOST_AUTO_TEST_CASE(VendorSpecificValueConstructor)
 
     BOOST_TEST(values == expected, boost::test_tools::per_element());
 
-    BOOST_CHECK_EQUAL(v.vendorType(), 1);
+    BOOST_CHECK_EQUAL(v.vendorAttributeCode(), 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
