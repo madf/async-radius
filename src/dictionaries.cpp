@@ -64,14 +64,14 @@ void BasicDictionary::append(const BasicDictionary& basicDict)
             {
 
                 std::cout << "name ==, code ==, entry.name: " + entry.second.first + "item.name: " + item.second.first + "\n";
-                throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::add]. Attribute name3 " + entry.second.first + " already exists with type " + item.second.second);
+                throw Exception(Error::suchAttributeNameWithAnotherTypeAlreadyExists, "[BasicDictionary::append]. Attribute name " + entry.second.first + " already exists with type " + item.second.second);
             }
 
             if (entry.second.first != item.second.first && entry.first == item.first && entry.second.second != item.second.second)
             {
 
                 std::cout << "(name !=, code ==, type !=) entry.name: " + entry.second.first + " entry.code: " + std::to_string(entry.first) + " entry.type: " + entry.second.second + " item.name: " + item.second.first + " item.code: " + std::to_string(item.first) + " item.type:" + item. second.second + "\n";
-                throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::add]. Attribute name4 " + entry.second.first + " already exists with type " + item.second.second);
+                throw Exception(Error::suchAttributeNameWithAnotherTypeAlreadyExists, "[BasicDictionary::append]. Attribute name4 " + entry.second.first + " already exists with type " + item.second.second);
             }
         }
 
@@ -99,7 +99,7 @@ void VendorDictionary::add(uint32_t code, const std::string& name)
 {
     for (const auto& entry: m_rightDict)
         if (entry.second == name && entry.first != code)
-            throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::add]. Attribute name " + name + " already exists with code " + std::to_string(entry.first));
+            throw Exception(Error::suchAttributeNameAlreadyExists, "[VendorDictionary::add]. Attribute name " + name + " already exists with code " + std::to_string(entry.first));
 
     m_rightDict.insert_or_assign(code, name);
     m_reverseDict.emplace(name, code);
@@ -111,7 +111,7 @@ void VendorDictionary::append(const VendorDictionary& vendorDict)
     {
         for (const auto& item: m_rightDict)
             if (entry.second == item.second && entry.first != item.first)
-                throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::append]. Attribute name " + entry.second + " already exists with code " + std::to_string(item.first));
+                throw Exception(Error::suchAttributeNameAlreadyExists, "[VendorDictionary::append]. Attribute name " + entry.second + " already exists with code " + std::to_string(item.first));
 
         m_rightDict.insert_or_assign(entry.first, entry.second);
     }
