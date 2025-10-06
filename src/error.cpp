@@ -43,6 +43,8 @@ std::string ErrorCategory::message(int ev) const noexcept
             return "Such attribute name already exists";
         case Error::suchAttributeCodeAlreadyExists:
             return "Such attribute code already exists";
+        case Error::suchAttributeNameWithAnotherTypeAlreadyExists:
+            return "Such attribute name with another type already exists";
        default:
             return "(Unrecognized error)";
     }
