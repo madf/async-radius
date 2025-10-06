@@ -23,7 +23,8 @@ namespace RadProto
         invalidAttributeSize,
         invalidVendorSpecificAttributeId,
         suchAttributeNameAlreadyExists,
-        suchAttributeCodeAlreadyExists
+        suchAttributeCodeAlreadyExists,
+        suchAttributeNameWithAnotherTypeAlreadyExists
     };
 
     class Exception: public std::runtime_error
