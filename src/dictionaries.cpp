@@ -39,7 +39,10 @@ void BasicDictionary::add(uint32_t code, const std::string& name, const std::str
             throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::add]. Attribute name " + name + " already exists with type " + entry.second.second);
 
         if (entry.second.first != name && entry.first == code && entry.second.second != type)
+        {
+           std::cout << "Basic add() name: " + name + " code: " + std::to_string(code) + " entry.type: " + type + "\n";
             throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::add]. Attribute name2 " + name + " already exists with type " + entry.second.second);
+        }
     }
 
     m_rightDict.insert_or_assign(code, std::make_pair(name, type));
@@ -51,25 +54,20 @@ void BasicDictionary::append(const BasicDictionary& basicDict)
     for (const auto& entry: basicDict.m_rightDict)
     {
 
-        std::cout << "entry.name: " + entry.second.first + " entry.code: " + std::to_string(entry.first) + " entry.type: " + entry.second.second + "\n";
         for (const auto& item: m_rightDict)
         {
             if (entry.second.first == item.second.first && entry.first != item.first)
             {
-                std::cout << "name ==, code !=, entry.name: " + entry.second.first + "item.name: " + item.second.first + "\n";
                 throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::append]. Attribute name " + entry.second.first + " already exists with code " + std::to_string(item.first));
             }
 
             if (entry.second.first == item.second.first && entry.first == item.first && entry.second.second != item.second.second)
             {
-
-                std::cout << "name ==, code ==, entry.name: " + entry.second.first + "item.name: " + item.second.first + "\n";
                 throw Exception(Error::suchAttributeNameWithAnotherTypeAlreadyExists, "[BasicDictionary::append]. Attribute name " + entry.second.first + " already exists with type " + item.second.second);
             }
 
             if (entry.second.first != item.second.first && entry.first == item.first && entry.second.second != item.second.second)
             {
-
                 std::cout << "(name !=, code ==, type !=) entry.name: " + entry.second.first + " entry.code: " + std::to_string(entry.first) + " entry.type: " + entry.second.second + " item.name: " + item.second.first + " item.code: " + std::to_string(item.first) + " item.type:" + item. second.second + "\n";
                 throw Exception(Error::suchAttributeNameWithAnotherTypeAlreadyExists, "[BasicDictionary::append]. Attribute name4 " + entry.second.first + " already exists with type " + item.second.second);
             }
@@ -98,9 +96,10 @@ uint32_t VendorDictionary::code(const std::string& name) const
 void VendorDictionary::add(uint32_t code, const std::string& name)
 {
     for (const auto& entry: m_rightDict)
+    {
         if (entry.second == name && entry.first != code)
-            throw Exception(Error::suchAttributeNameAlreadyExists, "[VendorDictionary::add]. Attribute name " + name + " already exists with code " + std::to_string(entry.first));
-
+            throw Exception(Error::suchAttributeNameAlreadyExists, "[VendorDictionary::add]. Vendor attribute name " + name + " already exists with code " + std::to_string(entry.first));
+    }
     m_rightDict.insert_or_assign(code, name);
     m_reverseDict.emplace(name, code);
 }
@@ -111,7 +110,7 @@ void VendorDictionary::append(const VendorDictionary& vendorDict)
     {
         for (const auto& item: m_rightDict)
             if (entry.second == item.second && entry.first != item.first)
-                throw Exception(Error::suchAttributeNameAlreadyExists, "[VendorDictionary::append]. Attribute name " + entry.second + " already exists with code " + std::to_string(item.first));
+                throw Exception(Error::suchAttributeNameAlreadyExists, "[VendorDictionary::append]. Vendor attribute name " + entry.second + " already exists with code " + std::to_string(item.first));
 
         m_rightDict.insert_or_assign(entry.first, entry.second);
     }
@@ -137,7 +136,6 @@ void DependentDictionary::add(uint32_t code, const std::string& name, const std:
     for (const auto& entry: m_rightDict)
         if (entry.second == name && entry.first.first == dependencyName && entry.first.second != code)
             throw Exception(Error::suchAttributeNameAlreadyExists, "[DependentDictionary::add]. Value name " + name + " of attribute " + dependencyName + " already exists with code " + std::to_string(entry.first.second));
-
     m_rightDict.insert_or_assign(std::make_pair(dependencyName, code), name);
     m_reverseDict.emplace(std::make_pair(dependencyName, name), code);
 }
@@ -180,18 +178,30 @@ Dictionaries::Dictionaries(const std::string& filePath)
 
         if (!tokens.empty())
         {
+            std::string attrName;
             if (tokens[0] == "ATTRIBUTE")
             {
-                const auto& attrName = tokens[1];
-                const auto code = std::stoul(tokens[2]);
-                const auto& attrType = tokens[3];
+                std::string::size_type n = tokens[2].find(".");
+                if (n == std::string::npos)
+                {
+                    const auto code = std::stoul(tokens[2]);
 
-                if (!vendorName.empty())
-                    m_vendorAttributes.add(code, attrName, vendorName);
-                else
-                    m_attributes.add(code, attrName, attrType);
+                    attrName = tokens[1];
+                    const auto& attrType = tokens[3];
+
+                    if (!vendorName.empty())
+                    {
+                        std::cout <<  "VendorName: " + vendorName + "  AttrName: " + attrName + "  AttrCode: " + std::to_string(code) + "\n";
+                        m_vendorAttributes.add(code, attrName, vendorName);
+                    }
+                    else
+                    {
+                        std::cout << "AttrName: " + attrName + "  AttrCode: " + std::to_string(code) + "  AttrType: " + attrType + "\n";
+                        m_attributes.add(code, attrName, attrType);
+                    }
+                }
             }
-            else if (tokens[0] == "VALUE")
+            else if (tokens[0] == "VALUE" && !attrName.empty())
             {
                 const auto& attrNameVal = tokens[1];
                 const auto& valueName = tokens[2];
