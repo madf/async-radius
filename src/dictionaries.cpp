@@ -4,7 +4,6 @@
 #include <vector>
 #include <utility>
 #include <fstream>
-#include <iostream>
 
 using BasicDictionary = RadProto::BasicDictionary;
 
@@ -30,27 +29,25 @@ std::string BasicDictionary::type(const std::string& name) const
 
 void BasicDictionary::add(uint32_t code, const std::string& name, const std::string& type)
 {
+    bool flag(false);
     for (const auto& entry: m_rightDict)
     {
         if (entry.second.first == name && entry.first != code)
             throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::add]. Attribute name " + name + " already exists with code " + std::to_string(entry.first));
 
         if (entry.second.first == name && entry.first == code && entry.second.second != type)
-            throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::add]. Attribute name " + name + " already exists with type " + entry.second.second);
-
-        if (entry.second.first != name && entry.first == code && entry.second.second != type)
-        {
-           std::cout << "Basic add() name: " + name + " code: " + std::to_string(code) + " entry.type: " + type + "\n";
-            throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::add]. Attribute name2 " + name + " already exists with type " + entry.second.second);
-        }
+            flag = true;
     }
 
     m_rightDict.insert_or_assign(code, std::make_pair(name, type));
+    if (flag)
+        m_reverseDict.insert_or_assign(name, std::make_pair(code, type));
     m_reverseDict.emplace(name, std::make_pair(code, type));
 }
 
 void BasicDictionary::append(const BasicDictionary& basicDict)
 {
+    bool flag(false);
     for (const auto& entry: basicDict.m_rightDict)
     {
 
@@ -62,23 +59,17 @@ void BasicDictionary::append(const BasicDictionary& basicDict)
             }
 
             if (entry.second.first == item.second.first && entry.first == item.first && entry.second.second != item.second.second)
-            {
-                throw Exception(Error::suchAttributeNameWithAnotherTypeAlreadyExists, "[BasicDictionary::append]. Attribute name " + entry.second.first + " already exists with type " + item.second.second);
-            }
-
-            if (entry.second.first != item.second.first && entry.first == item.first && entry.second.second != item.second.second)
-            {
-                std::cout << "(name !=, code ==, type !=) entry.name: " + entry.second.first + " entry.code: " + std::to_string(entry.first) + " entry.type: " + entry.second.second + " item.name: " + item.second.first + " item.code: " + std::to_string(item.first) + " item.type:" + item. second.second + "\n";
-                throw Exception(Error::suchAttributeNameWithAnotherTypeAlreadyExists, "[BasicDictionary::append]. Attribute name4 " + entry.second.first + " already exists with type " + item.second.second);
-            }
+                flag = true;
         }
-
-
         m_rightDict.insert_or_assign(entry.first, entry.second);
     }
 
     for (const auto& entry: basicDict.m_reverseDict)
+    {
+        if (flag)
+            m_reverseDict.insert_or_assign(entry.first, entry.second);
         m_reverseDict.emplace(entry.first, entry.second);
+    }
 }
 
 using VendorDictionary = RadProto::VendorDictionary;
@@ -134,8 +125,10 @@ uint32_t DependentDictionary::code(const std::string& dependencyName, const std:
 void DependentDictionary::add(uint32_t code, const std::string& name, const std::string& dependencyName)
 {
     for (const auto& entry: m_rightDict)
+    {
         if (entry.second == name && entry.first.first == dependencyName && entry.first.second != code)
             throw Exception(Error::suchAttributeNameAlreadyExists, "[DependentDictionary::add]. Value name " + name + " of attribute " + dependencyName + " already exists with code " + std::to_string(entry.first.second));
+    }
     m_rightDict.insert_or_assign(std::make_pair(dependencyName, code), name);
     m_reverseDict.emplace(std::make_pair(dependencyName, name), code);
 }
@@ -179,37 +172,45 @@ Dictionaries::Dictionaries(const std::string& filePath)
         if (!tokens.empty())
         {
             std::string attrName;
+            std::vector<std::string> excludeAttrs;
+
             if (tokens[0] == "ATTRIBUTE")
             {
                 std::string::size_type n = tokens[2].find(".");
                 if (n == std::string::npos)
                 {
                     const auto code = std::stoul(tokens[2]);
-
                     attrName = tokens[1];
                     const auto& attrType = tokens[3];
 
                     if (!vendorName.empty())
-                    {
-                        std::cout <<  "VendorName: " + vendorName + "  AttrName: " + attrName + "  AttrCode: " + std::to_string(code) + "\n";
                         m_vendorAttributes.add(code, attrName, vendorName);
-                    }
                     else
-                    {
-                        std::cout << "AttrName: " + attrName + "  AttrCode: " + std::to_string(code) + "  AttrType: " + attrType + "\n";
                         m_attributes.add(code, attrName, attrType);
-                    }
                 }
-            }
-            else if (tokens[0] == "VALUE" && !attrName.empty())
-            {
-                const auto& attrNameVal = tokens[1];
-                const auto& valueName = tokens[2];
-                const auto valueCode = std::stoul(tokens[3]);
-                if (!vendorName.empty())
-                    m_vendorAttributeValues.add(valueCode, valueName, attrNameVal);
                 else
-                    m_attributeValues.add(valueCode, valueName, attrNameVal);
+                    excludeAttrs.push_back(tokens[1]);
+            }
+            else if (tokens[0] == "VALUE")
+            {
+                bool flag(false);
+                if (!excludeAttrs.empty())
+                {
+                    for (const auto& name : excludeAttrs)
+                        if (tokens[1] == name)
+                            flag = true;
+                }
+
+                if (!flag)
+                {
+                    const auto& attrNameVal = tokens[1];
+                    const auto& valueName = tokens[2];
+                    const auto valueCode = std::stoul(tokens[3]);
+                    if (!vendorName.empty())
+                        m_vendorAttributeValues.add(valueCode, valueName, attrNameVal);
+                    else
+                        m_attributeValues.add(valueCode, valueName, attrNameVal);
+                }
             }
             else if (tokens[0] == "VENDOR")
                 m_vendorNames.add(std::stoul(tokens[2]), tokens[1]);
@@ -245,6 +246,16 @@ std::string Dictionaries::attributeName(uint32_t code) const
 uint32_t Dictionaries::attributeCode(const std::string& name) const
 {
     return attributes().code(name);
+}
+
+std::string Dictionaries::attributeType(uint32_t code) const
+{
+    return attributes().type(code);
+}
+
+std::string Dictionaries::attributeType(const std::string name) const
+{
+    return attributes().type(name);
 }
 
 std::string Dictionaries::vendorName(uint32_t code) const
