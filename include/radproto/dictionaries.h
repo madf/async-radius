@@ -62,6 +62,8 @@ namespace RadProto
 
             std::string attributeName(uint32_t code) const;
             uint32_t attributeCode(const std::string& name) const;
+            std::string attributeType(uint32_t code) const;
+            std::string attributeType(const std::string name) const;
 
             std::string vendorName(uint32_t code) const;
             uint32_t vendorCode(const std::string& name) const;
