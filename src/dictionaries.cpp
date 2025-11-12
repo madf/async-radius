@@ -48,7 +48,7 @@ void BasicDictionary::add(uint32_t code, const std::string& name, const std::str
 
 void BasicDictionary::append(const BasicDictionary& basicDict)
 {
-    bool flag(false);
+    bool flag = false;
     for (const auto& entry: basicDict.m_rightDict)
     {
 
@@ -69,7 +69,8 @@ void BasicDictionary::append(const BasicDictionary& basicDict)
     {
         if (flag)
             m_reverseDict.insert_or_assign(entry.first, entry.second);
-        m_reverseDict.emplace(entry.first, entry.second);
+        else
+            m_reverseDict.emplace(entry.first, entry.second);
     }
 }
 
