@@ -195,12 +195,15 @@ Dictionaries::Dictionaries(const std::string& filePath)
             }
             else if (tokens[0] == "VALUE")
             {
-                bool flag(false);
+                bool flag = false;
                 if (!excludeAttrs.empty())
                 {
                     for (const auto& name : excludeAttrs)
                         if (tokens[1] == name)
+                        {
                             flag = true;
+                            break;
+                        }
                 }
 
                 if (!flag)
