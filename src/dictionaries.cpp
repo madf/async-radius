@@ -29,20 +29,15 @@ std::string BasicDictionary::type(const std::string& name) const
 
 void BasicDictionary::add(uint32_t code, const std::string& name, const std::string& type)
 {
-    bool flag(false);
     for (const auto& entry: m_rightDict)
     {
         if (entry.second.first == name && entry.first != code)
             throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::add]. Attribute name " + name + " already exists with code " + std::to_string(entry.first));
 
-        if (entry.second.first == name && entry.first == code && entry.second.second != type)
-            flag = true;
     }
 
     m_rightDict.insert_or_assign(code, std::make_pair(name, type));
-    if (flag)
-        m_reverseDict.insert_or_assign(name, std::make_pair(code, type));
-    m_reverseDict.emplace(name, std::make_pair(code, type));
+    m_reverseDict.insert_or_assign(name, std::make_pair(code, type));
 }
 
 void BasicDictionary::append(const BasicDictionary& basicDict)
