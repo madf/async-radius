@@ -29,7 +29,7 @@ std::string BasicDictionary::type(const std::string& name) const
 
 void BasicDictionary::add(uint32_t code, const std::string& name, const std::string& type)
 {
-    bool flag(false);
+    bool flag = false;
     for (const auto& entry: m_rightDict)
     {
         if (entry.second.first == name && entry.first != code)
