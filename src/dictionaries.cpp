@@ -29,49 +29,27 @@ std::string BasicDictionary::type(const std::string& name) const
 
 void BasicDictionary::add(uint32_t code, const std::string& name, const std::string& type)
 {
-    bool flag = false;
     for (const auto& entry: m_rightDict)
-    {
         if (entry.second.first == name && entry.first != code)
             throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::add]. Attribute name " + name + " already exists with code " + std::to_string(entry.first));
 
-        if (entry.second.first == name && entry.first == code && entry.second.second != type)
-            flag = true;
-    }
-
     m_rightDict.insert_or_assign(code, std::make_pair(name, type));
-    if (flag)
-        m_reverseDict.insert_or_assign(name, std::make_pair(code, type));
-    else
-        m_reverseDict.emplace(name, std::make_pair(code, type));
+    m_reverseDict.insert_or_assign(name, std::make_pair(code, type));
 }
 
 void BasicDictionary::append(const BasicDictionary& basicDict)
 {
-    bool flag = false;
     for (const auto& entry: basicDict.m_rightDict)
     {
-
         for (const auto& item: m_rightDict)
-        {
             if (entry.second.first == item.second.first && entry.first != item.first)
-            {
                 throw Exception(Error::suchAttributeNameAlreadyExists, "[BasicDictionary::append]. Attribute name " + entry.second.first + " already exists with code " + std::to_string(item.first));
-            }
 
-            if (entry.second.first == item.second.first && entry.first == item.first && entry.second.second != item.second.second)
-                flag = true;
-        }
         m_rightDict.insert_or_assign(entry.first, entry.second);
     }
 
     for (const auto& entry: basicDict.m_reverseDict)
-    {
-        if (flag)
-            m_reverseDict.insert_or_assign(entry.first, entry.second);
-        else
-            m_reverseDict.emplace(entry.first, entry.second);
-    }
+        m_reverseDict.insert_or_assign(entry.first, entry.second);
 }
 
 using VendorDictionary = RadProto::VendorDictionary;
