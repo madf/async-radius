@@ -850,6 +850,16 @@ BOOST_AUTO_TEST_CASE(TestAttributeType)
 
     BOOST_CHECK_EQUAL(a.attributeType(1), "string");
     BOOST_CHECK_EQUAL(a.attributeType("User-Name"), "string");
+
+//  flag = "encypt=1"
+
+    BOOST_CHECK_EQUAL(a.attributeType(2), "encrypted");
+    BOOST_CHECK_EQUAL(a.attributeType("User-Password"), "encrypted");
+
+//  flag = "def=2"
+
+    BOOST_CHECK_EQUAL(a.attributeType(7), "bytes");
+    BOOST_CHECK_EQUAL(a.attributeType("abc"), "bytes");
 }
 
 BOOST_AUTO_TEST_CASE(TestAttributeValueName)
