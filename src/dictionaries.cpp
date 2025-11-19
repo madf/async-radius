@@ -152,6 +152,7 @@ Dictionaries::Dictionaries(const std::string& filePath)
         if (!tokens.empty())
         {
             std::string attrName;
+            std::string attrType;
             std::vector<std::string> excludeAttrs;
 
             if (tokens[0] == "ATTRIBUTE")
@@ -161,7 +162,16 @@ Dictionaries::Dictionaries(const std::string& filePath)
                 {
                     const auto code = std::stoul(tokens[2]);
                     attrName = tokens[1];
-                    const auto& attrType = tokens[3];
+
+                    if (tokens.size() == 5)
+                    {
+                        if (tokens[4] == "encrypt=1")
+                            attrType = "encrypted";
+                        else
+                            attrType = "bytes";
+                    }
+                    else
+                        attrType = tokens[3];
 
                     if (!vendorName.empty())
                         m_vendorAttributes.add(code, attrName, vendorName);
