@@ -151,8 +151,6 @@ Dictionaries::Dictionaries(const std::string& filePath)
 
         if (!tokens.empty())
         {
-            std::string attrName;
-            std::string attrType;
             std::vector<std::string> excludeAttrs;
 
             if (tokens[0] == "ATTRIBUTE")
@@ -160,6 +158,8 @@ Dictionaries::Dictionaries(const std::string& filePath)
                 std::string::size_type n = tokens[2].find(".");
                 if (n == std::string::npos)
                 {
+                    std::string attrName;
+                    std::string attrType;
                     const auto code = std::stoul(tokens[2]);
                     attrName = tokens[1];
 
