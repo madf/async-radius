@@ -2,7 +2,7 @@
 #include "vendor_attribute.h"
 #include "utils.h"
 #include "error.h"
-#include "attribute_types.h"
+#include "attribute_codes.h"
 #include <iostream>
 
 using VendorSpecific = RadProto::VendorSpecific;
@@ -16,7 +16,7 @@ VendorSpecific::VendorSpecific(const uint8_t* data)
                + data[2] * (1 << 8)
                + data[3];
 
-    m_vendorType = data[4];
+    m_vendorAttributeCode = data[4];
 
     size_t vendorLength = data[5];
     m_value.resize(vendorLength - 2);
@@ -25,9 +25,9 @@ VendorSpecific::VendorSpecific(const uint8_t* data)
         m_value[i] = data[i + 6];
 }
 
-VendorSpecific::VendorSpecific(uint32_t vendorId, uint8_t vendorType, const std::vector<uint8_t>& vendorValue)
+VendorSpecific::VendorSpecific(uint32_t vendorId, uint8_t vendorAttributeCode, const std::vector<uint8_t>& vendorValue)
     : m_vendorId(vendorId),
-      m_vendorType(vendorType),
+      m_vendorAttributeCode(vendorAttributeCode),
       m_value(vendorValue)
 {
 }
@@ -41,7 +41,7 @@ std::vector<uint8_t> VendorSpecific::toVector() const
     attribute[3] = (m_vendorId / (1 << 16)) % 256;
     attribute[4] = (m_vendorId / (1 << 8)) % 256;
     attribute[5] = m_vendorId % 256;
-    attribute[6] = vendorType();
+    attribute[6] = vendorAttributeCode();
     attribute[7] = m_value.size() + 2;
     for (size_t i = 0; i < m_value.size(); ++i)
         attribute[i + 8] = m_value[i];

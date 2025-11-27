@@ -33,8 +33,8 @@ std::string ErrorCategory::message(int ev) const noexcept
             return "Request length is less than specified in the request";
         case Error::eapMessageAttributeError:
             return "The EAP-Message attribute is present, but the Message-Authenticator attribute is missing";
-        case Error::invalidAttributeType:
-            return "Invalid attribute type";
+        case Error::invalidAttributeCode:
+            return "Invalid attribute code";
         case Error::invalidAttributeSize:
             return "Invalid attribute size";
         case Error::invalidVendorSpecificAttributeId:
@@ -43,6 +43,8 @@ std::string ErrorCategory::message(int ev) const noexcept
             return "Such attribute name already exists";
         case Error::suchAttributeCodeAlreadyExists:
             return "Such attribute code already exists";
+        case Error::suchAttributeNameWithAnotherTypeAlreadyExists:
+            return "Such attribute name with another type already exists";
        default:
             return "(Unrecognized error)";
     }

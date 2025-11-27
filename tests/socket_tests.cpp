@@ -4,7 +4,7 @@
 #include "radproto/error.h"
 #include "radproto/attribute.h"
 #include "radproto/vendor_attribute.h"
-#include "attribute_types.h"
+#include "attribute_codes.h"
 #include "utils.h"
 #include <boost/asio.hpp>
 #include <array>
@@ -43,7 +43,7 @@ namespace
         BOOST_REQUIRE(p != std::nullopt);
 
         RadProto::Packet d = p.value();
-        BOOST_CHECK_EQUAL(d.type(), 1);
+        BOOST_CHECK_EQUAL(d.code(), 1);
 
         BOOST_CHECK_EQUAL(d.id(), 208);
 
@@ -56,55 +56,55 @@ namespace
         auto* attr0 = findAttribute(attrs, RadProto::USER_NAME);
 
         BOOST_REQUIRE(attr0 != nullptr);
-        BOOST_CHECK_EQUAL(attr0->type(), RadProto::USER_NAME);
+        BOOST_CHECK_EQUAL(attr0->code(), RadProto::USER_NAME);
         BOOST_CHECK_EQUAL(attr0->toString(), "test");
 
         auto* attr1 = findAttribute(attrs, RadProto::USER_PASSWORD);
 
         BOOST_REQUIRE(attr1 != nullptr);
-        BOOST_CHECK_EQUAL(attr1->type(), RadProto::USER_PASSWORD);
+        BOOST_CHECK_EQUAL(attr1->code(), RadProto::USER_PASSWORD);
         BOOST_CHECK_EQUAL(attr1->toString(), "123456");
 
         auto* attr2 = findAttribute(attrs, RadProto::NAS_IP_ADDRESS);
 
         BOOST_REQUIRE(attr2 != nullptr);
-        BOOST_CHECK_EQUAL(attr2->type(), RadProto::NAS_IP_ADDRESS);
+        BOOST_CHECK_EQUAL(attr2->code(), RadProto::NAS_IP_ADDRESS);
         BOOST_CHECK_EQUAL(attr2->toString(), "127.0.0.1");
 
         auto* attr3 = findAttribute(attrs, RadProto::NAS_PORT);
 
         BOOST_REQUIRE(attr3 != nullptr);
-        BOOST_CHECK_EQUAL(attr3->type(), RadProto::NAS_PORT);
+        BOOST_CHECK_EQUAL(attr3->code(), RadProto::NAS_PORT);
         BOOST_CHECK_EQUAL(attr3->toString(), "1");
 
         auto* attr4 = findAttribute(attrs, RadProto::MESSAGE_AUTHENTICATOR);
 
         BOOST_REQUIRE(attr4 != nullptr);
-        BOOST_CHECK_EQUAL(attr4->type(), RadProto::MESSAGE_AUTHENTICATOR);
+        BOOST_CHECK_EQUAL(attr4->code(), RadProto::MESSAGE_AUTHENTICATOR);
         BOOST_CHECK_EQUAL(attr4->toString(), "F3E000E77DEB51EB815D52373D06B71B");
 
         auto* attr5 = findAttribute(attrs, RadProto::FRAMED_PROTOCOL);
 
         BOOST_REQUIRE(attr5 != nullptr);
-        BOOST_CHECK_EQUAL(attr5->type(), RadProto::FRAMED_PROTOCOL);
+        BOOST_CHECK_EQUAL(attr5->code(), RadProto::FRAMED_PROTOCOL);
         BOOST_CHECK_EQUAL(attr5->toString(), "1");
 
         std::vector<RadProto::VendorSpecific> vendor = d.vendorSpecific();
 
         BOOST_REQUIRE_EQUAL(vendor.size(), 1);
         BOOST_CHECK_EQUAL(vendor[0].vendorId(), 171);
-        BOOST_CHECK_EQUAL(vendor[0].vendorType(), 1);
+        BOOST_CHECK_EQUAL(vendor[0].vendorAttributeCode(), 1);
         BOOST_CHECK_EQUAL(vendor[0].toString(), "00000003");
 
-        std::set<uint8_t> types {RadProto::USER_NAME, RadProto::USER_PASSWORD, RadProto::NAS_IP_ADDRESS, RadProto::NAS_PORT, RadProto::MESSAGE_AUTHENTICATOR, RadProto::FRAMED_PROTOCOL};
+        std::set<uint8_t> codes {RadProto::USER_NAME, RadProto::USER_PASSWORD, RadProto::NAS_IP_ADDRESS, RadProto::NAS_PORT, RadProto::MESSAGE_AUTHENTICATOR, RadProto::FRAMED_PROTOCOL};
 
         BOOST_REQUIRE_EQUAL(attrs.size(), 6);
-        BOOST_CHECK(types.count(attrs[0]->type()) == 1);
-        BOOST_CHECK(types.count(attrs[1]->type()) == 1);
-        BOOST_CHECK(types.count(attrs[2]->type()) == 1);
-        BOOST_CHECK(types.count(attrs[3]->type()) == 1);
-        BOOST_CHECK(types.count(attrs[4]->type()) == 1);
-        BOOST_CHECK(types.count(attrs[5]->type()) == 1);
+        BOOST_CHECK(codes.count(attrs[0]->code()) == 1);
+        BOOST_CHECK(codes.count(attrs[1]->code()) == 1);
+        BOOST_CHECK(codes.count(attrs[2]->code()) == 1);
+        BOOST_CHECK(codes.count(attrs[3]->code()) == 1);
+        BOOST_CHECK(codes.count(attrs[4]->code()) == 1);
+        BOOST_CHECK(codes.count(attrs[5]->code()) == 1);
     }
 }
 

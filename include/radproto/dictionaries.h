@@ -12,8 +12,25 @@ namespace RadProto
             BasicDictionary() = default;
             std::string name(uint32_t code) const;
             uint32_t code(const std::string& name) const;
-            void add(uint32_t code, const std::string& name);
+            std::string type(uint32_t code) const;
+            std::string type(const std::string& name) const;
+
+            void add(uint32_t code, const std::string& name, const std::string& type);
             void append(const BasicDictionary& basicDict);
+        private:
+            std::map<uint32_t, std::pair<std::string, std::string>> m_rightDict;
+            std::map<std::string, std::pair<uint32_t, std::string>> m_reverseDict;
+    };
+
+    class VendorDictionary
+    {
+        public:
+            VendorDictionary() = default;
+            std::string name(uint32_t code) const;
+            uint32_t code(const std::string& name) const;
+
+            void add(uint32_t code, const std::string& name);
+            void append(const VendorDictionary& vendorDict);
         private:
             std::map<uint32_t, std::string> m_rightDict;
             std::map<std::string, uint32_t> m_reverseDict;
@@ -38,13 +55,15 @@ namespace RadProto
             Dictionaries(const std::string& filePath);
             void append(const Dictionaries& fillingDictionaries);
             const BasicDictionary& attributes() const { return m_attributes; }
-            const BasicDictionary& vendorNames() const { return m_vendorNames; }
+            const VendorDictionary& vendorNames() const { return m_vendorNames; }
             const DependentDictionary& attributeValues() const { return m_attributeValues; }
             const DependentDictionary& vendorAttributes() const { return m_vendorAttributes; }
             const DependentDictionary& vendorAttributeValues() const { return m_vendorAttributeValues; }
 
             std::string attributeName(uint32_t code) const;
             uint32_t attributeCode(const std::string& name) const;
+            std::string attributeType(uint32_t code) const;
+            std::string attributeType(const std::string name) const;
 
             std::string vendorName(uint32_t code) const;
             uint32_t vendorCode(const std::string& name) const;
@@ -60,7 +79,7 @@ namespace RadProto
 
         private:
             BasicDictionary m_attributes;
-            BasicDictionary m_vendorNames;
+            VendorDictionary m_vendorNames;
             DependentDictionary m_attributeValues;
             DependentDictionary m_vendorAttributes;
             DependentDictionary m_vendorAttributeValues;

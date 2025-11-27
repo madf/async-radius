@@ -1,6 +1,6 @@
 #include "packet.h"
 #include "error.h"
-#include "attribute_types.h"
+#include "attribute_codes.h"
 #include <openssl/evp.h>
 #include <stdexcept>
 
@@ -8,22 +8,22 @@ using Packet = RadProto::Packet;
 
 namespace
 {
-    RadProto::Attribute* makeAttribute(uint8_t type, const uint8_t* data, size_t size, const std::string& secret, const std::array<uint8_t, 16>& auth)
+    RadProto::Attribute* makeAttribute(uint8_t code, const uint8_t* data, size_t size, const std::string& secret, const std::array<uint8_t, 16>& auth)
     {
-        if (type == 1 || type == 11 || type == 18 || type == 22 || type == 34 || type == 35 || type == 60 || type == 63)
-            return new RadProto::String(type, data, size);
-        else if (type == 2)
-            return new RadProto::Encrypted(type, data, size, secret, auth);
-        else if (type == 3)
-            return new RadProto::ChapPassword(type, data, size);
-        else if (type == 4 || type == 8 || type == 9 || type == 14)
-            return new RadProto::IpAddress(type, data, size);
-        else if (type == 5 || type == 6 || type == 7 || type == 10 || type == 12 || type == 13 || type == 15 || type == 16 || type == 27 || type == 28 || type == 29 || type == 37 || type == 38 || type == 61 || type == 62)
-            return new RadProto::Integer(type, data, size);
-        else if (type == 19 || type == 20 || type == 24 || type == 25 || type == 30 || type == 31 || type == 32 || type == 33 || type == 36 || type == 39 || type == 79 || type == 80)
-            return new RadProto::Bytes(type, data, size);
+        if (code == 1 || code == 11 || code == 18 || code == 22 || code == 34 || code == 35 || code == 60 || code == 63)
+            return new RadProto::String(code, data, size);
+        else if (code == 2)
+            return new RadProto::Encrypted(code, data, size, secret, auth);
+        else if (code == 3)
+            return new RadProto::ChapPassword(code, data, size);
+        else if (code == 4 || code == 8 || code == 9 || code == 14)
+            return new RadProto::IpAddress(code, data, size);
+        else if (code == 5 || code == 6 || code == 7 || code == 10 || code == 12 || code == 13 || code == 15 || code == 16 || code == 27 || code == 28 || code == 29 || code == 37 || code == 38 || code == 61 || code == 62)
+            return new RadProto::Integer(code, data, size);
+        else if (code == 19 || code == 20 || code == 24 || code == 25 || code == 30 || code == 31 || code == 32 || code == 33 || code == 36 || code == 39 || code == 79 || code == 80)
+            return new RadProto::Bytes(code, data, size);
 
-        throw RadProto::Exception(RadProto::Error::invalidAttributeType);
+        throw RadProto::Exception(RadProto::Error::invalidAttributeCode);
     }
 }
 
@@ -38,7 +38,7 @@ Packet::Packet(const uint8_t* buffer, size_t size, const std::string& secret)
     if (size < length)
         throw Exception(Error::requestLengthIsShort);
 
-    m_type = buffer[0];
+    m_code = buffer[0];
 
     m_id = buffer[1];
 
@@ -63,20 +63,20 @@ Packet::Packet(const uint8_t* buffer, size_t size, const std::string& secret)
     bool messageAuthenticator = false;
     for (const auto& a : m_attributes)
     {
-        if (a->type() == EAP_MESSAGE)
+        if (a->code() == EAP_MESSAGE)
             eapMessage = true;
 
-        if (a->type() == MESSAGE_AUTHENTICATOR)
+        if (a->code() == MESSAGE_AUTHENTICATOR)
             messageAuthenticator = true;
     }
     if (eapMessage && !messageAuthenticator)
         throw Exception(Error::eapMessageAttributeError);
 }
 
-Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, const std::vector<Attribute*>& attributes, const std::vector<VendorSpecific>& vendorSpecific)
-    : m_type(type),
+Packet::Packet(uint8_t code, uint8_t id, const std::array<uint8_t, 16>& auth, const std::vector<Attribute*>& attributes, const std::vector<VendorSpecific>& vendorSpecific)
+    : m_code(code),
       m_id(id),
-      m_recalcAuth(m_type == 2 || m_type == 3 || m_type == 11),
+      m_recalcAuth(m_code == 2 || m_code == 3 || m_code == 11),
       m_auth(auth),
       m_attributes(attributes),
       m_vendorSpecific(vendorSpecific)
@@ -84,7 +84,7 @@ Packet::Packet(uint8_t type, uint8_t id, const std::array<uint8_t, 16>& auth, co
 }
 
 Packet::Packet(const Packet& other)
-    : m_type(other.m_type),
+    : m_code(other.m_code),
       m_id(other.m_id),
       m_recalcAuth(other.m_recalcAuth),
       m_auth(other.m_auth),
@@ -106,7 +106,7 @@ const std::vector<uint8_t> Packet::makeSendBuffer(const std::string& secret) con
 {
     std::vector<uint8_t> sendBuffer(20);
 
-    sendBuffer[0] = m_type;
+    sendBuffer[0] = m_code;
     sendBuffer[1] = m_id;
 
     for (size_t i = 0; i < m_auth.size(); ++i)
