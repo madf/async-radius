@@ -21,6 +21,7 @@ namespace RadProto
         eapMessageAttributeError,
         invalidAttributeCode,
         invalidAttributeSize,
+        invalidAttributeType,
         invalidVendorSpecificAttributeId,
         suchAttributeNameAlreadyExists,
         suchAttributeCodeAlreadyExists,
