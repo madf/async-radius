@@ -2,6 +2,7 @@
 #include "attribute.h"
 #include "utils.h"
 #include "error.h"
+#include <boost/tokenizer.hpp>
 #include <openssl/evp.h>
 #include <algorithm>
 #include <iostream>
@@ -10,6 +11,53 @@ using Attribute = RadProto::Attribute;
 Attribute::Attribute(uint8_t code)
     : m_code(code)
 {
+}
+
+Attribute* Attribute::make(uint8_t code, const std::string& type, const std::string& data)
+{
+    ValueType valueType;
+    if (type == "string")
+        valueType = ValueType::String;
+    else if (type == "integer" || "date")
+        valueType = ValueType::Integer;
+    else if (type == "ipaddr")
+        valueType = ValueType::IpAddress;
+    else if (type == "encrypted")
+        valueType = ValueType::Encrypted;
+    else if (type == "octet")
+        valueType = ValueType::Bytes;
+    else if (type == "vsa")
+        valueType = ValueType::VendorSpecific;
+    else
+       throw RadProto::Exception(RadProto::Error::invalidAttributeType);
+
+    using tokenizer =  boost::tokenizer<boost::char_separator<char>>;
+    boost::char_separator<char> sep(".");
+
+    tokenizer tok(data, sep);
+    size_t i = 0;
+    switch (valueType)
+    {
+        case ValueType::String:
+            return new String(code, data);
+        case ValueType::Integer:
+            return new Integer(code, std::stoul(data));
+        case ValueType::IpAddress:
+            std::array<uint8_t, 4> ipAddr;
+            for (const auto& t : tok)
+            {
+                ipAddr[i] = std::stoul(t);
+                i++;
+            }
+            return new IpAddress(code, ipAddr);
+        case ValueType::Encrypted:
+            return new Encrypted(code, data);
+        case ValueType::Bytes:
+            std::vector<uint8_t> bytes;
+            for (const auto& t : tok)
+                bytes.push_back(std::stoul(t));
+            return new Bytes(code, bytes);
+    }
 }
 
 using String = RadProto::String;
