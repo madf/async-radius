@@ -27,15 +27,14 @@ Attribute* Attribute::make(uint8_t code, const std::string& type, const std::str
     else if (type == "octet")
         valueType = ValueType::Bytes;
     else if (type == "vsa")
-        valueType = ValueType::VendorSpecific;
+       throw RadProto::Exception(RadProto::Error::invalidAttributeType);
     else
        throw RadProto::Exception(RadProto::Error::invalidAttributeType);
 
     using tokenizer =  boost::tokenizer<boost::char_separator<char>>;
     boost::char_separator<char> sep(".");
-
     tokenizer tok(data, sep);
-    size_t i = 0;
+
     switch (valueType)
     {
         case ValueType::String:
@@ -43,20 +42,25 @@ Attribute* Attribute::make(uint8_t code, const std::string& type, const std::str
         case ValueType::Integer:
             return new Integer(code, std::stoul(data));
         case ValueType::IpAddress:
+        {
             std::array<uint8_t, 4> ipAddr;
+            size_t i = 0;
             for (const auto& t : tok)
             {
                 ipAddr[i] = std::stoul(t);
-                i++;
+                ++i;
             }
             return new IpAddress(code, ipAddr);
+        }
         case ValueType::Encrypted:
             return new Encrypted(code, data);
         case ValueType::Bytes:
+        {
             std::vector<uint8_t> bytes;
             for (const auto& t : tok)
                 bytes.push_back(std::stoul(t));
             return new Bytes(code, bytes);
+        }
     }
 }
 
