@@ -47,7 +47,9 @@ std::string ErrorCategory::message(int ev) const noexcept
             return "Such attribute code already exists";
         case Error::suchAttributeNameWithAnotherTypeAlreadyExists:
             return "Such attribute name with another type already exists";
-       default:
+        case Error::typeIsNotSupported:
+            return "Type 'vsa' is not supported in this class";
+        default:
             return "(Unrecognized error)";
     }
 }
