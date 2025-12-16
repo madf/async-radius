@@ -26,8 +26,6 @@ Attribute* Attribute::make(uint8_t code, const std::string& type, const std::str
         valueType = ValueType::Encrypted;
     else if (type == "octet")
         valueType = ValueType::Bytes;
-    else if (type == "vsa")
-       throw RadProto::Exception(RadProto::Error::invalidAttributeType);
     else
        throw RadProto::Exception(RadProto::Error::invalidAttributeType);
 
