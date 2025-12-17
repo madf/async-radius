@@ -22,6 +22,8 @@ ValueType parseValueType(const std::string& type)
         return ValueType::Encrypted;
     else if (type == "octet")
         return ValueType::Bytes;
+    else if (type == "vsa")
+       throw RadProto::Exception(RadProto::Error::typeIsNotSupported);
     else
        throw RadProto::Exception(RadProto::Error::invalidAttributeType);
 }
