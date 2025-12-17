@@ -8,6 +8,24 @@
 #include <iostream>
 
 using Attribute = RadProto::Attribute;
+using ValueType = RadProto::Attribute::ValueType;
+
+ValueType parseValueType(const std::string& type)
+{
+    if (type == "string")
+        return ValueType::String;
+    else if (type == "integer" || "date")
+        return ValueType::Integer;
+    else if (type == "ipaddr")
+        return ValueType::IpAddress;
+    else if (type == "encrypted")
+        return ValueType::Encrypted;
+    else if (type == "octet")
+        return ValueType::Bytes;
+    else
+       throw RadProto::Exception(RadProto::Error::invalidAttributeType);
+}
+
 Attribute::Attribute(uint8_t code)
     : m_code(code)
 {
@@ -15,23 +33,11 @@ Attribute::Attribute(uint8_t code)
 
 Attribute* Attribute::make(uint8_t code, const std::string& type, const std::string& data)
 {
-    ValueType valueType;
-    if (type == "string")
-        valueType = ValueType::String;
-    else if (type == "integer" || "date")
-        valueType = ValueType::Integer;
-    else if (type == "ipaddr")
-        valueType = ValueType::IpAddress;
-    else if (type == "encrypted")
-        valueType = ValueType::Encrypted;
-    else if (type == "octet")
-        valueType = ValueType::Bytes;
-    else
-       throw RadProto::Exception(RadProto::Error::invalidAttributeType);
-
     using tokenizer =  boost::tokenizer<boost::char_separator<char>>;
     boost::char_separator<char> sep(".");
     tokenizer tok(data, sep);
+
+    ValueType valueType = parseValueType(type);
 
     switch (valueType)
     {
