@@ -65,6 +65,8 @@ Attribute* Attribute::make(uint8_t code, const std::string& type, const std::str
                 bytes.push_back(std::stoul(t));
             return new Bytes(code, bytes);
         }
+        default:
+            throw RadProto::Exception(RadProto::Error::invalidValueTypeMember);
     }
 }
 
