@@ -10,23 +10,7 @@
 using Attribute = RadProto::Attribute;
 using ValueType = RadProto::Attribute::ValueType;
 
-ValueType parseValueType(const std::string& type)
-{
-    if (type == "string")
-        return ValueType::String;
-    else if (type == "integer" || "date")
-        return ValueType::Integer;
-    else if (type == "ipaddr")
-        return ValueType::IpAddress;
-    else if (type == "encrypted")
-        return ValueType::Encrypted;
-    else if (type == "octet")
-        return ValueType::Bytes;
-    else if (type == "vsa")
-       throw RadProto::Exception(RadProto::Error::typeIsNotSupported);
-    else
-       throw RadProto::Exception(RadProto::Error::invalidValueType);
-}
+ValueType parseValueType(const std::string& type);
 
 Attribute::Attribute(uint8_t code)
     : m_code(code)
@@ -70,6 +54,24 @@ Attribute* Attribute::make(uint8_t code, const std::string& type, const std::str
         default:
             throw RadProto::Exception(RadProto::Error::invalidValueType);
     }
+}
+
+ValueType parseValueType(const std::string& type)
+{
+    if (type == "string")
+        return ValueType::String;
+    else if (type == "integer" || "date")
+        return ValueType::Integer;
+    else if (type == "ipaddr")
+        return ValueType::IpAddress;
+    else if (type == "encrypted")
+        return ValueType::Encrypted;
+    else if (type == "octet")
+        return ValueType::Bytes;
+    else if (type == "vsa")
+       throw RadProto::Exception(RadProto::Error::typeIsNotSupported);
+    else
+       throw RadProto::Exception(RadProto::Error::invalidValueType);
 }
 
 using String = RadProto::String;
