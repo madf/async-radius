@@ -39,8 +39,8 @@ std::string ErrorCategory::message(int ev) const noexcept
             return "Invalid attribute size";
         case Error::invalidAttributeType:
             return "Invalid attribute type";
-        case Error::invalidValueTypeMember:
-            return "Invalid member of type ValueType";
+        case Error::invalidValueType:
+            return "Invalid type of enum ValueType";
         case Error::invalidVendorSpecificAttributeId:
             return "Invalid Vendor Specific attribute Id";
         case Error::suchAttributeNameAlreadyExists:
