@@ -25,7 +25,7 @@ ValueType parseValueType(const std::string& type)
     else if (type == "vsa")
        throw RadProto::Exception(RadProto::Error::typeIsNotSupported);
     else
-       throw RadProto::Exception(RadProto::Error::invalidAttributeType);
+       throw RadProto::Exception(RadProto::Error::invalidValueType);
 }
 
 Attribute::Attribute(uint8_t code)
@@ -68,7 +68,7 @@ Attribute* Attribute::make(uint8_t code, const std::string& type, const std::str
             return new Bytes(code, bytes);
         }
         default:
-            throw RadProto::Exception(RadProto::Error::invalidValueTypeMember);
+            throw RadProto::Exception(RadProto::Error::invalidValueType);
     }
 }
 
