@@ -22,7 +22,7 @@ namespace RadProto
         invalidAttributeCode,
         invalidAttributeSize,
         invalidAttributeType,
-        invalidValueTypeMember,
+        invalidValueType,
         invalidVendorSpecificAttributeId,
         suchAttributeNameAlreadyExists,
         suchAttributeCodeAlreadyExists,
