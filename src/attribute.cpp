@@ -8,7 +8,17 @@
 #include <iostream>
 
 using Attribute = RadProto::Attribute;
-using ValueType = RadProto::Attribute::ValueType;
+
+enum class ValueType : uint8_t
+            {
+                String,
+                Integer,
+                IpAddress,
+                Encrypted,
+                Bytes,
+                VendorSpecific,
+                ChapPassword
+            };
 
 ValueType parseValueType(const std::string& type);
 
