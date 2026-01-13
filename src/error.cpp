@@ -51,6 +51,8 @@ std::string ErrorCategory::message(int ev) const noexcept
             return "Such attribute name with another type already exists";
         case Error::typeIsNotSupported:
             return "Type 'vsa' is not supported in this class";
+        case Error::invalidHexStringLength:
+            return "Invalid length of hex string";
         default:
             return "(Unrecognized error)";
     }
