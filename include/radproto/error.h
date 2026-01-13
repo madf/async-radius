@@ -27,7 +27,8 @@ namespace RadProto
         suchAttributeNameAlreadyExists,
         suchAttributeCodeAlreadyExists,
         suchAttributeNameWithAnotherTypeAlreadyExists,
-        typeIsNotSupported
+        typeIsNotSupported,
+        invalidHexStringLength
     };
 
     class Exception: public std::runtime_error
