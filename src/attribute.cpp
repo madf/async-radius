@@ -5,7 +5,6 @@
 #include <boost/tokenizer.hpp>
 #include <openssl/evp.h>
 #include <algorithm>
-#include <iostream>
 
 using Attribute = RadProto::Attribute;
 namespace
@@ -25,13 +24,13 @@ namespace
     {
         if (type == "string")
             return ValueType::String;
-        else if (type == "integer" || "date")
+        else if (type == "integer" || type == "date")
             return ValueType::Integer;
         else if (type == "ipaddr")
             return ValueType::IpAddress;
         else if (type == "encrypted")
             return ValueType::Encrypted;
-        else if (type == "octet")
+        else if (type == "octets")
             return ValueType::Bytes;
         else if (type == "vsa")
            throw RadProto::Exception(RadProto::Error::typeIsNotSupported);
@@ -47,10 +46,6 @@ Attribute::Attribute(uint8_t code)
 
 Attribute* Attribute::make(uint8_t code, const std::string& type, const std::string& data)
 {
-    using tokenizer =  boost::tokenizer<boost::char_separator<char>>;
-    boost::char_separator<char> sep(".");
-    tokenizer tok(data, sep);
-
     ValueType valueType = parseValueType(type);
 
     switch (valueType)
@@ -59,31 +54,41 @@ Attribute* Attribute::make(uint8_t code, const std::string& type, const std::str
             return new String(code, data);
         case ValueType::Integer:
             return new Integer(code, std::stoul(data));
+        case ValueType::Encrypted:
+            return new Encrypted(code, data);
         case ValueType::IpAddress:
         {
+            using tokenizer =  boost::tokenizer<boost::char_separator<char>>;
+            boost::char_separator<char> sep(".");
+            tokenizer tok(data, sep);
+
             std::array<uint8_t, 4> ipAddr;
             size_t i = 0;
             for (const auto& t : tok)
             {
-                ipAddr[i] = std::stoul(t);
+                ipAddr[i] = static_cast<uint8_t>(std::stoul(t));
                 ++i;
             }
             return new IpAddress(code, ipAddr);
         }
-        case ValueType::Encrypted:
-            return new Encrypted(code, data);
         case ValueType::Bytes:
         {
+            if (data.length() % 2 != 0)
+                throw RadProto::Exception(RadProto::Error::invalidHexStringLength);
+
             std::vector<uint8_t> bytes;
-            for (const auto& t : tok)
-                bytes.push_back(std::stoul(t));
+
+            for (size_t i = 0; i < data.length(); i += 2)
+            {
+                auto byte = static_cast<uint8_t>(std::stoi(data.substr(i, 2), nullptr, 16));
+                bytes.push_back(byte);
+            }
             return new Bytes(code, bytes);
         }
         default:
             throw RadProto::Exception(RadProto::Error::invalidValueType);
     }
 }
-
 
 using String = RadProto::String;
 String::String(uint8_t code, const uint8_t* data, size_t size)
