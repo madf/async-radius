@@ -27,6 +27,15 @@ BOOST_AUTO_TEST_CASE(TypeStringTest)
     RadProto::String* str = dynamic_cast<RadProto::String*>(attribute);
 
     BOOST_REQUIRE(str);
+
+    BOOST_CHECK_EQUAL(str->toString(), "User");
+
+    std::vector<uint8_t> values = str->toVector({}, {});
+    std::vector<uint8_t> expected {1, 6, 'U', 's', 'e', 'r'};
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(str->code(), 1);
 }
 
 BOOST_AUTO_TEST_CASE(TypeIntegerTest)
