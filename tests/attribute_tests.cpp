@@ -40,10 +40,19 @@ BOOST_AUTO_TEST_CASE(TypeStringTest)
 
 BOOST_AUTO_TEST_CASE(TypeIntegerTest)
 {
-    RadProto::Attribute* attribute = RadProto::Attribute::make(5, "integer", "123456");
+    RadProto::Attribute* attribute = RadProto::Attribute::make(5, "integer", "169090600");
     RadProto::Integer* intg = dynamic_cast<RadProto::Integer*>(attribute);
 
     BOOST_REQUIRE(intg);
+
+    BOOST_CHECK_EQUAL(intg->toString(), "169090600");
+
+    std::vector<uint8_t> values = intg->toVector({}, {});
+    std::vector<uint8_t> expected {5, 6, 10, 20, 30, 40};
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(intg->code(), 5);
 }
 
 BOOST_AUTO_TEST_CASE(TypeDateToIntegerTest)
