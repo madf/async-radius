@@ -19,6 +19,58 @@
 
 BOOST_AUTO_TEST_SUITE(AttributeTests)
 
+BOOST_AUTO_TEST_SUITE(AttributeMakeTests)
+
+BOOST_AUTO_TEST_CASE(TypeStringTest)
+{
+    RadProto::Attribute* attribute = RadProto::Attribute::make(1, "string", "User");
+    RadProto::String* str = dynamic_cast<RadProto::String*>(attribute);
+
+    BOOST_REQUIRE(str);
+}
+
+BOOST_AUTO_TEST_CASE(TypeIntegerTest)
+{
+    RadProto::Attribute* attribute = RadProto::Attribute::make(5, "integer", "123456");
+    RadProto::Integer* intg = dynamic_cast<RadProto::Integer*>(attribute);
+
+    BOOST_REQUIRE(intg);
+}
+
+BOOST_AUTO_TEST_CASE(TypeDateToIntegerTest)
+{
+    RadProto::Attribute* attribute = RadProto::Attribute::make(75, "date", "123456");
+    RadProto::Integer* intg = dynamic_cast<RadProto::Integer*>(attribute);
+
+    BOOST_REQUIRE(intg);
+}
+
+BOOST_AUTO_TEST_CASE(TypeIpaddrTest)
+{
+    RadProto::Attribute* attribute = RadProto::Attribute::make(4, "ipaddr", "127.104.22.17");
+    RadProto::IpAddress* ipadr = dynamic_cast<RadProto::IpAddress*>(attribute);
+
+    BOOST_REQUIRE(ipadr);
+}
+
+BOOST_AUTO_TEST_CASE(TypeEncryptedTest)
+{
+    RadProto::Attribute* attribute = RadProto::Attribute::make(2, "encrypted", "123456");
+    RadProto::Encrypted* encrypt = dynamic_cast<RadProto::Encrypted*>(attribute);
+
+    BOOST_REQUIRE(encrypt);
+}
+
+BOOST_AUTO_TEST_CASE(TypeOctetsTest)
+{
+    RadProto::Attribute* attribute = RadProto::Attribute::make(3, "octets", "313233616263");
+    RadProto::Bytes* bts = dynamic_cast<RadProto::Bytes*>(attribute);
+
+    BOOST_REQUIRE(bts);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
 BOOST_AUTO_TEST_CASE(StringDataConstructor)
 {
     std::vector<uint8_t> d {'t', 'e', 's', 't'};
