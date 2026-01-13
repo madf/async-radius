@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_SUITE(AttributeTests)
 
 BOOST_AUTO_TEST_SUITE(AttributeMakeTests)
 
-BOOST_AUTO_TEST_CASE(TypeStringTest)
+BOOST_AUTO_TEST_CASE(TypeString)
 {
     RadProto::Attribute* attribute = RadProto::Attribute::make(1, "string", "User");
     RadProto::String* str = dynamic_cast<RadProto::String*>(attribute);
@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(TypeStringTest)
     BOOST_CHECK_EQUAL(str->code(), 1);
 }
 
-BOOST_AUTO_TEST_CASE(TypeIntegerTest)
+BOOST_AUTO_TEST_CASE(TypeInteger)
 {
     RadProto::Attribute* attribute = RadProto::Attribute::make(5, "integer", "169090600");
     RadProto::Integer* intg = dynamic_cast<RadProto::Integer*>(attribute);
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE(TypeIntegerTest)
     BOOST_CHECK_EQUAL(intg->code(), 5);
 }
 
-BOOST_AUTO_TEST_CASE(TypeDateToIntegerTest)
+BOOST_AUTO_TEST_CASE(TypeDateToInteger)
 {
     RadProto::Attribute* attribute = RadProto::Attribute::make(75, "date", "123456");
     RadProto::Integer* intg = dynamic_cast<RadProto::Integer*>(attribute);
@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE(TypeDateToIntegerTest)
     BOOST_REQUIRE(intg);
 }
 
-BOOST_AUTO_TEST_CASE(TypeIpaddrTest)
+BOOST_AUTO_TEST_CASE(TypeIpaddr)
 {
     RadProto::Attribute* attribute = RadProto::Attribute::make(4, "ipaddr", "127.104.22.17");
     RadProto::IpAddress* ipadr = dynamic_cast<RadProto::IpAddress*>(attribute);
@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE(TypeIpaddrTest)
     BOOST_REQUIRE(ipadr);
 }
 
-BOOST_AUTO_TEST_CASE(TypeEncryptedTest)
+BOOST_AUTO_TEST_CASE(TypeEncrypted)
 {
     RadProto::Attribute* attribute = RadProto::Attribute::make(2, "encrypted", "123456");
     RadProto::Encrypted* encrypt = dynamic_cast<RadProto::Encrypted*>(attribute);
@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE(TypeEncryptedTest)
     BOOST_REQUIRE(encrypt);
 }
 
-BOOST_AUTO_TEST_CASE(TypeOctetsTest)
+BOOST_AUTO_TEST_CASE(TypeOctets)
 {
     RadProto::Attribute* attribute = RadProto::Attribute::make(3, "octets", "313233616263");
     RadProto::Bytes* bts = dynamic_cast<RadProto::Bytes*>(attribute);
