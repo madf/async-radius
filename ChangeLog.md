@@ -28,3 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Boost-1.88 compatibility (#57).
  - Deprecated OpenSSL functions (#59).
  - Deprecated Boost.ASIO functions (#61).
+
+## [1.2.0] - 2026-01-14
+### Added.
+ - Attribute types in dictionaries.
+ - `Attribute::make` constructor function.
