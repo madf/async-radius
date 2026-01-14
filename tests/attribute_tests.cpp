@@ -78,6 +78,15 @@ BOOST_AUTO_TEST_CASE(TypeIpaddr)
     RadProto::IpAddress* ipadr = dynamic_cast<RadProto::IpAddress*>(attribute);
 
     BOOST_REQUIRE(ipadr);
+
+    BOOST_CHECK_EQUAL(ipadr->toString(), "127.104.22.17");
+
+    std::vector<uint8_t> values = ipadr->toVector({}, {});
+    std::vector<uint8_t> expected {4, 6, 127, 104, 22, 17};
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(ipadr->code(), 4);
 }
 
 BOOST_AUTO_TEST_CASE(TypeEncrypted)
