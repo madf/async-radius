@@ -37,6 +37,10 @@ std::string ErrorCategory::message(int ev) const noexcept
             return "Invalid attribute code";
         case Error::invalidAttributeSize:
             return "Invalid attribute size";
+        case Error::invalidAttributeType:
+            return "Invalid attribute type";
+        case Error::invalidValueType:
+            return "Invalid type of enum ValueType";
         case Error::invalidVendorSpecificAttributeId:
             return "Invalid Vendor Specific attribute Id";
         case Error::suchAttributeNameAlreadyExists:
@@ -45,7 +49,11 @@ std::string ErrorCategory::message(int ev) const noexcept
             return "Such attribute code already exists";
         case Error::suchAttributeNameWithAnotherTypeAlreadyExists:
             return "Such attribute name with another type already exists";
-       default:
+        case Error::typeIsNotSupported:
+            return "Type 'vsa' is not supported in this class";
+        case Error::invalidHexStringLength:
+            return "Invalid length of hex string";
+        default:
             return "(Unrecognized error)";
     }
 }

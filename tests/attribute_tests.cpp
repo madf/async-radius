@@ -19,6 +19,113 @@
 
 BOOST_AUTO_TEST_SUITE(AttributeTests)
 
+BOOST_AUTO_TEST_SUITE(AttributeMakeTests)
+
+BOOST_AUTO_TEST_CASE(TypeString)
+{
+    RadProto::Attribute* attribute = RadProto::Attribute::make(1, "string", "User");
+    RadProto::String* str = dynamic_cast<RadProto::String*>(attribute);
+
+    BOOST_REQUIRE(str);
+
+    BOOST_CHECK_EQUAL(str->toString(), "User");
+
+    std::vector<uint8_t> values = str->toVector({}, {});
+    std::vector<uint8_t> expected {1, 6, 'U', 's', 'e', 'r'};
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(str->code(), 1);
+}
+
+BOOST_AUTO_TEST_CASE(TypeInteger)
+{
+    RadProto::Attribute* attribute = RadProto::Attribute::make(5, "integer", "169090600");
+    RadProto::Integer* intg = dynamic_cast<RadProto::Integer*>(attribute);
+
+    BOOST_REQUIRE(intg);
+
+    BOOST_CHECK_EQUAL(intg->toString(), "169090600");
+
+    std::vector<uint8_t> values = intg->toVector({}, {});
+    std::vector<uint8_t> expected {5, 6, 10, 20, 30, 40};
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(intg->code(), 5);
+}
+
+BOOST_AUTO_TEST_CASE(TypeDateToInteger)
+{
+    RadProto::Attribute* attribute = RadProto::Attribute::make(75, "date", "169090600");
+    RadProto::Integer* intg = dynamic_cast<RadProto::Integer*>(attribute);
+
+    BOOST_REQUIRE(intg);
+
+    BOOST_CHECK_EQUAL(intg->toString(), "169090600");
+
+    std::vector<uint8_t> values = intg->toVector({}, {});
+    std::vector<uint8_t> expected {75, 6, 10, 20, 30, 40};
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(intg->code(), 75);
+}
+
+BOOST_AUTO_TEST_CASE(TypeIpaddr)
+{
+    RadProto::Attribute* attribute = RadProto::Attribute::make(4, "ipaddr", "127.104.22.17");
+    RadProto::IpAddress* ipadr = dynamic_cast<RadProto::IpAddress*>(attribute);
+
+    BOOST_REQUIRE(ipadr);
+
+    BOOST_CHECK_EQUAL(ipadr->toString(), "127.104.22.17");
+
+    std::vector<uint8_t> values = ipadr->toVector({}, {});
+    std::vector<uint8_t> expected {4, 6, 127, 104, 22, 17};
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(ipadr->code(), 4);
+}
+
+BOOST_AUTO_TEST_CASE(TypeEncrypted)
+{
+    RadProto::Attribute* attribute = RadProto::Attribute::make(2, "encrypted", "123456");
+    RadProto::Encrypted* encrypt = dynamic_cast<RadProto::Encrypted*>(attribute);
+
+    BOOST_REQUIRE(encrypt);
+
+    BOOST_CHECK_EQUAL(encrypt->toString(), "123456");
+
+    std::array<uint8_t, 16> auth {0x92, 0xfa, 0xa1, 0xed, 0x98, 0x9b, 0xb4, 0x79, 0xfe, 0x20, 0xe2, 0xf4, 0x7f, 0x4a, 0x5a, 0x70};
+    std::vector<uint8_t> values = encrypt->toVector("secret", auth);
+    std::vector<uint8_t> expected {0x02, 0x12, 0x25, 0x38, 0x58, 0x18, 0xae, 0x97, 0xeb, 0xeb, 0xbd, 0x46, 0xfd, 0xb9, 0xd1, 0x17, 0x84, 0xeb};
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(encrypt->code(), 2);
+}
+
+BOOST_AUTO_TEST_CASE(TypeOctets)
+{
+    RadProto::Attribute* attribute = RadProto::Attribute::make(3, "octets", "313233616263");
+    RadProto::Bytes* bts = dynamic_cast<RadProto::Bytes*>(attribute);
+
+    BOOST_REQUIRE(bts);
+
+    BOOST_CHECK_EQUAL(bts->toString(), "313233616263");
+
+    std::vector<uint8_t> values = bts->toVector({}, {});
+    std::vector<uint8_t> expected({3, 8, '1', '2', '3', 'a', 'b', 'c'});
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(bts->code(), 3);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
 BOOST_AUTO_TEST_CASE(StringDataConstructor)
 {
     std::vector<uint8_t> d {'t', 'e', 's', 't'};

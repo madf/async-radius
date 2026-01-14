@@ -2,14 +2,92 @@
 #include "attribute.h"
 #include "utils.h"
 #include "error.h"
+#include <boost/tokenizer.hpp>
 #include <openssl/evp.h>
 #include <algorithm>
-#include <iostream>
 
 using Attribute = RadProto::Attribute;
+namespace
+{
+    enum class ValueType : uint8_t
+    {
+        String,
+        Integer,
+        IpAddress,
+        Encrypted,
+        Bytes,
+        VendorSpecific,
+        ChapPassword
+    };
+
+    ValueType parseValueType(const std::string& type)
+    {
+        if (type == "string")
+            return ValueType::String;
+        else if (type == "integer" || type == "date")
+            return ValueType::Integer;
+        else if (type == "ipaddr")
+            return ValueType::IpAddress;
+        else if (type == "encrypted")
+            return ValueType::Encrypted;
+        else if (type == "octets")
+            return ValueType::Bytes;
+        else if (type == "vsa")
+           throw RadProto::Exception(RadProto::Error::typeIsNotSupported);
+        else
+           throw RadProto::Exception(RadProto::Error::invalidValueType);
+    }
+}
+
 Attribute::Attribute(uint8_t code)
     : m_code(code)
 {
+}
+
+Attribute* Attribute::make(uint8_t code, const std::string& type, const std::string& data)
+{
+    ValueType valueType = parseValueType(type);
+
+    switch (valueType)
+    {
+        case ValueType::String:
+            return new String(code, data);
+        case ValueType::Integer:
+            return new Integer(code, std::stoul(data));
+        case ValueType::Encrypted:
+            return new Encrypted(code, data);
+        case ValueType::IpAddress:
+        {
+            using tokenizer =  boost::tokenizer<boost::char_separator<char>>;
+            boost::char_separator<char> sep(".");
+            tokenizer tok(data, sep);
+
+            std::array<uint8_t, 4> ipAddr;
+            size_t i = 0;
+            for (const auto& t : tok)
+            {
+                ipAddr[i] = static_cast<uint8_t>(std::stoul(t));
+                ++i;
+            }
+            return new IpAddress(code, ipAddr);
+        }
+        case ValueType::Bytes:
+        {
+            if (data.length() % 2 != 0)
+                throw RadProto::Exception(RadProto::Error::invalidHexStringLength);
+
+            std::vector<uint8_t> bytes;
+
+            for (size_t i = 0; i < data.length(); i += 2)
+            {
+                auto byte = static_cast<uint8_t>(std::stoi(data.substr(i, 2), nullptr, 16));
+                bytes.push_back(byte);
+            }
+            return new Bytes(code, bytes);
+        }
+        default:
+            throw RadProto::Exception(RadProto::Error::invalidValueType);
+    }
 }
 
 using String = RadProto::String;

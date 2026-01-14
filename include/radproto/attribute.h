@@ -16,6 +16,7 @@ namespace RadProto
             virtual std::string toString() const = 0;
             virtual std::vector<uint8_t> toVector(const std::string& secret, const std::array<uint8_t, 16>& auth) const = 0;
             virtual Attribute* clone() const = 0;
+            static Attribute* make(uint8_t code, const std::string& type, const std::string& data);
         private:
             uint8_t m_code;
     };

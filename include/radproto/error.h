@@ -21,10 +21,14 @@ namespace RadProto
         eapMessageAttributeError,
         invalidAttributeCode,
         invalidAttributeSize,
+        invalidAttributeType,
+        invalidValueType,
         invalidVendorSpecificAttributeId,
         suchAttributeNameAlreadyExists,
         suchAttributeCodeAlreadyExists,
-        suchAttributeNameWithAnotherTypeAlreadyExists
+        suchAttributeNameWithAnotherTypeAlreadyExists,
+        typeIsNotSupported,
+        invalidHexStringLength
     };
 
     class Exception: public std::runtime_error
