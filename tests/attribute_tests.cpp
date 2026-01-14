@@ -113,6 +113,15 @@ BOOST_AUTO_TEST_CASE(TypeOctets)
     RadProto::Bytes* bts = dynamic_cast<RadProto::Bytes*>(attribute);
 
     BOOST_REQUIRE(bts);
+
+    BOOST_CHECK_EQUAL(bts->toString(), "313233616263");
+
+    std::vector<uint8_t> values = bts->toVector({}, {});
+    std::vector<uint8_t> expected({3, 8, '1', '2', '3', 'a', 'b', 'c'});
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(bts->code(), 3);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
