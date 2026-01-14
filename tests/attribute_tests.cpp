@@ -95,6 +95,16 @@ BOOST_AUTO_TEST_CASE(TypeEncrypted)
     RadProto::Encrypted* encrypt = dynamic_cast<RadProto::Encrypted*>(attribute);
 
     BOOST_REQUIRE(encrypt);
+
+    BOOST_CHECK_EQUAL(encrypt->toString(), "123456");
+
+    std::array<uint8_t, 16> auth {0x92, 0xfa, 0xa1, 0xed, 0x98, 0x9b, 0xb4, 0x79, 0xfe, 0x20, 0xe2, 0xf4, 0x7f, 0x4a, 0x5a, 0x70};
+    std::vector<uint8_t> values = encrypt->toVector("secret", auth);
+    std::vector<uint8_t> expected {0x02, 0x12, 0x25, 0x38, 0x58, 0x18, 0xae, 0x97, 0xeb, 0xeb, 0xbd, 0x46, 0xfd, 0xb9, 0xd1, 0x17, 0x84, 0xeb};
+
+    BOOST_TEST(values == expected, boost::test_tools::per_element());
+
+    BOOST_CHECK_EQUAL(encrypt->code(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(TypeOctets)
