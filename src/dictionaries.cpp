@@ -52,6 +52,20 @@ void BasicDictionary::append(const BasicDictionary& basicDict)
         m_reverseDict.insert_or_assign(entry.first, entry.second);
 }
 
+bool BasicDictionary::findByName(const std::string& name)
+{
+    if (!m_reverseDict.count(name))
+        return false;
+    return true;
+}
+
+bool BasicDictionary::findByCode(uint32_t code)
+{
+    if (!m_rightDict.count(code))
+        return false;
+    return true;
+}
+
 using VendorDictionary = RadProto::VendorDictionary;
 
 std::string VendorDictionary::name(uint32_t code) const
@@ -90,6 +104,20 @@ void VendorDictionary::append(const VendorDictionary& vendorDict)
         m_reverseDict.emplace(entry.first, entry.second);
 }
 
+bool VendorDictionary::findByName(const std::string& name)
+{
+    if (!m_reverseDict.count(name))
+        return false;
+    return true;
+}
+
+bool VendorDictionary::findByCode(uint32_t code)
+{
+    if (!m_rightDict.count(code))
+        return false;
+    return true;
+}
+
 using DependentDictionary = RadProto::DependentDictionary;
 
 std::string DependentDictionary::name(const std::string& dependencyName, uint32_t code) const
@@ -125,6 +153,26 @@ void DependentDictionary::append(const DependentDictionary& dependentDict)
     }
     for (const auto& entry: dependentDict.m_reverseDict)
         m_reverseDict.insert_or_assign(entry.first, entry.second);
+}
+
+bool DependentDictionary::findByName(const std::string& dependencyName, const std::string& name)
+{
+    std::pair<const std::string&, const std::string&> key = {dependencyName, name};
+    auto it = m_reverseDict.find(key);
+
+    if (it == m_reverseDict.end())
+        return false;
+    return true;
+}
+
+bool DependentDictionary::findByCode(const std::string& dependencyName, uint32_t code)
+{
+    std::pair<const std::string&, uint32_t> key = {dependencyName, code};
+    auto it = m_rightDict.find(key);
+
+    if (it == m_rightDict.end())
+        return false;
+    return true;
 }
 
 using Dictionaries = RadProto::Dictionaries;
