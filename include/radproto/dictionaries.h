@@ -17,6 +17,8 @@ namespace RadProto
 
             void add(uint32_t code, const std::string& name, const std::string& type);
             void append(const BasicDictionary& basicDict);
+            bool findByName(const std::string& name);
+            bool findByCode(uint32_t code);
         private:
             std::map<uint32_t, std::pair<std::string, std::string>> m_rightDict;
             std::map<std::string, std::pair<uint32_t, std::string>> m_reverseDict;
@@ -31,7 +33,9 @@ namespace RadProto
 
             void add(uint32_t code, const std::string& name);
             void append(const VendorDictionary& vendorDict);
-        private:
+            bool findByName(const std::string& name);
+            bool findByCode(uint32_t code);
+       private:
             std::map<uint32_t, std::string> m_rightDict;
             std::map<std::string, uint32_t> m_reverseDict;
     };
@@ -44,6 +48,8 @@ namespace RadProto
             uint32_t code(const std::string& dependencyName, const std::string& name) const;
             void add(uint32_t code, const std::string& name, const std::string& dependencyName);
             void append(const DependentDictionary& dependentDict);
+            bool findByName(const std::string& dependencyName, const std::string& name);
+            bool findByCode(const std::string& dependencyName, uint32_t code);
         private:
             std::map<std::pair<std::string, uint32_t>, std::string> m_rightDict;
             std::map<std::pair<std::string, std::string>, uint32_t> m_reverseDict;
