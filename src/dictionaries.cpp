@@ -349,12 +349,12 @@ uint32_t Dictionaries::attributeValueCode(const std::string& attributeName, cons
     return attributeValues().code(attributeName, name);
 }
 
-bool Dictionaries::attributeValuefindByName(const std::string& attributeName, const std::string& name) const
+bool Dictionaries::attributeValueFindByName(const std::string& attributeName, const std::string& name) const
 {
     return attributeValues().findByName(attributeName, name);
 }
 
-bool Dictionaries::attributeValuefindByCode(const std::string& attributeName, uint32_t code) const
+bool Dictionaries::attributeValueFindByCode(const std::string& attributeName, uint32_t code) const
 {
     return attributeValues().findByCode(attributeName, code);
 }
