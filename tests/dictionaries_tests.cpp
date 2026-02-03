@@ -922,6 +922,22 @@ BOOST_AUTO_TEST_CASE(TestAttributeType)
     BOOST_CHECK_EQUAL(a.attributeType("abc"), "bytes");
 }
 
+BOOST_AUTO_TEST_CASE(TestAttributeFindByName)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.attributeFindByName("User-Name"), true);
+    BOOST_CHECK_EQUAL(a.attributeFindByName("Name"), false);
+}
+
+BOOST_AUTO_TEST_CASE(TestAttributeFindByCode)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.attributeFindByCode(1), true);
+    BOOST_CHECK_EQUAL(a.attributeFindByCode(3), false);
+}
+
 BOOST_AUTO_TEST_CASE(TestAttributeValueName)
 {
     RadProto::Dictionaries a("dictionary");
@@ -936,6 +952,22 @@ BOOST_AUTO_TEST_CASE(TestAttributeValueCode)
     BOOST_CHECK_EQUAL(a.attributeValueCode("Service-Type", "Framed-User"), 2);
 }
 
+BOOST_AUTO_TEST_CASE(TestAttributeValueFindByName)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.attributeValueFindByName("Service-Type","Framed-User"), true);
+    BOOST_CHECK_EQUAL(a.attributeValueFindByName("Service-Type", "Framed"), false);
+}
+
+BOOST_AUTO_TEST_CASE(TestAttributeValueFindByCode)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.attributeValueFindByCode("Service-Type", 2), true);
+    BOOST_CHECK_EQUAL(a.attributeValueFindByCode("Service-Type", 3), false);
+}
+
 BOOST_AUTO_TEST_CASE(TestVendorName)
 {
     RadProto::Dictionaries a("dictionary");
@@ -948,6 +980,22 @@ BOOST_AUTO_TEST_CASE(TestVendorCode)
     RadProto::Dictionaries a("dictionary");
 
     BOOST_CHECK_EQUAL(a.vendorCode("Dlink"), 171);
+}
+
+BOOST_AUTO_TEST_CASE(TestVendorFindByName)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.vendorFindByName("Dlink"), true);
+    BOOST_CHECK_EQUAL(a.vendorFindByName("Name"), false);
+}
+
+BOOST_AUTO_TEST_CASE(TestVendorFindByCode)
+{
+    RadProto::Dictionaries a("dictionary");
+
+    BOOST_CHECK_EQUAL(a.vendorFindByCode(171), true);
+    BOOST_CHECK_EQUAL(a.vendorFindByCode(160), false);
 }
 
 BOOST_AUTO_TEST_CASE(TestVendorAttributeName)
