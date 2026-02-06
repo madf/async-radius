@@ -102,16 +102,12 @@ void VendorDictionary::append(const VendorDictionary& vendorDict)
 
 bool VendorDictionary::findByName(const std::string& name) const
 {
-    if (!m_reverseDict.count(name))
-        return false;
-    return true;
+    return m_reverseDict.count(name) > 0;
 }
 
 bool VendorDictionary::findByCode(uint32_t code) const
 {
-    if (!m_rightDict.count(code))
-        return false;
-    return true;
+    return m_rightDict.count(code) > 0;
 }
 
 using DependentDictionary = RadProto::DependentDictionary;
