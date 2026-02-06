@@ -901,17 +901,12 @@ BOOST_AUTO_TEST_CASE(TestAttributeType)
     BOOST_CHECK_EQUAL(a.attributeType("abc"), "bytes");
 }
 
-BOOST_AUTO_TEST_CASE(TestAttributeFindByName)
+BOOST_AUTO_TEST_CASE(TestsAttributeFindByNameAndAttributeFindByCode)
 {
     RadProto::Dictionaries a("dictionary");
 
     BOOST_CHECK_EQUAL(a.attributeFindByName("User-Name"), true);
     BOOST_CHECK_EQUAL(a.attributeFindByName("Name"), false);
-}
-
-BOOST_AUTO_TEST_CASE(TestAttributeFindByCode)
-{
-    RadProto::Dictionaries a("dictionary");
 
     BOOST_CHECK_EQUAL(a.attributeFindByCode(1), true);
     BOOST_CHECK_EQUAL(a.attributeFindByCode(3), false);
