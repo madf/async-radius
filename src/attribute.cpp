@@ -69,10 +69,7 @@ Attribute* Attribute::make(uint8_t code, const std::string& type, const std::str
 
                 size_t i = 0;
                 for (const auto& t : tok)
-                {
-                    ipAddr[i] = static_cast<uint8_t>(std::stoul(t));
-                    ++i;
-                }
+                    ipAddr[i++] = static_cast<uint8_t>(std::stoul(t));
             }
             return new IpAddress(code, ipAddr);
         }
