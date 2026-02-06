@@ -54,16 +54,12 @@ void BasicDictionary::append(const BasicDictionary& basicDict)
 
 bool BasicDictionary::findByName(const std::string& name) const
 {
-    if (!m_reverseDict.count(name))
-        return false;
-    return true;
+    return m_reverseDict.count(name) > 0;
 }
 
 bool BasicDictionary::findByCode(uint32_t code) const
 {
-    if (!m_rightDict.count(code))
-        return false;
-    return true;
+    return m_rightDict.count(code) > 0;
 }
 
 using VendorDictionary = RadProto::VendorDictionary;
