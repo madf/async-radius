@@ -951,7 +951,7 @@ BOOST_AUTO_TEST_CASE(TestVendorCode)
     BOOST_CHECK_EQUAL(a.vendorCode("Dlink"), 171);
 }
 
-BOOST_AUTO_TEST_CASE(TestsVendorFindByNameAndVendorByCode)
+BOOST_AUTO_TEST_CASE(TestsVendorFindByNameAndVendorFindByCode)
 {
     RadProto::Dictionaries a("dictionary");
 
