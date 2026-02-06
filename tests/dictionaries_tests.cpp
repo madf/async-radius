@@ -246,7 +246,7 @@ BOOST_AUTO_TEST_CASE(TestAppend)
     BOOST_CHECK_EQUAL(j.type("abc"), "integer");
 }
 
-BOOST_AUTO_TEST_CASE(TestFindByName)
+BOOST_AUTO_TEST_CASE(TestsFindByNameAndFindByCode)
 {
     RadProto::BasicDictionary b;
 
@@ -254,13 +254,6 @@ BOOST_AUTO_TEST_CASE(TestFindByName)
 
     BOOST_CHECK_EQUAL(b.findByName("abc"), true);
     BOOST_CHECK_EQUAL(b.findByName("def"), false);
-}
-
-BOOST_AUTO_TEST_CASE(TestFindByCode)
-{
-    RadProto::BasicDictionary b;
-
-    b.add(1, "abc", "string");
 
     BOOST_CHECK_EQUAL(b.findByCode(1), true);
     BOOST_CHECK_EQUAL(b.findByCode(2), false);
@@ -620,7 +613,7 @@ BOOST_AUTO_TEST_CASE(TestAppend)
     BOOST_CHECK_EQUAL(a.code("jkl"), 4);
 }
 
-BOOST_AUTO_TEST_CASE(TestFindByName)
+BOOST_AUTO_TEST_CASE(TestsFindByNameAndFindByCode)
 {
     RadProto::VendorDictionary b;
 
@@ -628,13 +621,6 @@ BOOST_AUTO_TEST_CASE(TestFindByName)
 
     BOOST_CHECK_EQUAL(b.findByName("Vendor-Name"), true);
     BOOST_CHECK_EQUAL(b.findByName("Name"), false);
-}
-
-BOOST_AUTO_TEST_CASE(TestFindByCode)
-{
-    RadProto::VendorDictionary b;
-
-    b.add(1, "Vendor-Name");
 
     BOOST_CHECK_EQUAL(b.findByCode(1), true);
     BOOST_CHECK_EQUAL(b.findByCode(2), false);
@@ -816,7 +802,7 @@ BOOST_AUTO_TEST_CASE(TestAppend)
     BOOST_CHECK_EQUAL(a.code("Service-Type", "Call-Check"), 10);
 }
 
-BOOST_AUTO_TEST_CASE(TestFindByName)
+BOOST_AUTO_TEST_CASE(TestsFindByNameAndFindByCode)
 {
     RadProto::DependentDictionary b;
 
@@ -824,13 +810,6 @@ BOOST_AUTO_TEST_CASE(TestFindByName)
 
     BOOST_CHECK_EQUAL(b.findByName("Service-Type", "Framed-User"), true);
     BOOST_CHECK_EQUAL(b.findByName("Service-Type", "Name"), false);
-}
-
-BOOST_AUTO_TEST_CASE(TestFindByCode)
-{
-    RadProto::DependentDictionary b;
-
-    b.add(2, "Framed-User", "Service-Type");
 
     BOOST_CHECK_EQUAL(b.findByCode("Service-Type", 2), true);
     BOOST_CHECK_EQUAL(b.findByCode("Service-Type", 3), false);
@@ -952,17 +931,12 @@ BOOST_AUTO_TEST_CASE(TestAttributeValueCode)
     BOOST_CHECK_EQUAL(a.attributeValueCode("Service-Type", "Framed-User"), 2);
 }
 
-BOOST_AUTO_TEST_CASE(TestAttributeValueFindByName)
+BOOST_AUTO_TEST_CASE(TestsAttributeValueFindByNameAndAttributeValueFindByCode)
 {
     RadProto::Dictionaries a("dictionary");
 
     BOOST_CHECK_EQUAL(a.attributeValueFindByName("Service-Type","Framed-User"), true);
     BOOST_CHECK_EQUAL(a.attributeValueFindByName("Service-Type", "Framed"), false);
-}
-
-BOOST_AUTO_TEST_CASE(TestAttributeValueFindByCode)
-{
-    RadProto::Dictionaries a("dictionary");
 
     BOOST_CHECK_EQUAL(a.attributeValueFindByCode("Service-Type", 2), true);
     BOOST_CHECK_EQUAL(a.attributeValueFindByCode("Service-Type", 3), false);
