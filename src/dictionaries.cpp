@@ -52,6 +52,16 @@ void BasicDictionary::append(const BasicDictionary& basicDict)
         m_reverseDict.insert_or_assign(entry.first, entry.second);
 }
 
+bool BasicDictionary::findByName(const std::string& name) const
+{
+    return m_reverseDict.count(name) > 0;
+}
+
+bool BasicDictionary::findByCode(uint32_t code) const
+{
+    return m_rightDict.count(code) > 0;
+}
+
 using VendorDictionary = RadProto::VendorDictionary;
 
 std::string VendorDictionary::name(uint32_t code) const
@@ -90,6 +100,16 @@ void VendorDictionary::append(const VendorDictionary& vendorDict)
         m_reverseDict.emplace(entry.first, entry.second);
 }
 
+bool VendorDictionary::findByName(const std::string& name) const
+{
+    return m_reverseDict.count(name) > 0;
+}
+
+bool VendorDictionary::findByCode(uint32_t code) const
+{
+    return m_rightDict.count(code) > 0;
+}
+
 using DependentDictionary = RadProto::DependentDictionary;
 
 std::string DependentDictionary::name(const std::string& dependencyName, uint32_t code) const
@@ -125,6 +145,16 @@ void DependentDictionary::append(const DependentDictionary& dependentDict)
     }
     for (const auto& entry: dependentDict.m_reverseDict)
         m_reverseDict.insert_or_assign(entry.first, entry.second);
+}
+
+bool DependentDictionary::findByName(const std::string& dependencyName, const std::string& name) const
+{
+    return m_reverseDict.count({dependencyName, name}) > 0;
+}
+
+bool DependentDictionary::findByCode(const std::string& dependencyName, uint32_t code) const
+{
+    return m_rightDict.count({dependencyName, code}) > 0;
 }
 
 using Dictionaries = RadProto::Dictionaries;
@@ -246,9 +276,19 @@ std::string Dictionaries::attributeType(uint32_t code) const
     return attributes().type(code);
 }
 
-std::string Dictionaries::attributeType(const std::string name) const
+std::string Dictionaries::attributeType(const std::string& name) const
 {
     return attributes().type(name);
+}
+
+bool Dictionaries::attributeFindByName(const std::string& name) const
+{
+    return attributes().findByName(name);
+}
+
+bool Dictionaries::attributeFindByCode(uint32_t code) const
+{
+    return attributes().findByCode(code);
 }
 
 std::string Dictionaries::vendorName(uint32_t code) const
@@ -259,6 +299,16 @@ std::string Dictionaries::vendorName(uint32_t code) const
 uint32_t Dictionaries::vendorCode(const std::string& name) const
 {
     return vendorNames().code(name);
+}
+
+bool Dictionaries::vendorFindByName(const std::string& name) const
+{
+    return vendorNames().findByName(name);
+}
+
+bool Dictionaries::vendorFindByCode(uint32_t code) const
+{
+    return vendorNames().findByCode(code);
 }
 
 std::string Dictionaries::vendorAttributeName(const std::string& vendorName, uint32_t code) const
@@ -279,6 +329,16 @@ std::string Dictionaries::attributeValueName(const std::string& attributeName, u
 uint32_t Dictionaries::attributeValueCode(const std::string& attributeName, const std::string& name) const
 {
     return attributeValues().code(attributeName, name);
+}
+
+bool Dictionaries::attributeValueFindByName(const std::string& attributeName, const std::string& name) const
+{
+    return attributeValues().findByName(attributeName, name);
+}
+
+bool Dictionaries::attributeValueFindByCode(const std::string& attributeName, uint32_t code) const
+{
+    return attributeValues().findByCode(attributeName, code);
 }
 
 std::string Dictionaries::vendorAttributeValueName(const std::string& valueName, uint32_t code) const

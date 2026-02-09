@@ -17,6 +17,8 @@ namespace RadProto
 
             void add(uint32_t code, const std::string& name, const std::string& type);
             void append(const BasicDictionary& basicDict);
+            bool findByName(const std::string& name) const;
+            bool findByCode(uint32_t code) const;
         private:
             std::map<uint32_t, std::pair<std::string, std::string>> m_rightDict;
             std::map<std::string, std::pair<uint32_t, std::string>> m_reverseDict;
@@ -31,7 +33,9 @@ namespace RadProto
 
             void add(uint32_t code, const std::string& name);
             void append(const VendorDictionary& vendorDict);
-        private:
+            bool findByName(const std::string& name) const;
+            bool findByCode(uint32_t code) const;
+       private:
             std::map<uint32_t, std::string> m_rightDict;
             std::map<std::string, uint32_t> m_reverseDict;
     };
@@ -44,6 +48,8 @@ namespace RadProto
             uint32_t code(const std::string& dependencyName, const std::string& name) const;
             void add(uint32_t code, const std::string& name, const std::string& dependencyName);
             void append(const DependentDictionary& dependentDict);
+            bool findByName(const std::string& dependencyName, const std::string& name) const;
+            bool findByCode(const std::string& dependencyName, uint32_t code) const;
         private:
             std::map<std::pair<std::string, uint32_t>, std::string> m_rightDict;
             std::map<std::pair<std::string, std::string>, uint32_t> m_reverseDict;
@@ -63,16 +69,23 @@ namespace RadProto
             std::string attributeName(uint32_t code) const;
             uint32_t attributeCode(const std::string& name) const;
             std::string attributeType(uint32_t code) const;
-            std::string attributeType(const std::string name) const;
+            std::string attributeType(const std::string& name) const;
+            bool attributeFindByName(const std::string& name) const;
+            bool attributeFindByCode(uint32_t) const;
 
             std::string vendorName(uint32_t code) const;
             uint32_t vendorCode(const std::string& name) const;
+            bool vendorFindByName(const std::string& name) const;
+            bool vendorFindByCode(uint32_t) const;
 
             std::string vendorAttributeName(const std::string& vendorName, uint32_t code) const;
             uint32_t vendorAttributeCode(const std::string& vendorName, const std::string& name) const;
 
             std::string attributeValueName(const std::string& attributeName, uint32_t code) const;
             uint32_t attributeValueCode(const std::string& attributeName, const std::string& name) const;
+
+            bool attributeValueFindByName(const std::string& attributeName, const std::string& name) const;
+            bool attributeValueFindByCode(const std::string& attributeName, uint32_t code) const;
 
             std::string vendorAttributeValueName(const std::string& valueName, uint32_t code) const;
             uint32_t vendorAttributeValueCode(const std::string& valueName, const std::string& name) const;

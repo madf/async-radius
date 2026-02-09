@@ -58,16 +58,18 @@ Attribute* Attribute::make(uint8_t code, const std::string& type, const std::str
             return new Encrypted(code, data);
         case ValueType::IpAddress:
         {
-            using tokenizer =  boost::tokenizer<boost::char_separator<char>>;
-            boost::char_separator<char> sep(".");
-            tokenizer tok(data, sep);
-
             std::array<uint8_t, 4> ipAddr;
-            size_t i = 0;
-            for (const auto& t : tok)
+            if (data == "0")
+                ipAddr = {0};
+            else
             {
-                ipAddr[i] = static_cast<uint8_t>(std::stoul(t));
-                ++i;
+                using tokenizer =  boost::tokenizer<boost::char_separator<char>>;
+                boost::char_separator<char> sep(".");
+                tokenizer tok(data, sep);
+
+                size_t i = 0;
+                for (const auto& t : tok)
+                    ipAddr[i++] = static_cast<uint8_t>(std::stoul(t));
             }
             return new IpAddress(code, ipAddr);
         }
