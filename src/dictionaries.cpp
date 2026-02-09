@@ -149,14 +149,12 @@ void DependentDictionary::append(const DependentDictionary& dependentDict)
 
 bool DependentDictionary::findByName(const std::string& dependencyName, const std::string& name) const
 {
-    std::pair<const std::string&, const std::string&> key = {dependencyName, name};
-    return m_reverseDict.count(key) > 0;
+    return m_reverseDict.count({dependencyName, name}) > 0;
 }
 
 bool DependentDictionary::findByCode(const std::string& dependencyName, uint32_t code) const
 {
-    std::pair<const std::string&, uint32_t> key = {dependencyName, code};
-    return m_rightDict.count(key) > 0;
+    return m_rightDict.count({dependencyName, code}) > 0;
 }
 
 using Dictionaries = RadProto::Dictionaries;
