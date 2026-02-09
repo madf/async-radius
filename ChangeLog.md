@@ -33,3 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added.
  - Attribute types in dictionaries.
  - `Attribute::make` constructor function.
+
+## [1.3.0] - 2026-02-09
+### Added.
+ - Dictionary lookup functions.
