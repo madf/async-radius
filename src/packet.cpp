@@ -10,7 +10,7 @@ namespace
 {
     RadProto::Attribute* makeAttribute(uint8_t code, const uint8_t* data, size_t size, const std::string& secret, const std::array<uint8_t, 16>& auth)
     {
-        if (code == 1 || code == 11 || code == 18 || code == 22 || code == 34 || code == 35 || code == 60 || code == 63)
+        if (code == 1 || code == 11 || code == 18 || code == 19 || code == 20 || code == 22 ||code == 30 || code == 31 || code == 32 || code == 34 || code == 35 ||code == 39 || code == 60 || code == 63)
             return new RadProto::String(code, data, size);
         else if (code == 2)
             return new RadProto::Encrypted(code, data, size, secret, auth);
@@ -20,7 +20,7 @@ namespace
             return new RadProto::IpAddress(code, data, size);
         else if (code == 5 || code == 6 || code == 7 || code == 10 || code == 12 || code == 13 || code == 15 || code == 16 || code == 27 || code == 28 || code == 29 || code == 37 || code == 38 || code == 61 || code == 62)
             return new RadProto::Integer(code, data, size);
-        else if (code == 19 || code == 20 || code == 24 || code == 25 || code == 30 || code == 31 || code == 32 || code == 33 || code == 36 || code == 39 || code == 79 || code == 80)
+        else if (code == 24 || code == 25 || code == 33 || code == 36 || code == 79 || code == 80)
             return new RadProto::Bytes(code, data, size);
 
         throw RadProto::Exception(RadProto::Error::invalidAttributeCode);

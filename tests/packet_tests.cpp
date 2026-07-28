@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_CASE(PacketBufferConstructorResponse)
 
     BOOST_REQUIRE(attr3 != nullptr);
     BOOST_CHECK_EQUAL(attr3->code(), RadProto::CALLBACK_NUMBER);
-    BOOST_CHECK_EQUAL(attr3->toString(), "313233616263");
+    BOOST_CHECK_EQUAL(attr3->toString(), "123abc");
 
     auto* attr4 = findAttribute(attrs, RadProto::CHAP_PASSWORD);
 
@@ -198,7 +198,7 @@ BOOST_AUTO_TEST_CASE(PacketValueConstructorResponse)
 
     std::array<uint8_t, 16> auth {0x1a, 0x40, 0x43, 0xc6, 0x41, 0x0a, 0x08, 0x31, 0x12, 0x16, 0x80, 0x2c, 0x3e, 0x83, 0x12, 0x45};
 
-    const std::vector<RadProto::Attribute*> attributes {new RadProto::String(1, "test"), new RadProto::Integer(5, 20), new RadProto::IpAddress(4, {127, 104, 22, 17}), new RadProto::Bytes(19, {'1', '2', '3', 'a', 'b', 'c'}), new RadProto::ChapPassword(3, 1, {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g' })};
+    const std::vector<RadProto::Attribute*> attributes {new RadProto::String(1, "test"), new RadProto::Integer(5, 20), new RadProto::IpAddress(4, {127, 104, 22, 17}), new RadProto::String(19, {"123abc"}), new RadProto::ChapPassword(3, 1, {'1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g' })};
 
     std::vector<RadProto::VendorSpecific> vendorSpecific;
     vendorSpecific.push_back(RadProto::VendorSpecific(171, 1, {0, 0, 0, 3}));
@@ -235,7 +235,7 @@ BOOST_AUTO_TEST_CASE(PacketValueConstructorResponse)
 
     BOOST_REQUIRE(attr3 != nullptr);
     BOOST_CHECK_EQUAL(attr3->code(), RadProto::CALLBACK_NUMBER);
-    BOOST_CHECK_EQUAL(attr3->toString(), "313233616263");
+    BOOST_CHECK_EQUAL(attr3->toString(), "123abc");
 
     auto* attr4 = findAttribute(attrs, RadProto::CHAP_PASSWORD);
 
@@ -460,7 +460,7 @@ BOOST_AUTO_TEST_CASE(PacketCopyConstructorResponse)
 
     BOOST_REQUIRE(attr3 != nullptr);
     BOOST_CHECK_EQUAL(attr3->code(), RadProto::CALLBACK_NUMBER);
-    BOOST_CHECK_EQUAL(attr3->toString(), "313233616263");
+    BOOST_CHECK_EQUAL(attr3->toString(), "123abc");
 
     auto* attr4 = findAttribute(attrs, RadProto::CHAP_PASSWORD);
 
