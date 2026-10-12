@@ -58,6 +58,7 @@ namespace RadProto
     class Dictionaries
     {
         public:
+            Dictionaries() = default;
             Dictionaries(const std::string& filePath);
             void append(const Dictionaries& fillingDictionaries);
             const BasicDictionary& attributes() const { return m_attributes; }
