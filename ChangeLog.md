@@ -38,6 +38,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added.
  - Dictionary lookup functions.
 
-## [1.3.1] - 2026-10-12
+## [1.3.1] - 2026-07-28
+### Changed.
+ - Types of some attributes.
+
+## [1.3.2] - 2026-10-12
 ### Added.
  - Default constructor for dictionaries.
